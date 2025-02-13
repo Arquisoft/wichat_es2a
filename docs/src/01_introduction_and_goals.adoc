@@ -17,6 +17,26 @@ These include
 ****
 endif::arc42help[]
 
+WIChat is a course project for the subject of Software Architecture of the Software Engineering Degree at the University of Oviedo. It is developed by the team composed of this students:
+
+* Natalia Blanco Agudín
+* David Covián Gómez
+* Darío Cristóbal González
+* Hugo Fernández Rodríguez
+* Marcos Llanos Vega
+* Hugo Prendes Menéndez
+
+This project consists of the design and implementation of a web application consisting of a quiz game, similar to the quiz show “Saber y ganar”, broadcasted continuously by TVE since 1997 and presented by Jordi Hurtado.
+
+The game will consist of the user having to guess the location of a photo shown by the application, as well as answer questions related to it. However, he will not be alone in this task, since he will have the help of a chat that will give him clues. Behind this chat, an LLM will be hidden, which will be in charge of generating these clues.
+
+The objective of this game will be to expand the users' knowledge and memory, while they have a good time. In the meantime, its main functionalities will be:
+
+* Question and answer generation
+* Implementation of a chat to give clues
+* User registration and their previous results
+
+
 === Requirements Overview
 
 ifdef::arc42help[]
@@ -45,6 +65,15 @@ See https://docs.arc42.org/section-1/[Introduction and Goals] in the arc42 docum
 ****
 endif::arc42help[]
 
+The main objective of this project is the development of a new web application that allows users to play a quiz game based on a picture of a place, while having a chat that uses a LLM to give them clues.
+
+The application will have the following functionalities:
+
+* A web frontend that will display the images of the game along with the question and its possible answers, which must be answered in a given time.
+* Both images and answers will be generated from Wikidata data and will be accessible through an API.
+* A chat using an LLM to give hints to users.
+* User registration system to save their previous results, which will be accessible through an API.
+
 === Quality Goals
 
 ifdef::arc42help[]
@@ -68,6 +97,30 @@ If you as an architect do not know how the quality of your work will be judged..
 A table with quality goals and concrete scenarios, ordered by priorities
 ****
 endif::arc42help[]
+
+
+The following table describes the project quality goals.
+
+|=== 
+| Quality Goal | Motivation
+
+| *Efficiency*
+| The game should run quickly and smoothly, so as not to bore the user with unnecessary waiting.
+
+| *Usability*
+| The application must be easy to learn and use, because no one will stop to read an instruction manual.
+
+| *Maintenance*
+| The application must be designed in such a way that parts can be modified in the future without the need to redo the application.
+
+| *Testability*.
+| Different use cases should be tested to ensure correct operation.
+
+| *Security*
+| The application should be secure enough so that no one can access a user's personal information without permission.
+
+|=== 
+
 
 === Stakeholders
 
@@ -98,4 +151,33 @@ endif::arc42help[]
 |Role/Name|Contact|Expectations
 | _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
 | _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+|===
+
+
+|===
+| Role/Name | Description | Expectations
+
+| *Development Team*
+a| 
+* Natalia Blanco Agudín
+* David Covián Gómez
+* Darío Cristóbal González
+* Hugo Fernández Rodríguez
+* Marcos Llanos Vega
+* Hugo Prendes Menéndez
+| To improve their hard skills using different technologies, mainly focused on the web.
+Improve their soft skills such as teamwork skills, communication and time management.
+
+
+| *Teachers*
+a|
+* José Emilio Labra
+* Diego Martín
+| They are in charge of guiding the students and supervising their work, as well as helping them to solve any problems that may arise.
+
+| *Users*
+a|
+* Users
+| They will be in charge of using the application.
+
 |===
