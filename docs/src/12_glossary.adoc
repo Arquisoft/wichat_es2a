@@ -83,4 +83,13 @@ endif::arc42help[]
 
 |Arc42
 |A template for documenting software architecture.
+
+|Express
+|A minimal and flexible Node.js web application framework for building APIs and web apps.
+
+|Microservice
+|An application is composed of multiple independent components, each of which can be developed, deployed, and scaled separately..
+
+|NoSQL
+|Non-relational databases that store data in a non-tabular format, rather than in rule-based, relational tables like relational databases do.
 |===
