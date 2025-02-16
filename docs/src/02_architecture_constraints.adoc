@@ -81,3 +81,18 @@ making sure that the decisions made during those sessions are clearly documented
 | After each meeting, whether during the scheduled practice hours or any extraordinary meetings, meeting minutes will be written to document the decisions made.
 
 |===
+
+=== Convention Constraints
+[cols="e,2e", options="header"]
+|===
+| **Constraint** | **Explanation**
+
+|*Software Design*
+| The code must be modular, maintainable, and understandable. "Clean code" principles will be applied to ensure the project is easy to update and expand.
+
+|*Documentation*
+| The Arc42 template will be used to create the project documentation. 
+This documentation must be clear, structured, and easy to follow, with a practical approach so that any team member or external 
+person can understand the architecture and key components of the system. 
+
+|===
