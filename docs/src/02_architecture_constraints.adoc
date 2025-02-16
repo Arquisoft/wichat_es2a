@@ -3,7 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-architecture-constraints]]
 == Architecture Constraints
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -20,10 +19,41 @@ If needed you can subdivide them into
 technical constraints, organizational and political constraints and
 conventions (e.g. programming or versioning guidelines, documentation or naming conventions)
 
-
 .Further Information
 
 See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 documentation.
 
 ****
 endif::arc42help[]
+
+This document describes the technical, organizational, and convention-based limitations that must be considered during the development of the WIChat project, 
+an interactive web application for questions and answers based on images. 
+The main objective of the project is to create a platform where users can participate in a quiz game based on different themes, guessing places or concepts from images.
+
+A key feature of WIChat is the integration of a long language model (LLM) to provide players with conversational hints. 
+Additionally, questions and answers are generated automatically using data from Wikidata. 
+The following outlines the main constraints and conventions that will guide the development of the application.
+
+=== Technical Limitations
+
+[cols="e,2e", options="header"]
+|===
+| **Constraint** | **Explanation**
+
+|*GIT*
+|_The use of GIT will be mandatory for version control, and GitHub will be the platform we use to store the code. 
+This system will allow parallel work by using branches for developing new features or fixing bugs. 
+Additionally, we will use Pull Requests for code review before final integration._
+
+|*Docker*
+|_Docker will be used to containerize the application in both development and production environments for web deployment, 
+ensuring consistent environment configurations and simplifying application maintenance across different platforms._
+
+|*Wikidata*
+|_Wikidata will be the primary source for generating images for the questions and hints._
+
+|*LLMS (Long Language Model)*
+|_The system will use an external language model (LLM) to generate interactive hints about the images. 
+However, due to the inherent limitations of LLMs (such as generating incorrect responses or hallucinations), 
+it will be necessary to implement mechanisms to validate and mitigate these issues to ensure the accuracy of the generated hints._
+|===
