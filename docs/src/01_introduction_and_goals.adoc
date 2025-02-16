@@ -1,101 +1,103 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-introduction-and-goals]]
+
 == Introduction and Goals
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Describes the relevant requirements and the driving forces that software architects and development team must consider. 
-These include
+WIChat is a course project for the subject of Software Architecture of the Software Engineering Degree at the University of Oviedo. It is developed by the team composed of this students:
 
-* underlying business goals, 
-* essential features, 
-* essential functional requirements, 
-* quality goals for the architecture and
-* relevant stakeholders and their expectations
-****
-endif::arc42help[]
+* Natalia Blanco Agudín
+* David Covián Gómez
+* Darío Cristóbal González
+* Hugo Fernández Rodríguez
+* Marcos Llanos Vega
+* Hugo Prendes Menéndez
+
+This project consists of the design and implementation of a web application consisting of a quiz game, similar to the quiz show “Saber y Ganar”, broadcasted continuously by TVE since 1997 and presented by Jordi Hurtado.
+
+.Jordi Hurtado presenting "Saber y Ganar". Source: "www.eldiario.es".
+image::saberyganar.jpg[Jordi Hurtado, 1600, 900, align="center"]
+
+The game will consist of the user having to guess the location of a photo shown by the application, as well as answer questions related to it. However, he will not be alone in this task, since he will have the help of a chat that will give him clues. Behind this chat, an LLM will be hidden, which will be in charge of generating these clues.
+
+The objective of this game will be to expand the users' knowledge and memory, while they have a good time. In the meantime, its main functionalities will be:
+
+* Question and answer generation
+* Implementation of a chat to give clues
+* User registration and their previous results
+
+
 
 === Requirements Overview
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Short description of the functional requirements, driving forces, extract (or abstract)
-of requirements. Link to (hopefully existing) requirements documents
-(with version number and information where to find it).
+The main objective of this project is the development of a new web application that allows users to play a quiz game based on a picture of a place, while having a chat that uses a LLM to give them clues.
 
-.Motivation
-From the point of view of the end users a system is created or modified to
-improve support of a business activity and/or improve the quality.
+The application will have the following functionalities:
 
-.Form
-Short textual description, probably in tabular use-case format.
-If requirements documents exist this overview should refer to these documents.
+* A web frontend that will display the images of the game along with the question and its possible answers, which must be answered in a given time.
+* Both images and answers will be generated from Wikidata data and will be accessible through an API.
+* A chat using an LLM to give hints to users.
+* User registration system to save their previous results, which will be accessible through an API.
 
-Keep these excerpts as short as possible. Balance readability of this document with potential redundancy w.r.t to requirements documents.
+For more information about the requirements, see next link:
 
+* Spanish Version:
+https://docs.google.com/document/d/1-wvrh7Udjmnkv1aiDgulEFjaMvAOL2Cu22d5Hq_6s6s/edit?tab=t.0#heading=h.knuq2aw7zapd
 
-.Further Information
+* English Version
+https://docs.google.com/document/d/1_4KBTx6hVuR90cUW4LoDHEH0E3NZJ3DInacCZjAuGXY/edit?tab=t.0#heading=h.knuq2aw7zapd
 
-See https://docs.arc42.org/section-1/[Introduction and Goals] in the arc42 documentation.
-
-****
-endif::arc42help[]
 
 === Quality Goals
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-The top three (max five) quality goals for the architecture whose fulfillment is of highest importance to the major stakeholders. 
-We really mean quality goals for the architecture. Don't confuse them with project goals.
-They are not necessarily identical.
+The following table describes the project quality goals.
 
-Consider this overview of potential topics (based upon the ISO 25010 standard):
+|=== 
+| Quality Goal | Motivation
 
-image::01_2_iso-25010-topics-EN.drawio.png["Categories of Quality Requirements"]
+| *Efficiency*
+| The game should run quickly and smoothly, so as not to bore the user with unnecessary waiting.
 
-.Motivation
-You should know the quality goals of your most important stakeholders, since they will influence fundamental architectural decisions. 
-Make sure to be very concrete about these qualities, avoid buzzwords.
-If you as an architect do not know how the quality of your work will be judged...
+| *Usability*
+| The application must be easy to learn and use, because no one will stop to read an instruction manual.
 
-.Form
-A table with quality goals and concrete scenarios, ordered by priorities
-****
-endif::arc42help[]
+| *Maintenance*
+| The application must be designed in such a way that parts can be modified in the future without the need to redo the application.
+
+| *Testability*.
+| Different use cases should be tested to ensure correct operation.
+
+| *Security*
+| The application should be secure enough so that no one can access a user's personal information without permission.
+
+|=== 
+
 
 === Stakeholders
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Explicit overview of stakeholders of the system, i.e. all person, roles or organizations that
-
-* should know the architecture
-* have to be convinced of the architecture
-* have to work with the architecture or with code
-* need the documentation of the architecture for their work
-* have to come up with decisions about the system or its development
-
-.Motivation
-You should know all parties involved in development of the system or affected by the system.
-Otherwise, you may get nasty surprises later in the development process.
-These stakeholders determine the extent and the level of detail of your work and its results.
-
-.Form
-Table with role names, person names, and their expectations with respect to the architecture and its documentation.
-****
-endif::arc42help[]
-
-[options="header",cols="1,2,2"]
 |===
-|Role/Name|Contact|Expectations
-| _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
-| _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+| Role/Name | Members & Contact | Expectations
+
+| *Development Team*
+a| 
+* Natalia Blanco Agudín UO295340@uniovi.es
+* David Covián Gómez UO295168@uniovi.es
+* Darío Cristóbal González UO294401@uniovi.es
+* Hugo Fernández Rodríguez UO289157@uniovi.es
+* Marcos Llanos Vega UO218982@uniovi.es
+* Hugo Prendes Menéndez UO288294@uniovi.es
+| To improve their hard skills using different technologies, mainly focused on the web.
+Improve their soft skills such as teamwork skills, communication and time management.v
+
+| *Teachers*
+a|
+* José Emilio Labra Gayo
+* Diego Martín Fernández
+| They are in charge of guiding the students and supervising their work, as well as helping them to solve any problems that may arise.
+
+| *Users*
+a|
+* Users
+| They will be in charge of using the application.
+
 |===
