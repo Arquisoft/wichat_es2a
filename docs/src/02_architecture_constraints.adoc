@@ -73,4 +73,11 @@ making sure that the decisions made during those sessions are clearly documented
 This documentation must be clear, structured, and easy to follow, with a practical approach so that any team member or external 
 person can understand the architecture and key components of the system. 
 
+|*Adaptability*
+| The application must be designed to work across multiple devices and screen sizes, 
+ensuring a consistent experience on both desktop and mobile platforms. 
+Responsive design techniques and best practices will be implemented to optimize usability across different resolutions.
+
+|*Usability*
+| The system must provide an intuitive and accessible user interface, ensuring a smooth experience for all users.
 |===
