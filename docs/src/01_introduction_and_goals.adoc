@@ -76,23 +76,23 @@ The following table describes the project quality goals.
 === Stakeholders
 
 |===
-| Role/Name | Description | Expectations
+| Role/Name | Members & Contact | Expectations
 
 | *Development Team*
 a| 
-* Natalia Blanco Agudín
-* David Covián Gómez
-* Darío Cristóbal González
-* Hugo Fernández Rodríguez
-* Marcos Llanos Vega
-* Hugo Prendes Menéndez
+* Natalia Blanco Agudín UO295340@uniovi.es
+* David Covián Gómez UO295168@uniovi.es
+* Darío Cristóbal González UO294401@uniovi.es
+* Hugo Fernández Rodríguez UO289157@uniovi.es
+* Marcos Llanos Vega UO218982@uniovi.es
+* Hugo Prendes Menéndez UO288294@uniovi.es
 | To improve their hard skills using different technologies, mainly focused on the web.
 Improve their soft skills such as teamwork skills, communication and time management.v
 
 | *Teachers*
 a|
-* José Emilio Labra
-* Diego Martín
+* José Emilio Labra Gayo
+* Diego Martín Fernández
 | They are in charge of guiding the students and supervising their work, as well as helping them to solve any problems that may arise.
 
 | *Users*
