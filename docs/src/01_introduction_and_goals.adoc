@@ -39,6 +39,13 @@ The application will have the following functionalities:
 * A chat using an LLM to give hints to users.
 * User registration system to save their previous results, which will be accessible through an API.
 
+For more information about the requirements, see next link:
+
+* Spanish Version:
+https://docs.google.com/document/d/1-wvrh7Udjmnkv1aiDgulEFjaMvAOL2Cu22d5Hq_6s6s/edit?tab=t.0#heading=h.knuq2aw7zapd
+
+* English Version
+https://docs.google.com/document/d/1_4KBTx6hVuR90cUW4LoDHEH0E3NZJ3DInacCZjAuGXY/edit?tab=t.0#heading=h.knuq2aw7zapd
 
 
 === Quality Goals
