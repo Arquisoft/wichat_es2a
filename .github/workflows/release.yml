@@ -140,7 +140,6 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: gatewayservice
-
    deploy:
      name: Deploy over SSH
      runs-on: ubuntu-latest

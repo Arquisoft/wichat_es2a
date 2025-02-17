@@ -2,7 +2,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-deployment-view]]
 
-
 == Deployment View
 
 ifdef::arc42help[]
@@ -44,6 +43,8 @@ See https://docs.arc42.org/section-7/[Deployment View] in the arc42 documentatio
 ****
 endif::arc42help[]
 
+Our system infrastructure consists of a single virtual machine running Ubuntu 22.04 LTS. This server hosts a Node.js application inside a Docker container and includes a MongoDB database to store application data. The application also interacts with the Wikidata API to generate dynamic content. Additionally, we use a Large Language Model (LLM) that leverages context from the application to provide user hints.
+
 === Infrastructure Level 1
 
 ifdef::arc42help[]
@@ -60,41 +61,39 @@ For multiple environments or alternative deployments please copy and adapt this 
 ****
 endif::arc42help[]
 
-_**<Overview Diagram>**_
+image::07_overview.drawio.png[]
 
 Motivation::
 
-_<explanation in text form>_
+The choice of this infrastructure is driven by the flexibility of a dockerized microservice architecture. Containerization simplifies deployment and ensures consistency across different environments. Additionally, Docker's platform-agnostic nature allows the application to run on virtually any machine, making scaling and maintenance more efficient.
 
 Quality and/or Performance Features::
 
-_<explanation in text form>_
+- _Scalability_: The system can be easily scaled horizontally by adding more service instances, leveraging the container orchestrator for efficient load distribution.
+
+- _Portability_: The application can be deployed in any environment that supports Docker containers, enabling seamless migration to different cloud providers if needed.
+
+- _Maintainability_: Each container operates independently, allowing for individual updates and maintenance. By replacing containers with new application versions, the system remains up-to-date with minimal disruption.
+
+- _Security_: The system is hosted in a secure environment on the Azure cloud platform. Each container runs in isolation, minimizing the impact of potential security breaches and ensuring high availability.
 
 Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
+|===
+| Component | Description
 
+| User agent
+| The client that accesses the system through the web application.
 
-=== Infrastructure Level 2
+| Virtual Machine
+| The server hosting the system.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you can include the internal structure of (some) infrastructure elements from level 1.
+| Docker
+| Containerization platform used for deploying and managing the system.
 
-Please copy the structure from level 1 for each selected element.
-****
-endif::arc42help[]
+| Wikidata API
+| External service that provides dynamic content for the application.
 
-==== _<Infrastructure Element 1>_
+| Large Language Model (LLM)
+| AI-powered component that analyzes application context to assist users with relevant hints.
 
-_<diagram + explanation>_
-
-==== _<Infrastructure Element 2>_
-
-_<diagram + explanation>_
-
-...
-
-==== _<Infrastructure Element n>_
-
-_<diagram + explanation>_
+|===
