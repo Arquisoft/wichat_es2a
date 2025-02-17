@@ -32,3 +32,18 @@ See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentat
 
 ****
 endif::arc42help[]
+
+
+
+=== Technology decisions
+For the development of the following project we have decided to use the following technologies:
+
+* MongoDB
+* Javascript
+* React
+* Node.js
+* Express
+* Github
+* Docker
+
+
