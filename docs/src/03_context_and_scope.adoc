@@ -51,9 +51,23 @@ The title of the table is the name of your system, the three columns contain the
 ****
 endif::arc42help[]
 
-**<Diagram or Table>**
+**Business Context Table**
 
-**<optionally: Explanation of external domain interfaces>**
+[cols="1,1,1", options="header"]
+|===
+| Communication Partner | Inputs | Outputs
+| Users (Contestants)   | Registration data, game responses, hint requests | Game questions, AI-generated hints, game history
+| System Administrator  | Platform management commands | System status reports, user activity logs
+| Language Model (LLM)  | Image and question data | Interactive hints
+| Wikidata              | Data queries | Images and question-related data
+|===
+
+The business context defines how WIChat interacts with its key stakeholders and systems in terms of domain-specific inputs and outputs. This includes:
+
+- **Users (Contestants)**: Players who interact with the system to answer questions and request hints.
+- **System Administrator**: Responsible for managing and monitoring the platform.
+- **Language Model (LLM)**: Provides AI-generated hints based on user inputs.
+- **Wikidata**: Supplies the data and images used to generate questions.
 
 === Technical Context
 
