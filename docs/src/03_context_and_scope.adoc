@@ -103,4 +103,19 @@ The technical context describes the channels and protocols used by WIChat to com
 - **HTTPS**: Used for secure communication between users, administrators, and the system.
 - **Data Flow**: How inputs and outputs are mapped to specific channels for seamless operation.
 
-**<Mapping Input/Output to Channels>**
+**Mapping Input/Output to Channels**
+
+[cols="1,1,1", options="header"]
+|===
+| Input/Output | Channel/Protocol | Communication Partner
+| Game responses, hint requests | HTTPS | Users (Contestants)
+| Platform management commands | HTTPS | System Administrator
+| Image/question data, hint generation | API | Language Model (LLM)
+| Data queries and responses | API | Wikidata
+|===
+
+This mapping clarifies how specific inputs and outputs are transmitted through the system:
+
+- **Users**: Interact via HTTPS to send and receive game-related data.
+- **Administrators**: Use HTTPS to manage the platform and access logs.
+- **LLM and Wikidata**: Communicate via APIs to process data and generate hints or questions.
