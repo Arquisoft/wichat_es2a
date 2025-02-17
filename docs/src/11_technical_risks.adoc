@@ -3,17 +3,13 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-technical-risks]]
 == Risks and Technical Debts
 
-The technical risks and technical debts section of the document provides an overview of potential challenges and issues
-that may arise during the development and maintenance of the project. These risks and debts need to be carefully considered
-and addressed to ensure the successful completion and long-term viability of the project. The following subsections outline the
-internal and external technical risks, as well as the technical debts that should be taken into account.
+The "Technical Risks and Debts" section outlines potential challenges and issues that may emerge during the project's development and maintenance. 
+These risks and debts must be carefully assessed and addressed to ensure the project's successful completion and long-term sustainability. 
+The subsections below detail both internal and external technical risks, along with the technical debts to consider.
 
 === Technical risks
 
-We consider a technical risk a potential event that can threaten the successful completion of the project, delay timelines, increase costs, or even lead to project failure if not properly managed.
-The following subsections outline the internal and external technical risks that have been identified for the project.
-
-==== Internal
+A technical risk is defined as a potential event that could jeopardize the project's successful completion, cause delays, increase costs, or even result in failure if not effectively managed. The subsections below outline the internal and external technical risks identified for the project.
 
 [options="header",cols="1,3,3"]
 |===
@@ -68,6 +64,3 @@ The following subsections outline the internal and external technical risks that
 === Technical debts
 
 Not yet documented.
-
-
-
