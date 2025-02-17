@@ -87,8 +87,20 @@ together with a mapping table showing the relationships between channels and inp
 ****
 endif::arc42help[]
 
-**<Diagram or Table>**
+**Technical Context Table**
 
-**<optionally: Explanation of technical interfaces>**
+[cols="1,1,1", options="header"]
+|===
+| Communication Partner | Channel/Protocol | Input/Output
+| Users (Contestants)   | HTTPS (Web Browser) | Game interactions, hint requests, and responses
+| System Administrator  | HTTPS (Admin Panel) | Platform management commands and logs
+| Language Model (LLM)  | API (REST/GraphQL) | Image/question data and hint generation
+| Wikidata              | API (SPARQL)      | Data queries and responses
+|===
+
+The technical context describes the channels and protocols used by WIChat to communicate with its external systems and users. Key aspects include:
+
+- **HTTPS**: Used for secure communication between users, administrators, and the system.
+- **Data Flow**: How inputs and outputs are mapped to specific channels for seamless operation.
 
 **<Mapping Input/Output to Channels>**
