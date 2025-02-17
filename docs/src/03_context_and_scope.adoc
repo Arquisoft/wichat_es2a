@@ -51,9 +51,23 @@ The title of the table is the name of your system, the three columns contain the
 ****
 endif::arc42help[]
 
-**<Diagram or Table>**
+**Business Context Table**
 
-**<optionally: Explanation of external domain interfaces>**
+[cols="1,1,1", options="header"]
+|===
+| Communication Partner | Inputs | Outputs
+| Users (Contestants)   | Registration data, game responses, hint requests | Game questions, AI-generated hints, game history
+| System Administrator  | Platform management commands | System status reports, user activity logs
+| Language Model (LLM)  | Image and question data | Interactive hints
+| Wikidata              | Data queries | Images and question-related data
+|===
+
+The business context defines how WIChat interacts with its key stakeholders and systems in terms of domain-specific inputs and outputs. This includes:
+
+- **Users (Contestants)**: Players who interact with the system to answer questions and request hints.
+- **System Administrator**: Responsible for managing and monitoring the platform.
+- **Language Model (LLM)**: Provides AI-generated hints based on user inputs.
+- **Wikidata**: Supplies the data and images used to generate questions.
 
 === Technical Context
 
@@ -73,8 +87,35 @@ together with a mapping table showing the relationships between channels and inp
 ****
 endif::arc42help[]
 
-**<Diagram or Table>**
+**Technical Context Table**
 
-**<optionally: Explanation of technical interfaces>**
+[cols="1,1,1", options="header"]
+|===
+| Communication Partner | Channel/Protocol | Input/Output
+| Users (Contestants)   | HTTPS (Web Browser) | Game interactions, hint requests, and responses
+| System Administrator  | HTTPS (Admin Panel) | Platform management commands and logs
+| Language Model (LLM)  | API (REST/GraphQL) | Image/question data and hint generation
+| Wikidata              | API (SPARQL)      | Data queries and responses
+|===
 
-**<Mapping Input/Output to Channels>**
+The technical context describes the channels and protocols used by WIChat to communicate with its external systems and users. Key aspects include:
+
+- **HTTPS**: Used for secure communication between users, administrators, and the system.
+- **Data Flow**: How inputs and outputs are mapped to specific channels for seamless operation.
+
+**Mapping Input/Output to Channels**
+
+[cols="1,1,1", options="header"]
+|===
+| Input/Output | Channel/Protocol | Communication Partner
+| Game responses, hint requests | HTTPS | Users (Contestants)
+| Platform management commands | HTTPS | System Administrator
+| Image/question data, hint generation | API | Language Model (LLM)
+| Data queries and responses | API | Wikidata
+|===
+
+This mapping clarifies how specific inputs and outputs are transmitted through the system:
+
+- **Users**: Interact via HTTPS to send and receive game-related data.
+- **Administrators**: Use HTTPS to manage the platform and access logs.
+- **LLM and Wikidata**: Communicate via APIs to process data and generate hints or questions.
