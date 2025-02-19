@@ -57,9 +57,9 @@ See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
 ****
 endif::arc42help[]
 
-=== _<Concept 1>_
+=== Domain Model
 
-_<explanation>_
+image::08_domainModel.drawio.png[]
 
 
 
