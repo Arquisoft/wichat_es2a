@@ -46,8 +46,9 @@ Many of them have been based on the project template provided by the teachers, a
 * *Express*: Web framework for Node.js to simplify the implementation of web applications.
 * *MongoDB*: NoSQL-like database, which stores data in a JSON-like format and favours application scalability and flexibility when it comes to handling unstructured data.
 * *GitHub*: Web application used in software development that allows code to be written, stored, organised by version and collaborated on by different members of a team using Git.
+* *GitHub Issues*: We use GitHub Issues to create the mentioned tasks and assign them to different team members. Additionally, we use it as a platform to discuss important decisions related to the project.
 * *Docker*: Tool that allows you to create, deploy and run applications in containers, testing that the application works in different environments.
-
+* *Asciidoc*: We have chosen Asciidoc as the primary documentation tool. This decision is largely due to the ease and intuitiveness of deploying documentation using the tools provided by the Asciidoc ecosystem.
 
 
 === Top-level Decomposition
