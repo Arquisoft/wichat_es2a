@@ -45,4 +45,7 @@ endif::arc42help[]
 
 image::diagrama_runview_signup.png["Signup Diagram", align="center"]
 
+=== Log In
+* The login diagram in an application describes the flow that a user follows to access their account. It begins with the entry of data (such as email and password), followed by the validation of the information. If the data is correct, the user is redirected to the application's home page. This process ensures security and accuracy in account access.
 
+image::diagrama_runview_login.png["Login Diagram", align="center"]
