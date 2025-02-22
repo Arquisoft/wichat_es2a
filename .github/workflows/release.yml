@@ -140,6 +140,22 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: gatewayservice
+   # deploy:
+  #   name: Deploy over SSH
+  #   runs-on: ubuntu-latest
+  #   needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp]
+  #   steps:
+  #   - name: Deploy over SSH
+  #     uses: fifsky/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.DEPLOY_HOST }}
+  #       user: ${{ secrets.DEPLOY_USER }}
+  #       key: ${{ secrets.DEPLOY_KEY }}
+  #       command: |
+  #         wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
+  #         docker compose --profile prod down
+  #         docker compose --profile prod up -d --pull always
+
    deploy:
      name: Deploy over SSH
      runs-on: ubuntu-latest
@@ -152,6 +168,6 @@ jobs:
          user: ${{ secrets.DEPLOY_USER }}
          key: ${{ secrets.DEPLOY_KEY }}
          command: |
-           wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
+           wget https://raw.githubusercontent.com/arquisoft/wichat_0/master/docker-compose.yml -O docker-compose.yml
            docker compose --profile prod down
            docker compose --profile prod up -d --pull always
