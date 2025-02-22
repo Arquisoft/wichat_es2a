@@ -82,3 +82,34 @@ Finally, the application will be made responsive to facilitate its use on differ
 An example of this will be some of the SOLID principles previously studied, such as the Single responsibility principle or the Open/closed principle.
 
 |===
+
+
+=== Organizational decisions
+
+|===
+
+| Organizational goal | Tool chosen | Description
+
+| *Task distribution* 
+| *GitHub Issues*
+| It will be used to assign each of the tasks into which the project is divided to a member of the team.
+These tasks will be distributed equally among the different members of the team, trying to adjust to the knowledge and tastes of each one.
+
+| *Changes approval*
+| *Pull requests* 
+| Once each task is finished, a pull request will be made so that at least one component of the team other than the developer of the task will review it before merging it to the main branch of the project.
+
+| *Project timeline*
+| *GitHub Projects*
+| This will be used to track the development of the project and be able to see which parts are completed and which are not, as well as which parts are currently being worked on.
+
+| *Communication*
+| *Weekly meetings*
+| Meetings will be held on a weekly basis to see what is the status of the project, what has been done and what remains to be done.
+
+| *Documentation*
+| *AsciiDoc*
+| We have chosen Asciidoc as the primary documentation tool.
+This decision is largely due to the ease and intuitiveness of deploying documentation using the tools provided by the Asciidoc ecosystem.
+
+|===
