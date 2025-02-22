@@ -11,7 +11,7 @@ image::08_domainModel.drawio.png[]
 
 === User experience
 
-The app is designed as a quiz game that you have a variety of questions across different categories, each with multiple answer choices where only one is correct. Additionally, users can request hints from a LLM, enhancing their learning experience while playing.
+The app is designed as a quiz game that you have a variety of questions across different categories, each with multiple answer choices where only one is correct, the questions will focus on guessing a location based on a displayed photo. Additionally, users can request hints from a LLM, enhancing their learning experience while playing.
 
 === Usability
 
@@ -26,7 +26,7 @@ Since we prioritize the security of user information, it is a key focus for our 
 
 To ensure the app functions correctly, we have chosen to implement unit tests and conduct manual testing. Additionally, we will perform the usability tests mentioned earlier to further enhance the user experience.
 
-=== Testing
+=== Maintainability
 
 We have committed to following best practices to ensure the app is easy to maintain and update. We aim to simplify future enhancements and ensure we can work efficiently.
 
