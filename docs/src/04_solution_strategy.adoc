@@ -46,12 +46,10 @@ Many of them have been based on the project template provided by the teachers, a
 * *Express*: Web framework for Node.js to simplify the implementation of web applications.
 * *MongoDB*: NoSQL-like database, which stores data in a JSON-like format and favours application scalability and flexibility when it comes to handling unstructured data.
 * *GitHub*: Web application used in software development that allows code to be written, stored, organised by version and collaborated on by different members of a team using Git.
-* *GitHub Issues*: We use GitHub Issues to create the mentioned tasks and assign them to different team members. Additionally, we use it as a platform to discuss important decisions related to the project.
 * *Docker*: Tool that allows you to create, deploy and run applications in containers, testing that the application works in different environments.
-* *Asciidoc*: We have chosen Asciidoc as the primary documentation tool. This decision is largely due to the ease and intuitiveness of deploying documentation using the tools provided by the Asciidoc ecosystem.
 
 
-=== Top-level Decomposition
+=== Top-level decomposition of the system
 
 An architecture using microservices has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:
 
@@ -66,3 +64,21 @@ An architecture using microservices has been chosen for this project, so that ea
 * *Service to export user information*: It will allow access to user information stored in the system through an API.
 
 * *Service to export the information of the questions*: It will allow access to the information of the questions through an API.
+
+
+=== Decisions taken to achieve quality goals
+
+|===
+
+| Quality goal | Decision made
+
+|*Usability*
+|To ensure the usability of the application, an intuitive and simple interface will be designed so that the user has no doubts about what action to take at any moment.
+In addition, a sufficiently legible font with an appropriate size and weight will be used.
+Finally, the application will be made responsive to facilitate its use on different devices.
+
+|*Maintainability*
+|In order to facilitate the maintainability and expansion of the application, we will try to follow the good practices for software development acquired in other previous subjects of the degree.
+An example of this will be some of the SOLID principles previously studied, such as the Single responsibility principle or the Open/closed principle.
+
+|===
