@@ -3,72 +3,31 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-concepts]]
 == Cross-cutting Concepts
 
+=== Domain Model
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Content
-This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
-Such concepts are often related to multiple building blocks.
-They can include many different topics, such as
-
-* models, especially domain models
-* architecture or design patterns
-* rules for using specific technology
-* principal, often technical decisions of an overarching (= cross-cutting) nature
-* implementation rules
-
-
-.Motivation
-Concepts form the basis for _conceptual integrity_ (consistency, homogeneity) of the architecture. 
-Thus, they are an important contribution to achieve inner qualities of your system.
-
-Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety. 
-
-
-.Form
-The form can be varied:
-
-* concept papers with any kind of structure
-* cross-cutting model excerpts or scenarios using notations of the architecture views
-* sample implementations, especially for technical concepts
-* reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)
-
-.Structure
-A potential (but not mandatory) structure for this section could be:
-
-* Domain concepts
-* User Experience concepts (UX)
-* Safety and security concepts
-* Architecture and design patterns
-* "Under-the-hood"
-* development concepts
-* operational concepts
-
-Note: it might be difficult to assign individual concepts to one specific topic
-on this list.
-
-image::08-concepts-EN.drawio.png["Possible topics for crosscutting concepts"]
-
-
-.Further Information
-
-See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
-****
-endif::arc42help[]
-
-=== _<Concept 1>_
-
-_<explanation>_
+image::08_domainModel.drawio.png[]
 
 
 
-=== _<Concept 2>_
+=== User experience
 
-_<explanation>_
+The app is designed as a quiz game that you have a variety of questions across different categories, each with multiple answer choices where only one is correct, the questions will focus on guessing a location based on a displayed photo. Additionally, users can request hints from a LLM, enhancing their learning experience while playing.
 
-...
+=== Usability
 
-=== _<Concept n>_
+Usability is a critical factor for any application, as it directly influences how efficiently users can interact with it.
+To ensure our app’s usability, we will adhere to design standards and conduct testing with a diverse group of users, who will provide feedback on how intuitive the interface feels.
 
-_<explanation>_
+=== Security
+
+Since we prioritize the security of user information, it is a key focus for our app.We will encrypt user passwords and limit the amount of data we collect from them. For LLM interactions we ensure that no personally identifiable information is shared with external services.
+
+=== Testing
+
+To ensure the app functions correctly, we have chosen to implement unit tests and conduct manual testing. Additionally, we will perform the usability tests mentioned earlier to further enhance the user experience.
+
+=== Maintainability
+
+We have committed to following best practices to ensure the app is easy to maintain and update. We aim to simplify future enhancements and ensure we can work efficiently.
+
+
