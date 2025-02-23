@@ -1,5 +1,16 @@
 # wichat_es2a
 
+## Development Team 👥💻🛠️
+| 👤 Name | 📧 Email | 🐱 GitHub |
+| :---: | :---: | :---: | :---: |
+| Natalia Blanco Agudín | UO295340@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/NataliaBlancoAgudin) |
+| David Covián Gómez | UO295168@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/DavidCG-27) |
+| Darío Cristóbal González | UO294401@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/daariio92) |
+| Hugo Fernández Rodríguez | UO289157@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/hugo-fedez) |
+| Marcos Llanos Vega | UO218982@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/softwaremarcos) |
+| Hugo Prendes Menéndez | UO288294@uniovi.es | [![GitHub](https://img.shields.io/badge/GitHub-algarfer-brightgreen)](https://github.com/prendess) |
+
+
 [![Actions Status](https://github.com/arquisoft/wichat_es2a/workflows/CI%20for%20wichat_es2a/badge.svg)](https://github.com/arquisoft/wichat_es2a/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es2a&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es2a)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es2a&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es2a)
