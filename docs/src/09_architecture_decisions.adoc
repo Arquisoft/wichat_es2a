@@ -3,6 +3,9 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-design-decisions]]
 = Architecture Decision Records (ADRs)
 
+== Inherited ADRs
+Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
+
 == ADR 01: Mistral 7B as LLM Service
 *_Date: 2025-02-17_*
 
@@ -39,7 +42,7 @@ We need to establish a way to work as a team using Git, and determine the use to
 Gitflow uses branches such as master, develop and feature, being more suitable for large projects and long cycles, with less frequent integration. Trunk-Based Development focuses on integrating changes quickly into a single main branch, promoting continuous delivery and reducing conflicts, making it ideal for agile teams and fast cycles. Gitflow is more structured, while TBD is more agile and simple. 
 
 === Decision
-We opted for TBD as our approach to project development.
+Decision pending.
 
 === Consequences
-An agile approach with a single main branch will be followed during the development process.
+The chosen option will be the way to work from now on in the project.
