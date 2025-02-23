@@ -39,29 +39,13 @@ See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
 ****
 endif::arc42help[]
 
-=== <Runtime Scenario 1>
+=== Sign Up
 
+* The registration diagram in an application describes the flow that a user follows to create an account. It begins with the entry of data (such as name, email and password), followed by the validation of the information. If the data is correct, it is stored in a database. Finally, the user can log in and access the application. This process ensures security and accuracy in account creation.
 
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
+image::diagrama_runview_signup.png["Signup Diagram", align="center"]
 
-It is possible to use a sequence diagram:
+=== Log In
+* The login diagram in an application describes the flow that a user follows to access their account. It begins with the entry of data (such as email and password), followed by the validation of the information. If the data is correct, the user is redirected to the application's home page. This process ensures security and accuracy in account access.
 
-[plantuml,"Sequence diagram",png]
-----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
-----
-
-=== <Runtime Scenario 2>
-
-=== ...
-
-=== <Runtime Scenario n>
+image::diagrama_runview_login.png["Login Diagram", align="center"]
