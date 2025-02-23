@@ -4,37 +4,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 == Solution Strategy
 
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-A short summary and explanation of the fundamental decisions and solution strategies, that shape system architecture. It includes
-
-* technology decisions
-* decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern
-* decisions on how to achieve key quality goals
-* relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.
-
-.Motivation
-These decisions form the cornerstones for your architecture. They are the foundation for many other detailed decisions or implementation rules.
-
-.Form
-Keep the explanations of such key decisions short.
-
-Motivate what was decided and why it was decided that way,
-based upon problem statement, quality goals and key constraints.
-Refer to details in the following sections.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
-
-****
-endif::arc42help[]
-
-
-
 === Technology decisions
 
 For the development of the following project we have decided to use the following technologies.
@@ -47,6 +16,8 @@ Many of them have been based on the project template provided by the teachers, a
 * *MongoDB*: NoSQL-like database, which stores data in a JSON-like format and favours application scalability and flexibility when it comes to handling unstructured data.
 * *GitHub*: Web application used in software development that allows code to be written, stored, organised by version and collaborated on by different members of a team using Git.
 * *Docker*: Tool that allows you to create, deploy and run applications in containers, testing that the application works in different environments.
+* *Mistral / Qwen*: One of this AI tools to implement the LLM for the chat service in the game.
+
 
 
 === Top-level decomposition of the system
@@ -68,9 +39,10 @@ An architecture using microservices has been chosen for this project, so that ea
 
 === Decisions taken to achieve quality goals
 
+[options="header"]
 |===
 
-| Quality goal | Decision made
+| **Quality goal** | **Decision made**
 
 |*Usability*
 |To ensure the usability of the application, an intuitive and simple interface will be designed so that the user has no doubts about what action to take at any moment.
@@ -86,9 +58,10 @@ An example of this will be some of the SOLID principles previously studied, such
 
 === Organizational decisions
 
+[options="header"]
 |===
 
-| Organizational goal | Tool chosen | Description
+| **Organizational goal** | **Tool chosen** | **Description**
 
 | *Task distribution* 
 | *GitHub Issues*
