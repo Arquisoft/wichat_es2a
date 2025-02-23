@@ -48,7 +48,7 @@ Important Interfaces::
 |The user interacts with the Browser. The Browser is used to send answers and requests hints.
 
 |**HTTP/REST Inteface** (Browser ↔ WIChat)
-|The browser communicates with de WIChat system using HTPP or REST requests to send answer and retrieve
+|The browser communicates with de WIChat system using HTTP or REST requests to send answer and retrieve
 game information
 
 |**Hints Requests** (Browser ↔ LLM)
