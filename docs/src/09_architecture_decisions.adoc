@@ -1,37 +1,48 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-design-decisions]]
-== Architecture Decisions
+= Architecture Decision Records (ADRs)
 
+== Inherited ADRs
+Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Important, expensive, large scale or risky architecture decisions including rationales.
-With "decisions" we mean selecting one alternative based on given criteria.
+== ADR 01: Mistral 7B as LLM Service
+*_Date: 2025-02-17_*
 
-Please use your judgement to decide whether an architectural decision should be documented
-here in this central section or whether you better document it locally
-(e.g. within the white box template of one building block).
+image::MistralAI.png["Mistral", align="center"]
 
-Avoid redundancy. 
-Refer to section 4, where you already captured the most important decisions of your architecture.
+=== Status
+Accepted.
 
-.Motivation
-Stakeholders of your system should be able to comprehend and retrace your decisions.
+=== Context
+The LLM is the main feature added to the system, and is responsible for generating the hints the user will have available during each game in relation to the questions asked. An LLM service is required to provide the necessary functionality, and Mistral 7B, LLM developed by Mistral AI, shows the following aspects to consider as a potential candidate:
 
-.Form
-Various options:
+* Efficiency in Size and Performance: Mistral 7B is a relatively smaller model compared to others, but still provides strong performance (and even faster response times) in Natural Language Processing tasks, which makes it more manageable and a perfect choice for our system, given its requirements.
+* Open-Source Model: Mistral 7B is an open-source model, which allows us to access, modify and use it freely, without any licensing issues or commercial restrictions.
+* Not ideal for complex tasks: Its smaller size makes it less capable of capturing long or highly complex contexts as well as larger models, but our system does not require such complexity.
+* Fine-Tuning Required: The model may require fine-tuning for the specific aspects of our application.
 
-* ADR (https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions[Documenting Architecture Decisions]) for every important decision
-* List or table, ordered by importance and consequences or:
-* more detailed in form of separate sections per decision
+=== Decision
+The Mistral 7B LLM Service will be used as the LLM service for the system.
 
-.Further Information
+=== Consequences
+Mistral 7B will be implemented in our application as the external LLM hint generator.
 
-See https://docs.arc42.org/section-9/[Architecture Decisions] in the arc42 documentation.
-There you will find links and examples about ADR.
+== ADR 02: Trunk-Based Development
+*_Date: 2025-02-17_*
 
-****
-endif::arc42help[]
+image::GITFLOWvsTBD.jpg["Mistral", align="center"]
+
+=== Status
+Accepted.
+
+=== Context
+We need to establish a way to work as a team using Git, and determine the use to be made of branches. Among all possible approaches, two stand out: Gitflow and Trunk-Based Development.
+
+Gitflow uses branches such as master, develop and feature, being more suitable for large projects and long cycles, with less frequent integration. Trunk-Based Development focuses on integrating changes quickly into a single main branch, promoting continuous delivery and reducing conflicts, making it ideal for agile teams and fast cycles. Gitflow is more structured, while TBD is more agile and simple. 
+
+=== Decision
+Decision pending.
+
+=== Consequences
+The chosen option will be the way to work from now on in the project.
