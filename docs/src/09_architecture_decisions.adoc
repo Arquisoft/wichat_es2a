@@ -1,20 +1,20 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-design-decisions]]
-= Architecture Decision Records (ADRs)
+== Architecture Decision Records (ADRs)
 
-== Inherited ADRs
+=== Inherited ADRs
 Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
 
-== ADR 01: Mistral 7B as LLM Service
+=== ADR 01: Mistral 7B as LLM Service
 *_Date: 2025-02-17_*
 
 image::MistralAI.png["Mistral", align="center"]
 
-=== Status
+==== Status
 Accepted.
 
-=== Context
+==== Context
 The LLM is the main feature added to the system, and is responsible for generating the hints the user will have available during each game in relation to the questions asked. An LLM service is required to provide the necessary functionality, and Mistral 7B, LLM developed by Mistral AI, shows the following aspects to consider as a potential candidate:
 
 * Efficiency in Size and Performance: Mistral 7B is a relatively smaller model compared to others, but still provides strong performance (and even faster response times) in Natural Language Processing tasks, which makes it more manageable and a perfect choice for our system, given its requirements.
@@ -22,27 +22,27 @@ The LLM is the main feature added to the system, and is responsible for generati
 * Not ideal for complex tasks: Its smaller size makes it less capable of capturing long or highly complex contexts as well as larger models, but our system does not require such complexity.
 * Fine-Tuning Required: The model may require fine-tuning for the specific aspects of our application.
 
-=== Decision
+==== Decision
 The Mistral 7B LLM Service will be used as the LLM service for the system.
 
-=== Consequences
+==== Consequences
 Mistral 7B will be implemented in our application as the external LLM hint generator.
 
-== ADR 02: Trunk-Based Development
+=== ADR 02: Gitflow vs Trunk-Based Development
 *_Date: 2025-02-17_*
 
 image::GITFLOWvsTBD.jpg["Mistral", align="center"]
 
-=== Status
+==== Status
 Accepted.
 
-=== Context
+==== Context
 We need to establish a way to work as a team using Git, and determine the use to be made of branches. Among all possible approaches, two stand out: Gitflow and Trunk-Based Development.
 
 Gitflow uses branches such as master, develop and feature, being more suitable for large projects and long cycles, with less frequent integration. Trunk-Based Development focuses on integrating changes quickly into a single main branch, promoting continuous delivery and reducing conflicts, making it ideal for agile teams and fast cycles. Gitflow is more structured, while TBD is more agile and simple. 
 
-=== Decision
+==== Decision
 Decision pending.
 
-=== Consequences
+==== Consequences
 The chosen option will be the way to work from now on in the project.
