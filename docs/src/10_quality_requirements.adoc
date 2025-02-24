@@ -23,50 +23,61 @@ image::QualityRequirements.png["Quality Requirements", align="center"]
 === Quality Scenarios
 
 |===
-| Quality Requirement | Scenario | System Response
+| Quality Requirement | Scenario | System Response | Priority
 
 | Functionality
 | The user starts a new game
 | The system will provide a question, set a time limit and initialize the scoring system.
+| High
 
 | Usability
 | A new user opens the game for the first time
 | The system will be easy to understand at first sight, and prepared to answer any questions the user might have about its use. It will also be able for people with various disabilities to use it.
+| High
 
 | Performance
 | A user answers a question
 | The system will provide instant feedback (right or wrong) and move to the next question without any delay.
-
-| Content
-| A user starts a game
-| Different categories and difficulty levels will be available.
+| High
 
 | Security
 | A user logs in
 | All data is safely stored and encrypted, with no vulnerabilities.
-
-| Compatibility
-| A user opens the game in a web browser
-| The game will work properly independently of the browser used.
+| High
 
 | Testing
 | A user plays the game
 | No bugs will be encountered during the game.
+| High
 
-| Localization & Internationalization
-| A user changes the language
-| The system will switch to the selected language.
+| Compatibility
+| A user opens the game in a web browser
+| The game will work properly independently of the browser used.
+| High
 
-| Extensibility
+| Content
+| A user starts a game
+| Different categories and difficulty levels will be available.
+| Medium
+
+| Scalability
 | A large number of users play the game
 | The system will be able to handle the load without any performance issues.
+| Medium
 
 | Maintainability
 | A developer needs to update the system
 | The code will be well-documented and easy to understand.
+| Medium
 
 | Extensibility
 | A developer wants to add a new feature
 | The system architecture will allow for easy extension.
+| Medium
+
+| Localization & Internationalization
+| A user changes the language
+| The system will switch to the selected language.
+| Low
 
 |===
