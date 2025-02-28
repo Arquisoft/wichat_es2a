@@ -15,9 +15,6 @@ WIChat is a course project for the subject of Software Architecture of the Softw
 
 This project consists of the design and implementation of a web application consisting of a quiz game, similar to the quiz show “Saber y Ganar”, broadcasted continuously by TVE since 1997 and presented by Jordi Hurtado.
 
-.Jordi Hurtado presenting "Saber y Ganar". Source: "www.eldiario.es".
-image::saberyganar.jpg[Jordi Hurtado, 1600, 900, align="center"]
-
 The game will consist of the user having to guess the location of a photo shown by the application, as well as answer questions related to it. However, he will not be alone in this task, since he will have the help of a chat that will give him clues. Behind this chat, an LLM will be hidden, which will be in charge of generating these clues.
 
 The objective of this game will be to expand the users' knowledge and memory, while they have a good time. In the meantime, its main functionalities will be:
