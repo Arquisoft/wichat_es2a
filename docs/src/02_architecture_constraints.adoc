@@ -18,14 +18,35 @@ The following outlines the main constraints and conventions that will guide the 
 |===
 | **Constraint** | **Explanation**
 
-|*GIT*
+|*GIT & GitHub*
 | The use of GIT will be mandatory for version control, and GitHub will be the platform we use to store the code. 
 This system will allow parallel work by using branches for developing new features or fixing bugs. 
 Additionally, we will use Pull Requests for code review before final integration.
+GitHub Actions may be used to automate testing deployment.
 
 |*Docker*
 | Docker will be used to containerize the application in both development and production environments for web deployment, 
 ensuring consistent environment configurations and simplifying application maintenance across different platforms.
+
+|*MongoDB*
+| MongoDB will be used as the primary database to store user data, questions, and hints.
+Its flexible schema will allow efficient handling of dynamic content and scalability for future improvements.
+
+|*React*
+| The frontend will be developed using React to create a dynamic and responsive user interface.  
+This framework will enable a component-based architecture, improving maintainability and reusability.
+
+|*Node.js*
+| Execution environment using JavaScript for server-side operations, rather than client-side.  
+It provides an event-driven, non-blocking I/O model, making it lightweight and efficient.
+
+|*Express*
+| Web framework for Node.js designed to simplify the implementation of web applications.  
+It offers a minimal and flexible structure for handling routes, middleware, and API endpoints.
+
+|*JavaScript*
+| JavaScript will be the main programming language for both the frontend (React) and backend (Node.js & Express),  
+ensuring a unified development environment and reducing context switching between technologies.
 
 |*Wikidata*
 | Wikidata will be the primary source for generating images for the questions and hints.
