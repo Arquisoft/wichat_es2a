@@ -5,7 +5,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Domain Model
 
-image::08_domainModel.drawio.png[]
+image::08_domainModel.drawio.svg[]
 
 
 
