@@ -10,7 +10,7 @@ ifdef::arc42help[]
 === Whitebox Overall System
 
 .Building Block View.
-image::Building_block_view.png["Building Block View"]
+image::Building_Block_View.svg["Building Block View"]
 
 Motivation::
 
