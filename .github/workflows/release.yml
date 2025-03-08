@@ -140,7 +140,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: gatewayservice
-   deploy:
+  deploy:
      name: Deploy over SSH
      runs-on: ubuntu-latest
      needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp]
