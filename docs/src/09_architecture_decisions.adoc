@@ -42,7 +42,26 @@ We need to establish a way to work as a team using Git, and determine the use to
 Gitflow uses branches such as master, develop and feature, being more suitable for large projects and long cycles, with less frequent integration. Trunk-Based Development focuses on integrating changes quickly into a single main branch, promoting continuous delivery and reducing conflicts, making it ideal for agile teams and fast cycles. Gitflow is more structured, while TBD is more agile and simple. 
 
 ==== Decision
+TBD chosen as our git strategy for the project.
+
+==== Consequences
+The chosen option will be the way to work from now on in the project (TBD).
+
+=== ADR 03: Use of Neobrutalism components
+*_Date: 2025-03-13_*
+
+image::neobrutalism.png["Neobrutalism Components", align="center"]
+
+==== Status
+Proposed.
+
+==== Context
+React components are essentially the building blocks of a React application. They are the visual elements that make up the user interface of the application. https://www.neobrutalism.dev/[Neobrutalism] components are a collection of neobrutalism-styled React Tailwind components. They are a mix of regular brutalism in web design and more modern typography, illustration, and animation standards.
+
+As part of our design decisions, we need to decide whether to use Neobrutalism components in our project.
+
+==== Decision
 Decision pending.
 
 ==== Consequences
-The chosen option will be the way to work from now on in the project.
+Neobrutalism components will be used in our project.
