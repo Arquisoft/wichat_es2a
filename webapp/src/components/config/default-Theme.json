@@ -23,7 +23,7 @@
     },
   
     "typography": {
-      "fontFamily": "Verdana, sans-serif",
+      "fontFamily": "'Verdana, sans-serif'",
       "fontSize": 16
     }
   }
