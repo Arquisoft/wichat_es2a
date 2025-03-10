@@ -65,17 +65,17 @@ describe('User Service', () => {
       );
     });
   
-    it('should get a specific user on GET /getUser/:username', async () => {
+    it('should get a specific user on GET /user/:username', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       await User.create({ username: 'specificUser', password: hashedPassword });
   
-      const response = await request(app).get('/getUser/specificUser');
+      const response = await request(app).get('/user/specificUser');
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('username', 'specificUser');
     });
   
-    it('should return 404 if user not found on GET /getUser/:username', async () => {
-      const response = await request(app).get('/getUser/nonexistentUser');
+    it('should return 404 if user not found on GET /user/:username', async () => {
+      const response = await request(app).get('/user/nonexistentUser');
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error', 'Usuario no encontrado');
    });
