@@ -8,6 +8,9 @@ const questionSchema = new mongoose.Schema(
         answer: {
             type: String, required: true,
         },
+        image: {
+            type: String, required: true,
+        },
     },
 );
 
