@@ -13,7 +13,7 @@ Since we start from an initial project that is already functional and that we wi
 image::MistralAI.png["Mistral", align="center"]
 
 ==== Status
-Deprecated. See <<ADR-04>>.
+[.red]#Deprecated. See <<ADR-04>>.#
 
 ==== Context
 The LLM is the main feature added to the system, and is responsible for generating the hints the user will have available during each game in relation to the questions asked. An LLM service is required to provide the necessary functionality, and Mistral 7B, LLM developed by Mistral AI, shows the following aspects to consider as a potential candidate:
@@ -26,12 +26,12 @@ The LLM is the main feature added to the system, and is responsible for generati
 ==== Decision
 The Mistral 7B LLM Service will be used as the LLM service for the system.
 
-Deprecated. See <<ADR-04>>.
+[.red]#Deprecated. See <<ADR-04>>.#
 
 ==== Consequences
 Mistral 7B will be implemented in our application as the external LLM hint generator.
 
-Deprecated. See <<ADR-04>>.
+[.red]#Deprecated. See <<ADR-04>>.#
 
 [[ADR-02]]
 === ADR 02: Gitflow vs Trunk-Based Development
