@@ -77,7 +77,7 @@ describe('User Service', () => {
     it('should return 404 if user not found on GET /user/:username', async () => {
       const response = await request(app).get('/user/nonexistentUser');
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('error', 'Usuario no encontrado');
+      expect(response.body).toHaveProperty('error', 'User not found');
    });
    
 });
