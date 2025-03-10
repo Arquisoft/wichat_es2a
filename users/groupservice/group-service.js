@@ -25,6 +25,34 @@ function validateRequiredFields(req, requiredFields) {
       }
     }
 }
+app.post('/createGroup', async (req, res) => {
+  try {
+      validateRequiredFields(req, ['groupName', 'username']);
+
+      const { groupName, username } = req.body;
+
+      const user = await User.findOne({ username });
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      const existingGroup = await Group.findOne({ name: groupName });
+      if (existingGroup) {
+          return res.status(400).json({ error: 'Group name already taken' });
+      }
+
+      const newGroup = new Group({
+          name: groupName,
+          users: [{ user: user._id, role: 'admin' }]
+      });
+
+      await newGroup.save();
+
+      res.json(newGroup);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
 
 app.post('/addUserToGroup', async (req, res) => {
   try {
