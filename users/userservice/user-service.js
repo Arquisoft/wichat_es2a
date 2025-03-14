@@ -75,27 +75,7 @@ app.post('/addFriend', async(req,res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
 });
-
-app.post('/listFriends', async (req, res) => {
-  try {
-      validateRequiredFields(req, ['username']);
-
-      const { username } = req.body;
-      const user = await User.findOne({ username }).populate('friends', 'username');
-
-      if (!user) {
-          return res.status(404).json({ error: "Usuario no encontrado" });
-      }
-
-      res.status(200).json({ friends: user.friends || [] }); 
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
-
-
 
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
