@@ -47,7 +47,7 @@ describe('User Service', () => {
   });
 
     it('should add a new friend successfully', async () => {
-      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+      var TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
 
       const newUser = { username: 'testuser', password: TEST_PASSWORD };
       TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
