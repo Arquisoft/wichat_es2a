@@ -144,4 +144,40 @@ describe('User Service', () => {
       ])
     );
   });
+
+    });
+
+    it('should list users on GET /listUsers', async () => {
+      await User.create([
+        { username: 'user1', password: await bcrypt.hash('pass1', 10) },
+        { username: 'user2', password: await bcrypt.hash('pass2', 10) },
+      ]);
+  
+      const response = await request(app).get('/listUsers');
+      expect(response.status).toBe(200);
+      expect(response.body).toBeInstanceOf(Array);
+      expect(response.body.length).toBe(2);
+      expect(response.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ username: 'user1' }),
+          expect.objectContaining({ username: 'user2' }),
+        ])
+      );
+    });
+  
+    it('should get a specific user on GET /user/:username', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      await User.create({ username: 'specificUser', password: hashedPassword });
+  
+      const response = await request(app).get('/user/specificUser');
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('username', 'specificUser');
+    });
+  
+    it('should return 404 if user not found on GET /user/:username', async () => {
+      const response = await request(app).get('/user/nonexistentUser');
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'User not found');
+   });
+   
 });
