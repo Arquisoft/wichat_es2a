@@ -47,8 +47,11 @@ describe('User Service', () => {
   });
 
     it('should add a new friend successfully', async () => {
-      const newUser = { username: 'testuser', password: 'testpassword' };
-      const newUserFriend = { username: 'testFriend', password: 'testpassword1' };
+      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+
+      const newUser = { username: 'testuser', password: TEST_PASSWORD };
+      TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+      const newUserFriend = { username: 'testFriend', password: TEST_PASSWORD };
 
       await request(app).post('/adduser').send(newUser);
       await request(app).post('/adduser').send(newUserFriend);
@@ -68,7 +71,9 @@ describe('User Service', () => {
     });
 
     it('should not allow adding oneself as a friend', async () => {
-      const newUser = { username: 'testuser', password: 'testpassword' };
+      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+
+      const newUser = { username: 'testuser', password: TEST_PASSWORD };
       await request(app).post('/adduser').send(newUser);
 
       const response = await request(app)
@@ -80,7 +85,9 @@ describe('User Service', () => {
     });
 
     it('should return 404 if the friend does not exist', async () => {
-      const newUser = { username: 'testuser', password: 'testpassword' };
+      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+
+      const newUser = { username: 'testuser', password: TEST_PASSWORD };
       await request(app).post('/adduser').send(newUser);
 
       const response = await request(app)
@@ -92,7 +99,9 @@ describe('User Service', () => {
     });
 
     it('should not add an existing friend again', async () => {
-      const newUser = { username: 'testuser', password: 'testpassword' };
+      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
+
+      const newUser = { username: 'testuser', password: TEST_PASSWORD };
       const newUserFriend = { username: 'testFriend', password: 'testpassword1' };
 
       await request(app).post('/adduser').send(newUser);

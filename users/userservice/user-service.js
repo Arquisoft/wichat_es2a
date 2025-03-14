@@ -79,20 +79,26 @@ app.post('/addFriend', async(req,res) => {
 
 app.get('/listFriends', async (req, res) => {
   try {
-      validateRequiredFields(req.query, ['username']);  
+    validateRequiredFields(req.query, ['username']);
 
-      const { username } = req.query;
-      const user = await User.findOne({ username }).populate('friends', 'username');
+    const username = req.query.username;
 
-      if (!user) {
-          return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+    if (typeof username !== 'string' || username.trim() === '') {
+      return res.status(400).json({ error: 'Nombre de usuario inválido' });
+    }
 
-      res.status(200).json({ friends: user.friends });
+    const user = await User.findOne({ username: { $eq: username } }).populate('friends', 'username');
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ friends: user.friends });
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
+
 app.get('/listUsers', async (req, res) => {
     try {
         const users = await User.find({}, 'username friends'); // Return only the username and friends fields (password isn't included)
