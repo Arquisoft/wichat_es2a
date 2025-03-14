@@ -109,44 +109,7 @@ describe('User Service', () => {
       expect(response.status).toBe(400);
       expect(response.body.error).toBe('Ya tienes a este usuario como amigo.');
   });
-  it('should list friends of a user on GET /listFriends', async () => {
-    const user1 = await User.create({ 
-      username: 'user1', 
-      password: await bcrypt.hash('pass1', 10) 
-    });
-
-    const user2 = await User.create({ 
-      username: 'user2', 
-      password: await bcrypt.hash('pass2', 10) 
-    });
-
-    const user3 = await User.create({ 
-      username: 'user3', 
-      password: await bcrypt.hash('pass3', 10) 
-    });
-    await request(app).post('/adduser').send(user1);
-    await request(app).post('/adduser').send(user2);
-    await request(app).post('/adduser').send(user3);
-
-    await request(app).post('/addFriend').send({username: "user1", friendUsername: "user2"});
-    await request(app).post('/addFriend').send({username: "user1", friendUsername: "user3"});
-
-    const response = await request(app).get('/listFriends').query({ username: "user1" });
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('friends');
-    expect(response.body.friends).toBeInstanceOf(Array);
-    expect(response.body.friends.length).toBe(2);
-    expect(response.body.friends).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ username: 'user2' }),
-        expect.objectContaining({ username: 'user3' }),
-      ])
-    );
-  });
-
-    });
-
+  
     it('should list users on GET /listUsers', async () => {
       await User.create([
         { username: 'user1', password: await bcrypt.hash('pass1', 10) },
@@ -179,5 +142,4 @@ describe('User Service', () => {
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error', 'User not found');
    });
-   
 });

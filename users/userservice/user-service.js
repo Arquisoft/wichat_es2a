@@ -77,7 +77,22 @@ app.post('/addFriend', async(req,res) => {
   }
 });
 
+app.get('/listFriends', async (req, res) => {
+  try {
+      validateRequiredFields(req.query, ['username']);  
 
+      const { username } = req.query;
+      const user = await User.findOne({ username }).populate('friends', 'username');
+
+      if (!user) {
+          return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      res.status(200).json({ friends: user.friends });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 app.get('/listUsers', async (req, res) => {
     try {
         const users = await User.find({}, 'username friends'); // Return only the username and friends fields (password isn't included)
