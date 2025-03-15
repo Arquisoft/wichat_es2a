@@ -47,14 +47,10 @@ describe('User Service', () => {
   });
 
     it('should add a new friend successfully', async () => {
-      var TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
-
-      const newUser = { username: 'testuser', password: TEST_PASSWORD };
-      TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
-      const newUserFriend = { username: 'testFriend', password: TEST_PASSWORD };
-
-      await request(app).post('/adduser').send(newUser);
-      await request(app).post('/adduser').send(newUserFriend);
+      await User.create([
+        { username: 'testuser', password: await bcrypt.hash('pass1', 10) },
+        { username: 'testFriend', password: await bcrypt.hash('pass2', 10) },
+      ]);
 
       const response = await request(app)
         .post('/addFriend')
@@ -71,10 +67,9 @@ describe('User Service', () => {
     });
 
     it('should not allow adding oneself as a friend', async () => {
-      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
-
-      const newUser = { username: 'testuser', password: TEST_PASSWORD };
-      await request(app).post('/adduser').send(newUser);
+      await User.create([
+        { username: 'testuser', password: await bcrypt.hash('pass1', 10) },
+      ]);
 
       const response = await request(app)
         .post('/addFriend')
@@ -85,10 +80,9 @@ describe('User Service', () => {
     });
 
     it('should return 404 if the friend does not exist', async () => {
-      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
-
-      const newUser = { username: 'testuser', password: TEST_PASSWORD };
-      await request(app).post('/adduser').send(newUser);
+      await User.create([
+        { username: 'testuser', password: await bcrypt.hash('pass1', 10) },
+      ]);
 
       const response = await request(app)
         .post('/addFriend')
@@ -99,13 +93,11 @@ describe('User Service', () => {
     });
 
     it('should not add an existing friend again', async () => {
-      const TEST_PASSWORD = ['testpassword', 'testpassword1'][Math.floor(Math.random() * 2)];
 
-      const newUser = { username: 'testuser', password: TEST_PASSWORD };
-      const newUserFriend = { username: 'testFriend', password: 'testpassword1' };
-
-      await request(app).post('/adduser').send(newUser);
-      await request(app).post('/adduser').send(newUserFriend);
+      await User.create([
+        { username: 'testuser', password: await bcrypt.hash('pass1', 10) },
+        { username: 'testFriend', password: await bcrypt.hash('pass2', 10) },
+      ]);
 
       await request(app)
         .post('/addFriend')
