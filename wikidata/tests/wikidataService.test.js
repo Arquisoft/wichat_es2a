@@ -3,17 +3,16 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 const { fetchQuestionsFromWikidata } = require('../services/wikidataService');
-const { Question } = require('../model/wikidataModel');
-const questionRepository = require('../repositories/questionRepository');
+const wikidataRepository = require('../repositories/wikidataRepository');
 
 let mongoServer;
 
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
+    
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    questionRepository.init(mongoose, mongoUri);
+    wikidataRepository.init(mongoose, mongoUri);
 });
 
 afterAll(async () => {
@@ -23,18 +22,18 @@ afterAll(async () => {
 
 describe('Wikidata Service', () => {
     beforeEach(async () => {
-        await Question.deleteMany(); 
+        await wikidataRepository.deleteQuestions(); // ✅ Usar repositorio para limpiar BD
     });
 
-    it('should fetch and store questions from Wikidata', async () => {
+    it('should fetch questions from Wikidata and store them in MongoDB', async () => {
         const questions = await fetchQuestionsFromWikidata();
-
+        
         expect(Array.isArray(questions)).toBe(true);
         expect(questions.length).toBeGreaterThan(0);
 
-        await questionRepository.updateQuestionsFromWikidata();
+        await wikidataRepository.insertQuestions(questions);
 
-        const questionsInDb = await Question.find();
+        const questionsInDb = await wikidataRepository.getQuestions(questions[0].category, 10);
         expect(questionsInDb.length).toBeGreaterThan(0);
 
         questionsInDb.forEach((q) => {
@@ -43,5 +42,5 @@ describe('Wikidata Service', () => {
             expect(q).toHaveProperty('image');
             expect(q).toHaveProperty('category');
         });
-    });
+    }, 20000);
 });
