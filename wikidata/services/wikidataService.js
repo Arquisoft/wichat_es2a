@@ -11,7 +11,7 @@ async function fetchQuestionsFromWikidata() {
                       wdt:P18 ?image;   # Imagen
                       wdt:P17 ?answer.  # País de la ciudad (respuesta correcta)
                 SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } LIMIT 5`
+            } LIMIT 20`
         },
         /*
         {

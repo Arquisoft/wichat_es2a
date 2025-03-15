@@ -119,6 +119,8 @@ services:
     profiles: ["dev", "prod"]
     depends_on:
       - mongodb
+    ports:
+      - "3001:3001"
     networks:
       - mynetwork
     environment:
