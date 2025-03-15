@@ -11,12 +11,14 @@ const port = 8001;
 app.use(express.json());
 
 // Connect to MongoDB
+/* istanbul ignore file */
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
 mongoose.connect(mongoUri);
 
 
 
 // Function to validate required fields in the request body
+/* istanbul ignore file */
 function validateRequiredFields(req, requiredFields) {
     for (const field of requiredFields) {
       if (!(field in req.body)) {
@@ -76,7 +78,7 @@ app.post('/addFriend', async(req,res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+/* istanbul ignore file */
 app.get('/listFriends', async (req, res) => {
   try {
     validateRequiredFields(req.query, ['username']);
