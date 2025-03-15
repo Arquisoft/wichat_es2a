@@ -113,6 +113,17 @@ services:
     depends_on: 
       - prometheus
 
+  wikidata:
+    container_name: wikidata-wichat_es2a
+    build: ./wikidata
+    profiles: ["dev", "prod"]
+    depends_on:
+      - mongodb
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb-wichat_es2a:27017/wikidatadb
+
 
 volumes:
   mongodb_data:
