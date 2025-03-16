@@ -1,56 +1,57 @@
-import React, { useState } from 'react';
-import { Box, Grid, Paper, Typography, Button, IconButton } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
-import GameImage from '../media/madrid_mobile.webp';
+import GameImage from '../media/madrid_mobile.webp';  // Aquí la imagen no cambia por la url
 import { Close } from '@mui/icons-material';
 import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
 
-// Funcion para comprobar la respuesta del usuario
-const handleAnswerClick = (answer) => {
-    // La funcion que sea necesaria para manejar la respuesta
-    if (answer === correctAnswer) {
-        alert("Respuesta correcta");
-    } else {
-        alert("Respuesta incorrecta");
-    }
-}
-
-
-// Funcion para leer la pregunta y las opciones de respuesta de Wikidata
-const readWikidata = () => {
-    fetch("http://localhost:3001/wikidata/api.js/question")
-        .then(response => response.json())
-        .then(data => {
-
-            // Pregunta
-            var question = data.question;
-
-            // Imagen
-            var image = data.image;
-
-            // Opciones de respuesta
-            var answerOptions = data.options;
-            
-            // Respuesta correcta
-            var correctAnswer = data.correctAnswer;
-          });
-}
-
-
-
 const GamePanel = () => {
-    const [showChat, setShowChat] = useState(false); // Estado para mostrar/ocultar el chat
+    const [showChat, setShowChat] = useState(false);  // Estado para mostrar/ocultar el chat
 
+    // Usamos useRef para almacenar los datos de la pregunta sin forzar un re-renderizado
+    const questionDataRef = useRef({
+        question: '',  // Pregunta
+        image: '',     // Imagen
+        options: [],   // Opciones de respuesta
+        correctAnswer: ''  // Respuesta correcta
+    });
+
+    // Función para comprobar la respuesta del usuario
     const handleAnswerClick = (answer) => {
-        console.log('Respuesta seleccionada:', answer);
+        if (answer === questionDataRef.current.correctAnswer) {
+            alert("Respuesta correcta");
+        } else {
+            alert("Respuesta incorrecta");
+        }
     };
 
-    readWikidata();
+    // Función para leer la pregunta y las opciones de respuesta de Wikidata
+    const readWikidata = () => {
+        fetch("http://localhost:3001/wikidata/api.js/question")
+            .then(response => response.json())
+            .then(data => {
+                // Asignamos los datos a questionDataRef sin hacer un re-render
+                questionDataRef.current = {
+                    question: data.question,
+                    image: data.image,
+                    options: data.options,
+                    correctAnswer: data.correctAnswer
+                };
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos de Wikidata:', error);
+            });
+    };
+
+    // Llamamos a la función para obtener los datos al montar el componente
+    useEffect(() => {
+        readWikidata();
+    }, []);  // El array vacío asegura que solo se ejecute una vez al cargar el componente
 
     return (
         <ThemeProvider theme={theme}>
@@ -77,7 +78,7 @@ const GamePanel = () => {
                 >
                     <Paper elevation={3} style={{ padding: '16px', height: '100%' }}>
                         <Typography variant="h4" align="center" gutterBottom>
-                            {question}
+                            {questionDataRef.current.question}
                         </Typography>
                         <Box
                             style={{
@@ -92,7 +93,7 @@ const GamePanel = () => {
                         >
                             <Box
                                 component="img"
-                                src={GameImage}
+                                src={questionDataRef.current.image}  // Usamos la imagen desde los datos
                                 alt="Imagen del juego"
                                 style={{
                                     maxWidth: '100%',
@@ -114,7 +115,7 @@ const GamePanel = () => {
                                 transition: 'transform 0.5s',
                             }}
                         >
-                            {[answerOptions[0], answerOptions[1], answerOptions[2], answerOptions[3]].map((respuesta, index) => (
+                            {questionDataRef.current.options.map((respuesta, index) => (
                                 <Grid item xs={6} sm={6} md={6} key={index}>
                                     <Button
                                         variant="contained"
@@ -184,3 +185,4 @@ const GamePanel = () => {
 };
 
 export default GamePanel;
+
