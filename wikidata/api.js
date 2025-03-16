@@ -1,6 +1,7 @@
 const express = require('express');
-const { Question } = require('./model/wikidataModel');
+const { Question, Game } = require('./model/wikidataModel');
 const mongoose = require('mongoose');
+jest.setTimeout(10000);
 
 const router = express.Router();
 
@@ -66,9 +67,9 @@ function generateSimilarAnswer(category, correctAnswer) {
 
 router.post('/verify', async (req, res) => {
     try {
-        const { question, selectedOption } = req.body;
+        const { userId, question, selectedOption } = req.body;
 
-        if (!question || !selectedOption) {
+        if (!userId || !question || !selectedOption) {
             return res.status(400).json({ error: "Missing data in the application" });
         }
 
@@ -90,18 +91,87 @@ router.post('/verify', async (req, res) => {
 
         const isCorrect = selectedQuestion.answer === selectedOption;
 
+        let game = await Game.findOne({ userId }).sort({ createdAt: -1 });
+
+        if (!game) {
+            return res.status(404).json({ error: "No active game found for this user" });
+        }
+
+        if (isCorrect) {
+            game.correct += 1;
+        } else {
+            game.wrong += 1;
+        }
+
+        await game.save();
         res.json({
             question: selectedQuestion.statements[0],
             selectedOption: selectedOption,
             correctAnswer: selectedQuestion.answer,
             isCorrect: isCorrect,
-            options: options
+            options: options,
+            correctCount: game.correct,
+            wrongCount: game.wrong
         });
 
     } catch (error) {
         console.error("Error verifying response:", error);
         res.status(500).json({ error: "Server error" });
+    }});
+
+router.post('/game/start', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
+
+        await Game.create({
+            userId,
+            correct: 0,
+            wrong: 0,
+            duration: 0
+        });
+
+        return res.json({ message: "Game started successfully" });
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
     }
 });
+
+    
+router.post('/game/end', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
+
+        let games = await Game.find({ userId });
+        let game = games[games.length-1];
+
+        if (!game) {
+            return res.status(404).json({ error: "No active game found for this user" });
+        }
+
+        const now = new Date();
+        const durationInSeconds = Math.floor((now - game.createdAt) / 1000);
+        game.duration = durationInSeconds;
+
+        await game.save();
+
+        res.json({
+            correct: game.correct,
+            wrong: game.wrong,
+            duration: game.duration
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
+    }
+});    
+
 
 module.exports = router;

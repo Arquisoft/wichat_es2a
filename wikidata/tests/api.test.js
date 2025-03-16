@@ -3,7 +3,7 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 const express = require("express");
 const apiRoutes = require("../api");
-const { Question } = require("../model/wikidataModel");
+const { Question,Game } = require("../model/wikidataModel");
 
 let mongoServer;
 let app;
@@ -46,7 +46,21 @@ describe("API Endpoints", () => {
         expect(response.body.options.length).toBe(4);
     });
 
-    it("should verify correct and incorrect answers on POST /api/verify", async () => {
+    it("should start a game on POST /api/game/start", async () => {
+        const response = await request(app).post("/api/game/start").send({
+            userId: "user123"
+        });
+
+        expect(response.status).toBe(200);
+
+        const games = await Game.find({ userId: "user123" });
+        expect(games.length).toBe(1);
+        expect(games[0].correct).toBe(0);
+        expect(games[0].wrong).toBe(0);
+        expect(games[0].duration).toBe(0);
+    });
+
+    it("should verify correct and incorrect answers and update stats on POST /api/verify", async () => {
         await Question.create({
             statements: ["¿Quién pintó 'La Mona Lisa'?"],
             answer: "Leonardo da Vinci",
@@ -54,18 +68,44 @@ describe("API Endpoints", () => {
             category: "Arte"
         });
 
+        const response = await request(app).post("/api/game/start").send({
+            userId: "user123"
+        });
+
         const correctResponse = await request(app).post("/api/verify").send({
+            userId: "user123",
             question: "¿Quién pintó 'La Mona Lisa'?",
             selectedOption: "Leonardo da Vinci"
         });
+
         expect(correctResponse.status).toBe(200);
         expect(correctResponse.body.isCorrect).toBe(true);
 
         const incorrectResponse = await request(app).post("/api/verify").send({
+            userId: "user123",
             question: "¿Quién pintó 'La Mona Lisa'?",
             selectedOption: "Pablo Picasso"
         });
+
         expect(incorrectResponse.status).toBe(200);
         expect(incorrectResponse.body.isCorrect).toBe(false);
+
+        const games = await Game.find({ userId: "user123" });
+        expect(games[1].correct).toBe(1);
+        expect(games[1].wrong).toBe(1);
+    });
+
+    it("should end the game and calculate duration on POST /api/game/end", async () => {
+        await Game.create({ userId: "user123", correct: 2, wrong: 1, duration: 0, createdAt: new Date(Date.now() - 50000) });
+
+        const response = await request(app).post("/api/game/end").send({
+            userId: "user123"
+        });
+
+        expect(response.status).toBe(200);
+
+
+        const games = await Game.find({ userId: "user123" });
+        expect(games[2].duration).toBeGreaterThanOrEqual(5); 
     });
 });
