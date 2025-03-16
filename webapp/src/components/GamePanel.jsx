@@ -10,10 +10,38 @@ import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
 
+// Funcion para comprobar la respuesta del usuario
 const handleAnswerClick = (answer) => {
-    // La función que sea necesaria para manejar la respuesta
-    alert(`Has seleccionado la respuesta: ${answer}`);
-};
+    // La funcion que sea necesaria para manejar la respuesta
+    if (answer === correctAnswer) {
+        alert("Respuesta correcta");
+    } else {
+        alert("Respuesta incorrecta");
+    }
+}
+
+
+// Funcion para leer la pregunta y las opciones de respuesta de Wikidata
+const readWikidata = () => {
+    fetch("http://localhost:3001/wikidata/api.js/question")
+        .then(response => response.json())
+        .then(data => {
+
+            // Pregunta
+            var question = data.question;
+
+            // Imagen
+            var image = data.image;
+
+            // Opciones de respuesta
+            var answerOptions = data.options;
+            
+            // Respuesta correcta
+            var correctAnswer = data.correctAnswer;
+          });
+}
+
+
 
 const GamePanel = () => {
     const [showChat, setShowChat] = useState(false); // Estado para mostrar/ocultar el chat
@@ -21,6 +49,8 @@ const GamePanel = () => {
     const handleAnswerClick = (answer) => {
         console.log('Respuesta seleccionada:', answer);
     };
+
+    readWikidata();
 
     return (
         <ThemeProvider theme={theme}>
@@ -47,7 +77,7 @@ const GamePanel = () => {
                 >
                     <Paper elevation={3} style={{ padding: '16px', height: '100%' }}>
                         <Typography variant="h4" align="center" gutterBottom>
-                            Pregunta: ¿Cuál es la capital de España?
+                            {question}
                         </Typography>
                         <Box
                             style={{
@@ -84,7 +114,7 @@ const GamePanel = () => {
                                 transition: 'transform 0.5s',
                             }}
                         >
-                            {['Respuesta 1', 'Respuesta 2', 'Respuesta 3', 'Respuesta 4'].map((respuesta, index) => (
+                            {[answerOptions[0], answerOptions[1], answerOptions[2], answerOptions[3]].map((respuesta, index) => (
                                 <Grid item xs={6} sm={6} md={6} key={index}>
                                     <Button
                                         variant="contained"
