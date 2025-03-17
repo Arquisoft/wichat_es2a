@@ -1,6 +1,7 @@
 const request = require('supertest');
 const axios = require('axios');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const mongoose = require('mongoose');
 
 let mongoServer;
 let app;
@@ -13,6 +14,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await mongoose.connection.close();
   app.close();
   await mongoServer.stop();
 });
