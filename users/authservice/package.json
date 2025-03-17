@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/arquisoft/wichat_es2a#readme",
     "dependencies": {
+        "authservice": "file:",
         "bcrypt": "^5.1.1",
         "body-parser": "^1.20.3",
         "express": "^4.21.2",
