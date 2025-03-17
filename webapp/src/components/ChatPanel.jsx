@@ -3,6 +3,7 @@ import { Box, Grid, Paper, Typography, TextField, IconButton } from '@mui/materi
 import { Send, Close } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
+import axios from 'axios';
 
 const theme = createTheme(defaultTheme);
 
@@ -13,16 +14,25 @@ const ChatPanel = ({ setShowChat }) => {
     const [input, setInput] = useState('');
     const chatEndRef = useRef(null);
 
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         if (input.trim() === '') return;
 
-        setMessages([...messages, { text: input, sender: 'user' }]);
+        const userMessage = { text: input, sender: 'user' };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
         setInput('');
 
-        // Simulación de respuesta automática
-        setTimeout(() => {
-            setMessages((prev) => [...prev, { text: 'Mensaje recibido', sender: 'bot' }]);
-        }, 1000);
+        try {
+            const response = await axios.post('http://localhost:8003/ask', {
+                question: input,
+                model: 'gemini',
+            });
+
+            const llmResponse = { text: response.data.answer, sender: 'bot' };
+            setMessages((prevMessages) => [...prevMessages, llmResponse]);
+        } catch (error) {
+            console.error('Error al enviar la pregunta al LLM:', error);
+            setMessages((prevMessages) => [...prevMessages, {text: "Error al obtener la respuesta", sender: "bot"}]);
+        }
     };
 
     const handleCloseChat = () => {
