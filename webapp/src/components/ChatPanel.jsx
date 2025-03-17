@@ -25,6 +25,9 @@ const ChatPanel = ({ setShowChat }) => {
             const response = await axios.post('http://localhost:8003/ask', {
                 question: input,
                 model: 'gemini',
+                userId: 'user123',
+                useHistory: true,
+                answer: correctAnswer,
             });
 
             const llmResponse = { text: response.data.answer, sender: 'bot' };

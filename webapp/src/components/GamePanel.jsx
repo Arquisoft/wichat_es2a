@@ -157,7 +157,7 @@ const GamePanel = () => {
                             overflowY: 'auto',
                         }}
                     >
-                        <ChatPanel setShowChat={setShowChat} />
+                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionDataRef.current.correctAnswer}/>
                     </Grid>
                 )}
 
