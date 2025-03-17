@@ -18,10 +18,11 @@
   },
   "homepage": "https://github.com/arquisoft/wichat_es2a#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongoose": "^8.9.3",
-    "node-fetch": "^2.6.1",
-    "wikidata": "file:"
+    "wikidata": "file:",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
