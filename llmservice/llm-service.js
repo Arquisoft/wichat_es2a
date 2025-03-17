@@ -5,6 +5,7 @@ const Conversation = require('./conversation-model');
 require('dotenv').config();
 
 const app = express();
+app.disable('x-powered-by');
 const port = 8003;
 
 // Connect to MongoDB
@@ -49,13 +50,22 @@ function validateRequiredFields(req, requiredFields) {
   }
 }
 
+function safeUserId(userId) {
+  if (userId === undefined || userId === null) {
+    throw new Error('UserId is required');
+  }
+  return String(userId);
+}
+
 // Function to get or create a conversation for a user
 async function getOrCreateConversation(userId, model, maxHistoryLength=20, prePrompt = null) {
-  let conversation = await Conversation.findOne({ userId });
+  const userIdStr = safeUserId(userId);
+  
+  let conversation = await Conversation.findOne({ userId: userIdStr });
   
   if (!conversation) {
     conversation = new Conversation({
-      userId,
+      userId: userIdStr,
       model,
       maxHistoryLength,
       messages: []
@@ -210,7 +220,9 @@ app.get('/conversations/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     
-    const conversation = await Conversation.findOne({ userId });
+    const userIdStr = safeUserId(userId);
+    
+    const conversation = await Conversation.findOne({ userId: userIdStr });
     
     if (!conversation) {
       return res.status(404).json({ error: 'No conversation found for this user' });
@@ -229,7 +241,9 @@ app.delete('/conversations/:userId', async (req, res) => {
     const { userId } = req.params;
     const { preservePrePrompt = true } = req.query; // Option to preserve preprompt
     
-    const conversation = await Conversation.findOne({ userId });
+    const userIdStr = safeUserId(userId);
+    
+    const conversation = await Conversation.findOne({ userId: userIdStr });
     
     if (!conversation) {
       return res.status(404).json({ error: 'No conversation found for this user' });
@@ -263,10 +277,12 @@ app.put('/conversations/:userId/settings', async (req, res) => {
     const { userId } = req.params;
     const { maxHistoryLength, model } = req.body;
     
-    let conversation = await Conversation.findOne({ userId });
+    const userIdStr = safeUserId(userId);
+    
+    let conversation = await Conversation.findOne({ userId: userIdStr });
     
     if (!conversation) {
-      conversation = new Conversation({ userId });
+      conversation = new Conversation({ userId: userIdStr });
     }
     
     if (maxHistoryLength !== undefined) {
