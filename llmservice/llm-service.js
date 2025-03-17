@@ -134,7 +134,7 @@ async function sendQuestionToLLM(question, model = 'gemini', conversationContext
     let fullPrompt = '';
     
     // Add conversation history if provided
-    if (conversationContext && conversationContext.trim()) {
+    if (conversationContext?.trim()) {
       fullPrompt = conversationContext;
     }
     
