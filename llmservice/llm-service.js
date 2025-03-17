@@ -9,9 +9,7 @@ const port = 8003;
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/llmdb';
-mongoose.connect(mongoUri)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Failed to connect to MongoDB:', err));
+mongoose.connect(mongoUri);
 
 // Middleware to parse JSON in request body
 app.use(express.json());
