@@ -52,7 +52,7 @@ function validateRequiredFields(req, requiredFields) {
 }
 
 // Function to get or create a conversation for a user
-async function getOrCreateConversation(userId, model, maxHistoryLength = 10, prePrompt = null) {
+async function getOrCreateConversation(userId, model, maxHistoryLength=20, prePrompt = null) {
   let conversation = await Conversation.findOne({ userId });
   
   if (!conversation) {

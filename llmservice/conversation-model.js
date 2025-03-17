@@ -30,7 +30,7 @@ const conversationSchema = new mongoose.Schema({
     model: String,
     maxHistoryLength: {
         type: Number,
-        default: 10 // Default max number of messages to keep in history
+        default: 20 // Default max number of messages to keep in history
     },
     createdAt: {
         type: Date,
