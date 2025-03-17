@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
-import GameImage from '../media/madrid_mobile.webp';  // Aquí la imagen no cambia por la url
 import { Close } from '@mui/icons-material';
 import Nav from './Nav';
 
@@ -13,7 +12,6 @@ const theme = createTheme(defaultTheme);
 const GamePanel = () => {
 
     const [showChat, setShowChat] = useState(false);  // Estado para mostrar/ocultar el chat
-
     const [questionData, setQuestionData] = useState({
         question: '',
         image: '',
@@ -23,20 +21,26 @@ const GamePanel = () => {
 
     // Función para comprobar la respuesta del usuario
     const handleAnswerClick = (answer) => {
+        // Comprobamos si la respuesta es correcta
         if (answer === questionData.correctAnswer) {
             alert("Respuesta correcta");
         } else {
             alert("Respuesta incorrecta");
         }
+    
+        // Después de responder, cargamos una nueva pregunta
+        readWikidata();
     };
+    
 
     // Función para leer la pregunta y las opciones de respuesta de Wikidata
     const readWikidata = () => {
-        fetch("http://localhost:3001/wikidata/question")  // URL corregida
+        fetch("http://localhost:3001/wikidata/question")
             .then(response => response.json())
             .then(data => {
                 if (data && data.length > 0) {
-                    const question = data[0];  // Asumimos que la respuesta es un arreglo
+                    // Seleccionamos una pregunta aleatoria
+                    const question = data[Math.floor(Math.random() * data.length)];
                     setQuestionData({
                         question: question.statements[0],  // La pregunta
                         image: question.image,  // La imagen
@@ -162,7 +166,7 @@ const GamePanel = () => {
                             overflowY: 'auto',
                         }}
                     >
-                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionDataRef.current.correctAnswer}/>
+                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer}/>
                     </Grid>
                 )}
 
@@ -190,4 +194,3 @@ const GamePanel = () => {
 };
 
 export default GamePanel;
-

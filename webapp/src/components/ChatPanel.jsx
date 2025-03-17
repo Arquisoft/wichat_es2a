@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, Grid, Paper, Typography, TextField, IconButton } from '@mui/material';
 import { Send, Close } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
+
+
 
 const theme = createTheme(defaultTheme);
 
@@ -20,7 +22,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         const storedToken = window.localStorage.getItem('token');
         if (storedToken) {
             try {
-                const decoded = jwt_decode(storedToken);
+                const decoded = jwtDecode(storedToken);
                 setUserId(decoded.userId);
             } catch (error) {
                 console.error("Error decoding token:", error);
