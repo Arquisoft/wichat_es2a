@@ -4,15 +4,29 @@ import { Send, Close } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
+import jwt_decode from "jwt-decode";
 
 const theme = createTheme(defaultTheme);
 
-const ChatPanel = ({ setShowChat, correctAnswer, sessionId }) => {
+const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const [messages, setMessages] = useState([
         { text: '¡Hola! ¿Cómo puedo ayudarte?', sender: 'bot' },
     ]);
     const [input, setInput] = useState('');
     const chatEndRef = useRef(null);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const storedToken = window.localStorage.getItem('token');
+        if (storedToken) {
+            try {
+                const decoded = jwt_decode(storedToken);
+                setUserId(decoded.userId);
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, []);
 
     const handleSendMessage = async () => {
         if (input.trim() === '') return;
@@ -25,7 +39,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, sessionId }) => {
             const response = await axios.post('http://localhost:8003/ask', {
                 question: input,
                 model: 'gemini',
-                userId: sessionId, // Uso temporal de sessionID
+                userId: userId,
                 useHistory: true,
                 answer: correctAnswer,
             });
