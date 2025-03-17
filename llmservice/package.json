@@ -12,7 +12,9 @@
   "dependencies": {
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "llmservice": "file:",
+    "mongoose": "^8.1.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

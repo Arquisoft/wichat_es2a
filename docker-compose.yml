@@ -43,10 +43,14 @@ services:
     image: ghcr.io/arquisoft/wichat_es2a/llmservice:latest
     profiles: ["dev", "prod"]
     build: ./llmservice
+    depends_on:
+      - mongodb
     ports:
       - "8003:8003"
     networks:
       - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/llmdb
 
   gatewayservice:
     container_name: gatewayservice-wichat_es2a
@@ -125,7 +129,6 @@ services:
       - mynetwork
     environment:
       MONGODB_URI: mongodb://mongodb-wichat_es2a:27017/wikidatadb
-
 
 volumes:
   mongodb_data:

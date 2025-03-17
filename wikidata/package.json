@@ -20,7 +20,8 @@
   "dependencies": {
     "express": "^4.21.2",
     "mongoose": "^8.9.3",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "wikidata": "file:"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -28,4 +29,3 @@
     "supertest": "^7.0.0"
   }
 }
-
