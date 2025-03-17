@@ -1,12 +1,15 @@
 const request = require('supertest');
 const axios = require('axios');
-const app = require('./llm-service'); 
 const { MongoMemoryServer } = require('mongodb-memory-server');
+
+let mongoServer;
+let app;
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   process.env.MONGODB_URI = mongoUri;
+  app = require('./llm-service');
 });
 
 afterAll(async () => {
