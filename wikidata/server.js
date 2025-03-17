@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const apiRoutes = require('./api');
-const { fetchQuestionsFromWikidata } = require('./services/wikidataService');
+const { fetchQuestionsFromWikidata } = require('./wikidataService');
 const { init, deleteQuestions, insertQuestions } = require('./repositories/wikidataRepository');
 
 const app = express();

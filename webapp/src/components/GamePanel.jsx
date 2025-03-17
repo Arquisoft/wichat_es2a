@@ -13,17 +13,16 @@ const theme = createTheme(defaultTheme);
 const GamePanel = () => {
     const [showChat, setShowChat] = useState(false);  // Estado para mostrar/ocultar el chat
 
-    // Usamos useRef para almacenar los datos de la pregunta sin forzar un re-renderizado
-    const questionDataRef = useRef({
-        question: '',  // Pregunta
-        image: '',     // Imagen
-        options: [],   // Opciones de respuesta
-        correctAnswer: ''  // Respuesta correcta
+    const [questionData, setQuestionData] = useState({
+        question: '',
+        image: '',
+        options: [],
+        correctAnswer: ''
     });
 
     // Función para comprobar la respuesta del usuario
     const handleAnswerClick = (answer) => {
-        if (answer === questionDataRef.current.correctAnswer) {
+        if (answer === questionData.correctAnswer) {
             alert("Respuesta correcta");
         } else {
             alert("Respuesta incorrecta");
@@ -32,21 +31,26 @@ const GamePanel = () => {
 
     // Función para leer la pregunta y las opciones de respuesta de Wikidata
     const readWikidata = () => {
-        fetch("http://localhost:3001/wikidata/api.js/question")
+        fetch("http://localhost:3001/wikidata/question")  // URL corregida
             .then(response => response.json())
             .then(data => {
-                // Asignamos los datos a questionDataRef sin hacer un re-render
-                questionDataRef.current = {
-                    question: data.question,
-                    image: data.image,
-                    options: data.options,
-                    correctAnswer: data.correctAnswer
-                };
+                if (data && data.length > 0) {
+                    const question = data[0];  // Asumimos que la respuesta es un arreglo
+                    setQuestionData({
+                        question: question.statements[0],  // La pregunta
+                        image: question.image,  // La imagen
+                        options: question.options || [],  // Opciones de respuesta (si están disponibles)
+                        correctAnswer: question.answer || '',  // Respuesta correcta
+                    });
+                } else {
+                    console.error("No se recibieron preguntas válidas.");
+                }
             })
             .catch(error => {
                 console.error('Error al obtener los datos de Wikidata:', error);
             });
     };
+    
 
     // Llamamos a la función para obtener los datos al montar el componente
     useEffect(() => {
@@ -78,7 +82,7 @@ const GamePanel = () => {
                 >
                     <Paper elevation={3} style={{ padding: '16px', height: '100%' }}>
                         <Typography variant="h4" align="center" gutterBottom>
-                            {questionDataRef.current.question}
+                            {questionData.question}
                         </Typography>
                         <Box
                             style={{
@@ -93,7 +97,7 @@ const GamePanel = () => {
                         >
                             <Box
                                 component="img"
-                                src={questionDataRef.current.image}  // Usamos la imagen desde los datos
+                                src={questionData.image}  // Usamos la imagen desde los datos
                                 alt="Imagen del juego"
                                 style={{
                                     maxWidth: '100%',
@@ -115,7 +119,7 @@ const GamePanel = () => {
                                 transition: 'transform 0.5s',
                             }}
                         >
-                            {questionDataRef.current.options.map((respuesta, index) => (
+                            {questionData.options.map((respuesta, index) => (
                                 <Grid item xs={6} sm={6} md={6} key={index}>
                                     <Button
                                         variant="contained"
