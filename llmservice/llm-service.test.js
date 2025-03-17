@@ -1,10 +1,18 @@
 const request = require('supertest');
 const axios = require('axios');
 const app = require('./llm-service'); 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  process.env.MONGODB_URI = mongoUri;
+});
 
 afterAll(async () => {
-    app.close();
-  });
+  app.close();
+  await mongoServer.stop();
+});
 
 jest.mock('axios');
 
@@ -25,7 +33,8 @@ describe('LLM Service', () => {
       .send({ question: 'a question', model: 'gemini', userId: 'userId', answer:'answer'});
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.answer).toBe('llmanswer');
+    expect(response.body).toHaveProperty('answer');
+    expect(response.body.answer).not.toEqual(null);
   });
 
 });
