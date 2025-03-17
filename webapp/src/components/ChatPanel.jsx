@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const theme = createTheme(defaultTheme);
 
-const ChatPanel = ({ setShowChat }) => {
+const ChatPanel = ({ setShowChat, correctAnswer, sessionId }) => {
     const [messages, setMessages] = useState([
         { text: '¡Hola! ¿Cómo puedo ayudarte?', sender: 'bot' },
     ]);
@@ -25,7 +25,7 @@ const ChatPanel = ({ setShowChat }) => {
             const response = await axios.post('http://localhost:8003/ask', {
                 question: input,
                 model: 'gemini',
-                userId: 'user123',
+                userId: sessionId, // Uso temporal de sessionID
                 useHistory: true,
                 answer: correctAnswer,
             });

@@ -10,7 +10,23 @@ import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
 
+function generateUniqueId() {
+    return Math.random().toString(36).substring(2, 12); // Cambia el segundo argumento a 12
+}
+
+function getSessionId() {
+    let sessionId = sessionStorage.getItem('sessionId');
+    if (!sessionId) {
+        sessionId = generateUniqueId();
+        sessionStorage.setItem('sessionId', sessionId);
+    }
+    return sessionId;
+}
+
 const GamePanel = () => {
+
+    const sessionId = getSessionId(); // Uso temporal de sessionID
+
     const [showChat, setShowChat] = useState(false);  // Estado para mostrar/ocultar el chat
 
     // Usamos useRef para almacenar los datos de la pregunta sin forzar un re-renderizado
@@ -157,7 +173,7 @@ const GamePanel = () => {
                             overflowY: 'auto',
                         }}
                     >
-                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionDataRef.current.correctAnswer}/>
+                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionDataRef.current.correctAnswer} sessionId={sessionId}/>
                     </Grid>
                 )}
 
