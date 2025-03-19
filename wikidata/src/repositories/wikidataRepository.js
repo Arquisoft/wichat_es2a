@@ -1,0 +1,122 @@
+const { Question } = require("../model/wikidataModel");
+const mongoose = require("mongoose");
+
+const mongoUri = process.env.MONGODB_URI || "mongodb://mongodb-wichat_es2a:27017/wikidatadb";
+
+const repository = {
+  mongooseInstance: mongoose,
+  uri: mongoUri,
+  collectionName: "questions",
+  Question,
+
+  init: function (mongooseInstance, uri) {
+    module.exports.mongooseInstance = mongooseInstance;
+    module.exports.uri = uri;
+  },
+
+ /**
+  * Check that the database and services are active.
+  * If not, try to reconnect.
+  *
+  * @throws {Error} If mongoose or uri is not initialized.
+  * @throws {Error} If there is an error connecting to MongoDB.
+  * @returns {Promise<void>} 
+  */
+  checkUp: async function () {
+    if (!module.exports.mongooseInstance || !module.exports.uri) {
+      throw new Error("Error: mongoose or uri is not initialized. Call `init()` first.");
+    }
+    if (module.exports.mongooseInstance.connection.readyState !== 1) {
+      try {
+        await module.exports.mongooseInstance.connect(module.exports.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        throw error;
+      }
+    }
+  },
+
+ /**
+  * Inserts multiple questions into the database.
+  *
+  * This function first ensures that the database connection and necessary services are active by calling `checkUp()`.
+  * Then, it uses the `insertMany` method of the `Question` model to insert the provided array of questions.
+  *
+  * @async
+  * @param {Array<Question>} questions - An array of question objects to be inserted.
+  * @throws {Error} Throws an error if the database connection check fails or if there is an error during the insertion process.
+  * @returns {Promise<void>} A promise that resolves when the insertion is complete.
+  */
+  insertQuestions: async function (questions) {
+    try {
+      await module.exports.checkUp();
+      await Question.insertMany(questions);
+    } catch (error) {
+      throw new Error(`Error inserting questions: ${error.message}`);
+    }
+  },
+
+  /**
+   * Get a random set of questions from the database based on the specified category.
+   * @param {String} category - Question category
+   * @param {int} n - Number of questions to retrieve
+   * @throws {Error} Throws an error if the database connection check fails or if there is an error during the retrieval process.
+   * @returns A random set of questions from the database based on the specified category
+   */
+  getQuestions: async function (category, n = 10) {
+    try {
+      await module.exports.checkUp();
+      let result = await Question.aggregate([
+        { $match: { category: category } },
+        { $sample: { size: parseInt(n) } }
+      ]);
+      return result;
+    } catch (error) {
+      throw new Error(`Error getting questions: ${error.message}`);
+    }
+  },
+
+  /**
+   * Delete all questions from the database.
+   * @throws {Error} Throws an error if the database connection check fails or if there is an error during the deletion process.
+   */
+  deleteQuestions: async function () {
+    try {
+      await module.exports.checkUp();
+      await Question.deleteMany({});
+    } catch (error) {
+      throw new Error(`Error deleting questions:${error.message}`);
+    }
+  },
+
+  /**
+   * Check if there are questions in the database for the specified category.
+   * @param {String} category - Question category
+   * @returns {Promise<boolean>} A promise that resolves to true if there are questions in the database, and false otherwise.
+   * @throws {Error} Throws an error if the database connection check fails or if there is an error during the check process.
+   */
+  exitsQuestions: async function (category) {
+    try {
+      await module.exports.checkUp();
+      let result = await Question
+        .find({ category: category })
+        .limit(1);
+      return result.length > 0;
+    } catch (error) {
+      throw new Error(`Error getting questions: ${error.message}`);
+    }
+  },
+
+  deleteQuestion: async function (id) {
+    try {
+      await module.exports.checkUp();
+      await Question.deleteOne({ id: id });
+    } catch (error) {
+      throw new Error(`Error deleting question: ${error.message}`);
+    }
+  }
+};
+
+repository.init(mongoose, mongoUri);
+
+module.exports = repository;
