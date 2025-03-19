@@ -9,30 +9,27 @@ const repository = {
   collectionName: "questions",
   Question,
 
+  /**
+   * Initialize the repository with the provided mongoose instance and URI.
+   * @param {Object} mongooseInstance - The mongoose instance to use.
+   * @param {String} uri - The URI of the MongoDB database. 
+   */
   init: function (mongooseInstance, uri) {
     module.exports.mongooseInstance = mongooseInstance;
     module.exports.uri = uri;
   },
 
  /**
-  * Check that the database and services are active.
-  * If not, try to reconnect.
-  *
-  * @throws {Error} If mongoose or uri is not initialized.
-  * @throws {Error} If there is an error connecting to MongoDB.
-  * @returns {Promise<void>} 
+  * Check if the database connection is active.
+  * @throws {Error} Throws an error if the database connection is not active.
+  * @returns {Promise<void>} A promise that resolves when the database connection is active.
   */
   checkUp: async function () {
     if (!module.exports.mongooseInstance || !module.exports.uri) {
-      throw new Error("Error: mongoose or uri is not initialized. Call `init()` first.");
+        throw new Error("Error: mongoose or uri is not initialized. Call `init()` first.");
     }
     if (module.exports.mongooseInstance.connection.readyState !== 1) {
-      try {
-        await module.exports.mongooseInstance.connect(module.exports.uri, { useNewUrlParser: true, useUnifiedTopology: true });
-      } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        throw error;
-      }
+        throw new Error("Error connecting to MongoDB");
     }
   },
 
@@ -107,6 +104,11 @@ const repository = {
     }
   },
 
+  /**
+   * Delete a question from the database based on the question id.
+   * @param {String} id - The id of the question to delete
+   * @throws {Error} Throws an error if the database connection check fails or if there is an error during the deletion process.
+   */
   deleteQuestion: async function (id) {
     try {
       await module.exports.checkUp();

@@ -43,7 +43,7 @@ const service = {
                 };
             });
             
-            questions = questions.concat(newQuestions);
+            questions = [...questions, ...newQuestions];
 
         } catch (error) {
             console.error(`Error getting data from the category ${query.category}:`, error);
@@ -57,7 +57,7 @@ const service = {
      * @returns A question from the database of the specified category.
      */
     getQuestion: async function(category) {
-        if(repository.exitsQuestions(category)){
+        if (await repository.exitsQuestions(category)){
             return await repository.getQuestions(category, 1);
         }
         else
@@ -84,29 +84,3 @@ const service = {
 };
 
 module.exports = service;
-
-/*
-// Configuración de la ruta para servir las preguntas a tu frontend
-app.get("/wikidata/question", async (req, res) => {
-    try {
-        const questions = await fetchQuestionsFromWikidata();
-        const formattedQuestions = questions.map(q=>({
-            statements: [q.statements[0] || "Pregunta sin texto"],
-            image: q.image || "default",
-            options: q.options || [],
-            correctAnswer: q.answer || "Respuesta desconocida"
-        }));
-        
-        res.json(questions);
-    } catch (error) {
-        console.error("Error al obtener las preguntas:", error);
-        res.status(500).json({ error: "Error al obtener las preguntas de Wikidata" });
-    }
-});
-
-// Iniciar el servidor en el puerto 3001
-const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-});
-*/
