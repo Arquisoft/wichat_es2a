@@ -171,7 +171,41 @@ router.post('/game/end', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
-});    
+});
+router.get('/game/statistics', async (req, res) => {
+     try {
+         const { userId } = req.query;
+ 
+         if (!userId) {
+             return res.status(400).json({ error: "userId is required" });
+         }
+ 
+         const games = await Game.find({ userId });
+ 
+         if (!games || games.length === 0) {
+             return res.status(404).json({ error: "No games found for this user" });
+         }
+ 
+         const statistics = games.map(game => ({
+             correct: game.correct,
+             wrong: game.wrong,
+             duration: game.duration,
+             createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
+                 year: 'numeric',
+                 month: '2-digit',
+                 day: '2-digit',
+                 hour: '2-digit',
+                 minute: '2-digit',
+                 second: '2-digit'
+             })
+         }));
+ 
+         res.json(statistics);
+     } catch (error) {
+         console.error("Error fetching game statistics:", error);
+         res.status(500).json({ error: "Server error" });
+     }
+ });
 
 
 module.exports = router;

@@ -108,4 +108,19 @@ describe("API Endpoints", () => {
         const games = await Game.find({ userId: "user123" });
         expect(games[2].duration).toBeGreaterThanOrEqual(5); 
     });
+    it("should return game statistics on GET /api/game/statistics", async () => {
+        await Game.create({ userId: "user234", correct: 3, wrong: 2, duration: 120, createdAt: new Date() });
+        await Game.create({ userId: "user234", correct: 5, wrong: 1, duration: 300, createdAt: new Date() });
+
+        const response = await request(app).get("/api/game/statistics").query({ userId: "user234" });
+
+        expect(response.status).toBe(200);
+        expect(response.body.length).toBe(2);
+        expect(response.body[0]).toHaveProperty("correct", 3);
+        expect(response.body[0]).toHaveProperty("wrong", 2);
+        expect(response.body[0]).toHaveProperty("duration", 120);
+        expect(response.body[1]).toHaveProperty("correct", 5);
+        expect(response.body[1]).toHaveProperty("wrong", 1);
+        expect(response.body[1]).toHaveProperty("duration", 300);
+    });
 });
