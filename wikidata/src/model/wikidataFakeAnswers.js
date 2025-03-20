@@ -1,6 +1,6 @@
-const answers = [{
+module.exports = [{
     category: "Actores",
-    actors : [
+    answers : [
       "Leonardo DiCaprio", "Meryl Streep", "Tom Hanks", "Scarlett Johansson", "Denzel Washington",
       "Brad Pitt", "Angelina Jolie", "Robert De Niro", "Al Pacino", "Natalie Portman",
       "Johnny Depp", "Morgan Freeman", "Emma Stone", "Harrison Ford", "Nicole Kidman",
@@ -47,7 +47,7 @@ const answers = [{
   },
   {
     category : "Cantantes",
-    singers : [
+    answers : [
       "Freddie Mercury", "Beyoncé", "Elvis Presley", "Shakira", "Michael Jackson",
       "Adele", "Madonna", "Frank Sinatra", "Whitney Houston", "Ed Sheeran",
       "Lady Gaga", "David Bowie", "Rihanna", "Paul McCartney", "Elton John",
@@ -71,7 +71,7 @@ const answers = [{
   },
   {
     category : "Arte",
-    art : [
+    answers : [
       "La Gioconda", "La última cena", "La persistencia de la memoria", "Las meninas", "La noche estrellada",
       "El nacimiento de Venus", "La creación de Adán", "El grito", "Guernica", "El jardín de las delicias",
       "La joven de la perla", "El beso", "Las dos Fridas", "La rendición de Breda", "El caballero de la mano en el pecho",
@@ -98,7 +98,7 @@ const answers = [{
   },
   {
     category : "Lugares",
-    places : [
+    answers : [
       "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia",
       "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin",
       "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil",
@@ -123,54 +123,27 @@ const answers = [{
     ]
   },
   {
-    category : "Películas",
-    movies : [
-      "El Padrino", "El Padrino II", "El Padrino III", "Titanic", "Forrest Gump", "El caballero oscuro",
-      "Interestelar", "Inception", "Matrix", "Pulp Fiction", "El Señor de los Anillos: La Comunidad del Anillo",
-      "El Señor de los Anillos: Las Dos Torres", "El Señor de los Anillos: El Retorno del Rey", "Gladiador",
-      "Braveheart", "Salvar al Soldado Ryan", "La lista de Schindler", "Cadena Perpetua", "El gran dictador",
-      "Ciudad de Dios", "La vida es bella", "El laberinto del fauno", "Coco", "Ratatouille", "Toy Story",
-      "Toy Story 2", "Toy Story 3", "Toy Story 4", "Buscando a Nemo", "Buscando a Dory", "Up", "Inside Out",
-      "Soul", "WALL·E", "Los Increíbles", "Los Increíbles 2", "Cars", "Cars 2", "Cars 3", "Frozen", "Frozen II",
-      "Encanto", "Moana", "El Rey León", "Aladdin", "Hércules", "Tarzán", "Mulan", "La Bella y la Bestia",
-      "Blancanieves y los siete enanitos", "Cenicienta", "Peter Pan", "El Libro de la Selva", "Pinocho",
-      "Alicia en el país de las maravillas", "Dumbo", "Bambi", "101 dálmatas", "La dama y el vagabundo",
-      "La sirenita", "Pocahontas", "Los aristogatos", "Robin Hood", "Zootopia", "Luca", "Red", "Elemental",
-      "Los Minions", "Mi villano favorito", "Mi villano favorito 2", "Mi villano favorito 3", "Shrek",
-      "Shrek 2", "Shrek Tercero", "Shrek: Felices para siempre", "Kung Fu Panda", "Kung Fu Panda 2",
-      "Kung Fu Panda 3", "Madagascar", "Madagascar 2", "Madagascar 3", "Cómo entrenar a tu dragón",
-      "Cómo entrenar a tu dragón 2", "Cómo entrenar a tu dragón 3", "Spider-Man", "Spider-Man 2",
-      "Spider-Man 3", "El sorprendente Hombre Araña", "El sorprendente Hombre Araña 2", "Spider-Man: Homecoming",
-      "Spider-Man: Lejos de casa", "Spider-Man: Sin camino a casa", "Spider-Man: Un nuevo universo",
-      "Spider-Man: A través del Spider-Verso", "Avengers", "Avengers: La era de Ultrón", "Avengers: Infinity War",
-      "Avengers: Endgame", "Iron Man", "Iron Man 2", "Iron Man 3", "Thor", "Thor: El mundo oscuro",
-      "Thor: Ragnarok", "Thor: Amor y Trueno", "Capitán América: El primer vengador", "Capitán América: El Soldado de Invierno",
-      "Capitán América: Civil War", "Guardianes de la Galaxia", "Guardianes de la Galaxia Vol. 2",
-      "Guardianes de la Galaxia Vol. 3", "Doctor Strange", "Doctor Strange en el multiverso de la locura",
-      "Black Panther", "Black Panther: Wakanda Forever", "Ant-Man", "Ant-Man y la Avispa", "Ant-Man y la Avispa: Quantumania",
-      "Deadpool", "Deadpool 2", "Logan", "X-Men", "X-Men 2", "X-Men: La batalla final", "X-Men: Primera Generación",
-      "X-Men: Días del futuro pasado", "X-Men: Apocalipsis", "X-Men: Dark Phoenix", "The Batman",
-      "Joker", "El Hombre de Acero", "Batman vs Superman", "Escuadrón Suicida", "La Liga de la Justicia",
-      "Wonder Woman", "Wonder Woman 1984", "Aquaman", "The Flash", "Black Adam", "The Suicide Squad",
-      "Harry Potter y la piedra filosofal", "Harry Potter y la cámara secreta", "Harry Potter y el prisionero de Azkaban",
-      "Harry Potter y el cáliz de fuego", "Harry Potter y la Orden del Fénix", "Harry Potter y el misterio del príncipe",
-      "Harry Potter y las Reliquias de la Muerte – Parte 1", "Harry Potter y las Reliquias de la Muerte – Parte 2",
-      "Animales fantásticos y dónde encontrarlos", "Animales fantásticos: Los crímenes de Grindelwald",
-      "Animales fantásticos: Los secretos de Dumbledore", "Los juegos del hambre", "Los juegos del hambre: En llamas",
-      "Los juegos del hambre: Sinsajo Parte 1", "Los juegos del hambre: Sinsajo Parte 2", "Duna",
-      "Duna: Parte Dos", "El resplandor", "IT", "IT: Capítulo 2", "Expediente Warren: El Conjuro",
-      "Expediente Warren: El Conjuro 2", "El Conjuro 3: El diablo me obligó a hacerlo", "Annabelle",
-      "Annabelle 2: La creación", "Annabelle vuelve a casa", "La Monja", "La Monja 2", "Saw",
-      "Saw II", "Saw III", "Saw IV", "Saw V", "Saw VI", "Jigsaw", "Spiral: El juego del miedo continúa",
-      "Scream", "Scream 2", "Scream 3", "Scream 4", "Scream 5", "Scream 6", "El exorcista",
-      "El exorcista: Creyentes", "Psicosis", "Halloween", "Halloween Kills", "Halloween Ends",
-      "Viernes 13", "Pesadilla en Elm Street", "Destino Final", "Destino Final 2", "Destino Final 3",
-      "Destino Final 4", "Destino Final 5", "La matanza de Texas", "La mosca", "El hombre invisible",
-      "El silencio de los inocentes", "Seven", "Zodiac", "El club de la pelea", "El origen del planeta de los simios",
-      "El amanecer del planeta de los simios", "La guerra del planeta de los simios", "Oppenheimer",
-      "Barbie", "Everything Everywhere All At Once"
+    category: "Pintores",
+    answers: [
+      "Leonardo da Vinci", "Michelangelo Buonarroti", "Raphael Sanzio", "Tiziano Vecellio", "Sandro Botticelli", "Albrecht Dürer", "Caravaggio (Michelangelo Merisi)", "Rembrandt van Rijn", "Johannes Vermeer", "Diego Velázquez",
+      "Francisco de Goya", "Édouard Manet", "Claude Monet", "Edgar Degas", "Pierre-Auguste Renoir", "Paul Cézanne", "Vincent van Gogh", "Paul Gauguin", "Henri Matisse", "Pablo Picasso",
+      "Georges Braque", "Salvador Dalí", "René Magritte", "Joan Miró", "Marc Chagall", "Wassily Kandinsky", "Piet Mondrian", "Jackson Pollock", "Mark Rothko", "Andy Warhol",
+      "Roy Lichtenstein", "Frida Kahlo", "Diego Rivera", "Georgia O'Keeffe", "Edward Hopper", "Grant Wood", "Gustav Klimt", "Egon Schiele", "Amedeo Modigliani", "Francis Bacon",
+      "Lucian Freud", "David Hockney", "Jean-Michel Basquiat", "Keith Haring", "Cy Twombly", "Anselm Kiefer", "Jeff Koons", "Yayoi Kusama", "Zdzisław Beksiński", "Paul Klee",
+      "Fernand Léger", "Robert Delaunay", "Sonia Delaunay", "Kazimir Malevich", "El Lissitzky", "David Alfaro Siqueiros", "José Clemente Orozco", "Thomas Cole", "Frederic Edwin Church", "Asher B. Durand",
+      "Winslow Homer", "John Singer Sargent", "James McNeill Whistler", "Gustave Courbet", "Jean-François Millet", "Honoré Daumier", "Camille Pissarro", "Alfred Sisley", "Berthe Morisot", "Mary Cassatt",
+      "Childe Hassam", "Maurice Utrillo", "Raoul Dufy", "André Derain", "Georges Seurat", "Paul Signac", "Henri Rousseau", "Maurice de Vlaminck", "André Lhote", "Giorgio de Chirico",
+      "Max Ernst", "Francis Picabia", "Roberto Matta", "Lucio Fontana", "Antonio Berni", "Joaquín Torres García", "Emilio Pettoruti", "Osvaldo Borda", "Fernando Botero", "Armando Reverón",
+      "Carmen Herrera", "Jesús Rafael Soto", "Carlos Cruz-Diez", "Antonio López García", "Joan Mitchell", "Helen Frankenthaler", "Grace Hartigan", "Willem de Kooning", "Franz Kline", "Robert Motherwell",
+      "Clyfford Still", "Philip Guston", "Richard Diebenkorn", "David Salle", "Julian Schnabel", "Eric Fischl", "Jasper Johns", "Robert Rauschenberg", "Ellsworth Kelly", "Agnes Martin",
+      "Sol LeWitt", "Donald Sultan", "R.B. Kitaj", "Alice Neel", "Fairfield Porter", "Wayne Thiebaud", "Robert Indiana", "Tom Wesselmann", "Victor Vasarely", "Bridget Riley",
+      "Julian Opie", "Damien Hirst", "Takashi Murakami", "Yoshitomo Nara", "Kohei Nawa", "Shinique Smith", "Mickalene Thomas", "Cecily Brown", "Njideka Akunyili Crosby", "Lynette Yiadom-Boakye",
+      "Elizabeth Peyton", "Tracey Emin", "Marlene Dumas", "Gerhard Richter", "Sigmar Polke", "Markus Lüpertz", "Georg Baselitz", "Neo Rauch", "Jörg Immendorff", "Rainer Fetting",
+      "Martin Kippenberger", "Sean Scully", "Mary Heilmann", "Amy Sillman", "Kerry James Marshall", "Fernando Zóbel", "Rufino Tamayo", "Joaquín Sorolla", "Miguel Covarrubias", "Cándido López",
+      "Juan Gris", "Giorgio Morandi", "Oskar Schlemmer", "Otto Dix", "Franz von Stuck", "John William Waterhouse", "Edward Burne-Jones", "Frederic Leighton", "Lawrence Alma-Tadema", "Jean-Léon Gérôme",
+      "Henri de Toulouse-Lautrec", "Eugène Atget", "Anders Zorn", "Lars Lerin", "Odd Nerdrum", "Magdalena Abakanowicz", "Bruno Liljefors", "Vilhelm Hammershøi"
     ]
-  }
+  }  
 ];
     
 

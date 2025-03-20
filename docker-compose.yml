@@ -128,7 +128,7 @@ services:
     networks:
       - mynetwork
     environment:
-      MONGODB_URI: mongodb://mongodb-wichat_es2a:27017/wikidatadb
+      MONGODB_URI: mongodb://mongodb:27017/wikidatadb
 
 volumes:
   mongodb_data:

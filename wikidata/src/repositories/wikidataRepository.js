@@ -24,12 +24,18 @@ const repository = {
   * @throws {Error} Throws an error if the database connection is not active.
   * @returns {Promise<void>} A promise that resolves when the database connection is active.
   */
-  checkUp: async function () {
+ checkUp: async function () {
     if (!module.exports.mongooseInstance || !module.exports.uri) {
-        throw new Error("Error: mongoose or uri is not initialized. Call `init()` first.");
+      throw new Error("Error: mongoose or uri is not initialized. Call `init()` first.");
     }
     if (module.exports.mongooseInstance.connection.readyState !== 1) {
-        throw new Error("Error connecting to MongoDB");
+      try {
+        console.log("Attempting to connect to MongoDB...");
+        await module.exports.mongooseInstance.connect(module.exports.uri);
+      } catch (error) {
+        console.error("Error connecting to MongoDB:", error.message);
+        throw new Error(`Error connecting to MongoDB: ${error.message}`);
+      }
     }
   },
 
@@ -92,17 +98,15 @@ const repository = {
    * @returns {Promise<boolean>} A promise that resolves to true if there are questions in the database, and false otherwise.
    * @throws {Error} Throws an error if the database connection check fails or if there is an error during the check process.
    */
-  exitsQuestions: async function (category) {
+  existsQuestions: async function (category) {
     try {
       await module.exports.checkUp();
-      let result = await Question
-        .find({ category: category })
-        .limit(1);
-      return result.length > 0;
+      let count = await Question.countDocuments({ category: category });
+      return count > 0;
     } catch (error) {
-      throw new Error(`Error getting questions: ${error.message}`);
+      throw new Error(`Error checking questions: ${error.message}`);
     }
-  },
+  },  
 
   /**
    * Delete a question from the database based on the question id.
@@ -112,7 +116,8 @@ const repository = {
   deleteQuestion: async function (id) {
     try {
       await module.exports.checkUp();
-      await Question.deleteOne({ id: id });
+      await Question.deleteOne({ _id: id });
+      console.log(`Question with id ${id} deleted successfully`);
     } catch (error) {
       throw new Error(`Error deleting question: ${error.message}`);
     }

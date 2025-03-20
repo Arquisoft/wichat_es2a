@@ -5,9 +5,9 @@
     2. Arte (Art)
     3. Actores (Actors)
     4. Cantantes (Singers)
-    5. Películas (Movies)
+    5. Pintores (Painters)
     */
-const queries = [
+module.exports = [
         {
             category: "Lugares",
             sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
@@ -15,46 +15,47 @@ const queries = [
                       wdt:P18 ?image;   # Imagen
                       wdt:P17 ?answer.  # País de la ciudad (respuesta correcta)
                 SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } LIMIT 20`,
+            } LIMIT 10`,
             statement: "¿A qué lugar corresponde la siguiente foto?"
         },
         {
             category: "Arte",
             sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
+                ?item wdt:P31 wd:Q3305213;  # Es una pintura
+                      wdt:P18 ?image.      # Tiene imagen
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                BIND(?itemLabel AS ?answerLabel)
+            } LIMIT 10`,
+            statement: "¿Cuál es el nombre de la obra?"
+        },          
+        {
+            category: "Actores",
+            sparql: `SELECT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
+                ?item wdt:P31 wd:Q5;
+                      wdt:P106 wd:Q33999;  # Ocupación: Actor
+                      wdt:P18 ?image.      # Imagen
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+            } LIMIT 10`,
+            statement: "¿Quién es este actor?"
+        },
+        {
+            category: "Cantantes",
+            sparql: `SELECT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
+                ?item wdt:P31 wd:Q5;     # Humano
+                      wdt:P106 wd:Q177220; # Ocupación: Cantante
+                      wdt:P18 ?image.      # Imagen
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+            } LIMIT 10`,
+            statement: "¿Quién es este cantante?"
+        },
+        {
+            category: "Pintores",
+            sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
                     ?item wdt:P31 wd:Q3305213;  # Es una pintura
                             wdt:P18 ?image;        # Tiene imagen
                             wdt:P170 ?answer.      # Su autor (respuesta correcta)
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-                    } LIMIT 3`,
+                    } LIMIT 10`,
             statement: "¿Quién es el autor de esta obra?"
-        },
-        {
-            category: "Actores",
-            sparql: `SELECT ?itemLabel ?image WHERE {
-                ?item wdt:P31 wd:Q5;       # Actor
-                    wdt:P18 ?image.      # Imagen
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } LIMIT 5`,
-            statement: "¿Quién es este actor?"
-
-        },
-        {
-        category: "Cantantes",
-        sparql: `SELECT ?itemLabel ?image WHERE {
-            ?item wdt:P31 wd:Q5;     # Humano
-                wdt:P106 wd:Q177220; # Ocupación: Cantante
-                wdt:P18 ?image.      # Imagen
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-        } LIMIT 5`,
-        statement: "¿Quién es este cantante?"
-        },
-        {
-            category: "Películas",
-            sparql: `SELECT ?itemLabel ?image WHERE {
-                ?item wdt:P31 wd:Q11424; # Instancia de: Película
-                      wdt:P18 ?image.    # Imagen
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } LIMIT 5`,
-            statement: "¿Qué película es esta?"
-        }            
+        }          
     ];

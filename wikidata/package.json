@@ -4,7 +4,7 @@
   "description": "Service for obtaining and storing questions from Wikidata",
   "main": "server.js",
   "scripts": {
-    "start": "node wikidataService.js",
+    "start": "node src/wikidataRoutes.js",
     "test": "jest"
   },
   "repository": {
