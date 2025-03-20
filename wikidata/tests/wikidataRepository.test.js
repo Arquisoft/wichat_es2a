@@ -1,6 +1,5 @@
 const repository = require('../src/repositories/wikidataRepository');
 
-// Mock de la interacción con la base de datos
 jest.mock('../src/repositories/wikidataRepository');
 
 describe('wikidataRepository', () => {
@@ -14,7 +13,7 @@ describe('wikidataRepository', () => {
 
     const result = await repository.existsQuestions(category);
 
-    expect(result).toBe(true); // Verificamos que el repositorio devuelva correctamente si existen preguntas
+    expect(result).toBe(true); 
     expect(repository.existsQuestions).toHaveBeenCalledWith(category);
   });
 
@@ -25,7 +24,7 @@ describe('wikidataRepository', () => {
 
     await repository.insertQuestions(questions);
 
-    expect(repository.insertQuestions).toHaveBeenCalledWith(questions); // Verificamos que se insertaron las preguntas
+    expect(repository.insertQuestions).toHaveBeenCalledWith(questions); 
   });
 
   it('should get questions from the database', async () => {
@@ -36,7 +35,7 @@ describe('wikidataRepository', () => {
 
     const result = await repository.getQuestions(category, 1);
 
-    expect(result).toEqual(questions); // Verificamos que las preguntas recuperadas son las correctas
+    expect(result).toEqual(questions); 
   });
 
   it('should delete questions from the database', async () => {
@@ -46,6 +45,6 @@ describe('wikidataRepository', () => {
 
     await repository.deleteQuestion(question._id);
 
-    expect(repository.deleteQuestion).toHaveBeenCalledWith(question._id); // Verificamos que se ha borrado la pregunta correctamente
+    expect(repository.deleteQuestion).toHaveBeenCalledWith(question._id); 
   });
 });
