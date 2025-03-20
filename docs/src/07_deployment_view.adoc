@@ -1,0 +1,99 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-deployment-view]]
+
+== Deployment View
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Content
+The deployment view describes:
+
+ 1. technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and
+
+2. mapping of (software) building blocks to that infrastructure elements.
+
+Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.
+
+Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.
+
+From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.
+
+.Motivation
+Software does not run without hardware.
+This underlying infrastructure can and will influence a system and/or some
+cross-cutting concepts. Therefore, there is a need to know the infrastructure.
+
+.Form
+
+Maybe a highest level deployment diagram is already contained in section 3.2. as
+technical context with your own infrastructure as ONE black box. In this section one can
+zoom into this black box using additional deployment diagrams:
+
+* UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
+when your infrastructure is more complex.
+* When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.
+
+
+.Further Information
+
+See https://docs.arc42.org/section-7/[Deployment View] in the arc42 documentation.
+
+****
+endif::arc42help[]
+
+Our system infrastructure consists of a single virtual machine running Ubuntu 22.04 LTS. This server hosts a Node.js application inside a Docker container and includes a MongoDB database to store application data. The application also interacts with the Wikidata API to generate dynamic content. Additionally, we use a Large Language Model (LLM) that leverages context from the application to provide user hints.
+
+=== Infrastructure Level 1
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+Describe (usually in a combination of diagrams, tables, and text):
+
+* distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them
+* important justifications or motivations for this deployment structure
+* quality and/or performance features of this infrastructure
+* mapping of software artifacts to elements of this infrastructure
+
+For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.
+****
+endif::arc42help[]
+
+image::07_overview.drawio.png[]
+
+Motivation::
+
+The choice of this infrastructure is driven by the flexibility of a dockerized microservice architecture. Containerization simplifies deployment and ensures consistency across different environments. Additionally, Docker's platform-agnostic nature allows the application to run on virtually any machine, making scaling and maintenance more efficient.
+
+Quality and/or Performance Features::
+
+- _Scalability_: The system can be easily scaled horizontally by adding more service instances, leveraging the container orchestrator for efficient load distribution.
+
+- _Portability_: The application can be deployed in any environment that supports Docker containers, enabling seamless migration to different cloud providers if needed.
+
+- _Maintainability_: Each container operates independently, allowing for individual updates and maintenance. By replacing containers with new application versions, the system remains up-to-date with minimal disruption.
+
+- _Security_: The system is hosted in a secure environment on the Azure cloud platform. Each container runs in isolation, minimizing the impact of potential security breaches and ensuring high availability.
+
+Mapping of Building Blocks to Infrastructure::
+|===
+| Component | Description
+
+| User agent
+| The client that accesses the system through the web application.
+
+| Virtual Machine
+| The server hosting the system.
+
+| Docker
+| Containerization platform used for deploying and managing the system.
+
+| Wikidata API
+| External service that provides dynamic content for the application.
+
+| Large Language Model (LLM)
+| AI-powered component that analyzes application context to assist users with relevant hints.
+
+|===

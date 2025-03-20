@@ -1,0 +1,104 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-architecture-constraints]]
+== Architecture Constraints
+
+
+This document describes the technical, organizational, and convention-based limitations that must be considered during the development of the WIChat project, 
+an interactive web application for questions and answers based on images. 
+The main objective of the project is to create a platform where users can participate in a quiz game based on different themes, guessing places or concepts from images.
+
+A key feature of WIChat is the integration of a long language model (LLM) to provide players with conversational hints. 
+Additionally, questions and answers are generated automatically using data from Wikidata. 
+The following outlines the main constraints and conventions that will guide the development of the application.
+
+=== Technical Limitations
+
+[cols="e,2e", options="header"]
+|===
+| **Constraint** | **Explanation**
+
+|*GIT & GitHub*
+| The use of GIT will be mandatory for version control, and GitHub will be the platform we use to store the code. 
+This system will allow parallel work by using branches for developing new features or fixing bugs. 
+Additionally, we will use Pull Requests for code review before final integration.
+GitHub Actions may be used to automate testing deployment.
+
+|*Docker*
+| Docker will be used to containerize the application in both development and production environments for web deployment, 
+ensuring consistent environment configurations and simplifying application maintenance across different platforms.
+
+|*MongoDB*
+| MongoDB will be used as the primary database to store user data, questions, and hints.
+Its flexible schema will allow efficient handling of dynamic content and scalability for future improvements.
+
+|*React*
+| The frontend will be developed using React to create a dynamic and responsive user interface.  
+This framework will enable a component-based architecture, improving maintainability and reusability.
+
+|*Node.js*
+| Execution environment using JavaScript for server-side operations, rather than client-side.  
+It provides an event-driven, non-blocking I/O model, making it lightweight and efficient.
+
+|*Express*
+| Web framework for Node.js designed to simplify the implementation of web applications.  
+It offers a minimal and flexible structure for handling routes, middleware, and API endpoints.
+
+|*JavaScript*
+| JavaScript will be the main programming language for both the frontend (React) and backend (Node.js & Express),  
+ensuring a unified development environment and reducing context switching between technologies.
+
+|*Wikidata*
+| Wikidata will be the primary source for generating images for the questions and hints.
+
+|*LLMS (Long Language Model)*
+| The system will use an external language model (LLM) to generate interactive hints about the images. 
+However, due to the inherent limitations of LLMs (such as generating incorrect responses or hallucinations), 
+it will be necessary to implement mechanisms to validate and mitigate these issues to ensure the accuracy of the generated hints.
+|===
+
+=== Organizational Limitations
+[cols="e,2e", options="header"]
+|===
+| **Constraint** | **Explanation**
+
+|*Team*
+| The project team consists of 6 people, which means that coordination and cooperation between team members is essential.
+
+|*Time*
+| The team must adhere to the established deadlines for project delivery, ensuring that progress is presented according to the anticipated dates and the decisions documented in the meeting minutes.
+
+|*Meetings*
+| Weekly meetings will be held during the practical classes, where the tasks completed by each team member during the previous week will be reviewed, and new tasks will be discussed. 
+If there is a need to address questions outside these meetings, team members can ask through the WhatsApp group, or hold meetings via Discord, 
+making sure that the decisions made during those sessions are clearly documented on GitHub.
+
+|*Issues*
+| The GitHub Issues tool will be used for task management. Each team member will be responsible for completing the tasks specified within the given time frame.
+
+|*Records*
+| After each meeting, whether during the scheduled practice hours or any extraordinary meetings, meeting minutes will be written to document the decisions made.
+
+|===
+
+=== Convention Constraints
+[cols="e,2e", options="header"]
+|===
+| **Constraint** | **Explanation**
+
+|*Software Design*
+| The code must be modular, maintainable, and understandable. "Clean code" principles will be applied to ensure the project is easy to update and expand.
+
+|*Documentation*
+| The Arc42 template will be used to create the project documentation. 
+This documentation must be clear, structured, and easy to follow, with a practical approach so that any team member or external 
+person can understand the architecture and key components of the system. 
+
+|*Adaptability*
+| The application must be designed to work across multiple devices and screen sizes, 
+ensuring a consistent experience on both desktop and mobile platforms. 
+Responsive design techniques and best practices will be implemented to optimize usability across different resolutions.
+
+|*Usability*
+| The system must provide an intuitive and accessible user interface, ensuring a smooth experience for all users.
+|===

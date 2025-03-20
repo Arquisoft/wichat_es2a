@@ -1,0 +1,6 @@
+node_modules
+coverage
+docs/build
+.env
+webapp/.env
+.vscode

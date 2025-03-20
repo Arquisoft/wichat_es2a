@@ -1,0 +1,66 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-technical-risks]]
+== Risks and Technical Debts
+
+The "Technical Risks and Debts" section outlines potential challenges and issues that may emerge during the project's development and maintenance. 
+These risks and debts must be carefully assessed and addressed to ensure the project's successful completion and long-term sustainability. 
+The subsections below detail both internal and external technical risks, along with the technical debts to consider.
+
+=== Technical risks
+
+A technical risk is defined as a potential event that could jeopardize the project's successful completion, cause delays, increase costs, or even result in failure if not effectively managed. The subsections below outline the internal and external technical risks identified for the project.
+
+[options="header",cols="1,3,3"]
+|===
+| Description | Priority |  Considerations
+
+| Lack of experience with the base project and its technologies
+| 9
+| Since none of the team members have prior experience with the technologies used in this project, there will be a steep learning curve. This will require extensive research and testing, which could slow down progress. However, leveraging documentation and online resources will help mitigate this risk.
+
+| First time working as a large team on a software project
+| 8
+| The team has experience in GitHub but has not collaborated in such a large group before. This could lead to difficulties in task distribution, communication, and version control conflicts. Establishing clear workflows and communication channels will be essential to mitigate these issues.
+
+| Working on a legacy project
+| 7
+| As a group we decided to continue a project from the previous course of the asignature. Familiarizing ourselves with the project can take time, and therefore slow down development.
+
+| Integration of a Large Language Model (LLM) chat system
+| 7
+| Adding an AI-driven chat system for user hints introduces complexities such as model selection, API integration, and performance optimization. Ensuring precision in the chat responses will require careful planning.
+
+| Managing dependencies and service configurations
+| 6
+| The project relies on multiple external services and dependencies, which may introduce compatibility issues. Keeping dependencies up-to-date and using containerization tools can help manage these risks.
+
+| Unequal distribution of workload
+| 5
+| If tasks are not evenly distributed among team members, it may lead to burnout or bottlenecks. Regular meetings and tracking progress using project management tools will be necessary to balance workload effectively.
+
+|===
+
+==== External
+
+[options="header",cols="1,3,3"]
+|===
+| Description | Priority |  Considerations
+
+| Dependency on third-party AI API services
+| 8
+| The integration of an LLM chat system relies on external AI APIs, which could be subject to service limitations, or outages. Exploring fallback options or alternative providers is advisable.
+
+| Wikidata API failure
+| 3
+| Even though an API failure is possible, it's a low-impact event because we have the questions stored in the database, and the game would still function.
+
+| Cloud service downtime
+| 6
+| The project may rely on cloud-based infrastructure, and any downtime could affect system availability. Using monitoring tools and backup strategies can help mitigate this risk.
+
+|===
+
+=== Technical debts
+
+Not yet documented.

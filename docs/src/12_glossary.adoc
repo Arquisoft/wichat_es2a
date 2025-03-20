@@ -1,0 +1,95 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-glossary]]
+== Glossary
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Contents
+The most important domain and technical terms that your stakeholders use when discussing the system.
+
+You can also see the glossary as source for translations if you work in multi-language teams.
+
+.Motivation
+You should clearly define your terms, so that all stakeholders
+
+* have an identical understanding of these terms
+* do not use synonyms and homonyms
+
+
+.Form
+
+A table with columns <Term> and <Definition>.
+
+Potentially more columns in case you need translations.
+
+
+.Further Information
+
+See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
+
+****
+endif::arc42help[]
+
+[cols="e,2e" options="header"]
+|===
+|Term |Definition
+
+|ChattySw
+|Software development company in charge of updating WIChat, including LLM-generated hints integration.
+
+|RTVE
+|Radio Television Española.
+
+|Saber y Ganar
+|A Spanish TV quiz show that serves as the inspiration for this project, known for its intellectual challenges and diverse question formats.
+
+|HappySw
+|Company that developed WIChat last year.
+
+|WIChat
+|Name of the application
+
+|LLM
+|Large Language Model based on AI
+
+|Wikidata
+|A structured data repository used by the application via an API to generate game questions.
+
+|Frontend 
+|The user-facing part of the application, responsible for the interface and user interactions
+
+|Backend 
+|he server-side part of an application
+
+|API
+|A set of functions and procedures allowing the creation of applications that access the features or data of an operating system, application, or other service.
+
+|React
+|A JavaScript library for building user interfaces, used for the application's frontend development.
+
+|MongoDB
+|A NoSQL database used for the application data storage.
+
+|Node.js
+|A JavaScript runtime environment used for the application's backend development.
+
+|Git
+|Version control system used during the development of the application.
+
+|Github pages
+|Allows hosting static web pages from a repository used to deploy documentation.
+
+|Arc42
+|A template for documenting software architecture.
+
+|Express
+|A minimal and flexible Node.js web application framework for building APIs and web apps.
+
+|Microservice
+|An application is composed of multiple independent components, each of which can be developed, deployed, and scaled separately..
+
+|NoSQL
+|Non-relational databases that store data in a non-tabular format, rather than in rule-based, relational tables like relational databases do.
+|===

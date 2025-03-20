@@ -1,0 +1,140 @@
+services:
+  mongodb:
+    container_name: mongodb-wichat_es2a
+    image: mongo
+    profiles: ["dev", "prod"]
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - mynetwork
+
+  authservice:
+    container_name: authservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/authservice:latest
+    profiles: ["dev", "prod"]
+    build: ./users/authservice
+    depends_on:
+      - mongodb
+    ports:
+      - "8002:8002"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/userdb
+
+  userservice:
+    container_name: userservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/userservice:latest
+    profiles: ["dev", "prod"]
+    build: ./users/userservice
+    depends_on:
+      - mongodb
+    ports:
+      - "8001:8001"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/userdb
+
+  llmservice:
+    container_name: llmservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/llmservice:latest
+    profiles: ["dev", "prod"]
+    build: ./llmservice
+    depends_on:
+      - mongodb
+    ports:
+      - "8003:8003"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/llmdb
+
+  gatewayservice:
+    container_name: gatewayservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest
+    profiles: ["dev", "prod"]
+    build: ./gatewayservice
+    depends_on:
+      - mongodb
+      - userservice
+      - authservice
+      - llmservice
+    ports:
+      - "8000:8000"
+    networks:
+      - mynetwork
+    environment:
+      AUTH_SERVICE_URL: http://authservice:8002
+      USER_SERVICE_URL: http://userservice:8001
+      LLM_SERVICE_URL: http://llmservice:8003
+
+  webapp:
+    container_name: webapp-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/webapp:latest
+    profiles: ["dev", "prod"]
+    build: 
+      context: ./webapp
+      args:
+        LLM_API_KEY: ${LLM_API_KEY}
+    depends_on:
+      - gatewayservice
+    ports:
+      - "3000:3000"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus-wichat_es2a
+    profiles: ["dev"]
+    networks:
+      - mynetwork
+    volumes:
+      - ./gatewayservice/monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on: 
+      - gatewayservice
+      
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-wichat_es2a
+    profiles: ["dev"]
+    networks:
+      - mynetwork
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./gatewayservice/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SERVER_HTTP_PORT=9091
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - "9091:9091"
+    depends_on: 
+      - prometheus
+
+  wikidata:
+    container_name: wikidata-wichat_es2a
+    build: ./wikidata
+    profiles: ["dev", "prod"]
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb-wichat_es2a:27017/wikidatadb
+
+volumes:
+  mongodb_data:
+  prometheus_data: 
+  grafana_data: 
+
+networks:
+  mynetwork:
+    driver: bridge
