@@ -2,7 +2,7 @@ const request = require('supertest');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
-const { fetchQuestionsFromWikidata } = require('../services/wikidataService');
+const { fetchQuestionsFromWikidata } = require('../wikidataService');
 const wikidataRepository = require('../repositories/wikidataRepository');
 
 let mongoServer;
