@@ -10,57 +10,79 @@ import Nav from './Nav';
 const theme = createTheme(defaultTheme);
 
 const GamePanel = () => {
-
-    const [showChat, setShowChat] = useState(false);  // Estado para mostrar/ocultar el chat
+    const [showChat, setShowChat] = useState(false);
     const [questionData, setQuestionData] = useState({
         question: '',
         image: '',
         options: [],
         correctAnswer: ''
     });
+    const [questions, setQuestions] = useState([]);
 
     // Función para comprobar la respuesta del usuario
     const handleAnswerClick = (answer) => {
-        // Comprobamos si la respuesta es correcta
         if (answer === questionData.correctAnswer) {
             alert("Respuesta correcta");
         } else {
             alert("Respuesta incorrecta");
         }
+        chooseQuestion();
+    };
+
+    // Función para obtener las preguntas desde el servidor
+    const getQuestions = async () => {
+        try {
+            const response = await fetch("http://localhost:3001/wikidata/question?category=Actores&n=10");
+            const data = await response.json();
+            if (data && data.length > 0) {
+                setQuestions(data);
+            } else {
+                console.error("No se recibieron preguntas válidas.");
+            }
+        } catch (error) {
+            console.error("Error al recibir preguntas: ", error);
+        }
+    };
+
+    // Función para elegir una pregunta al azar y eliminarla del listado
+    const chooseQuestion = () => {
+        if (questions.length === 0) {
+            getQuestions();
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        const question = questions[randomIndex];
+        // Se elimina la pregunta elegida del listado
+        setQuestions(prev => prev.filter((_, index) => index !== randomIndex));
     
-        // Después de responder, cargamos una nueva pregunta
-        readWikidata();
+        // Se asegura que la respuesta correcta esté en las opciones
+        let options = question.options || [];
+        if (!options.includes(question.answer)) {
+            options.push(question.answer);
+        }
+        // Mezclar las opciones
+        options = options.sort(() => Math.random() - 0.5);
+    
+        setQuestionData({
+            question: question.statements,  // Texto de la pregunta
+            image: question.image,           // Imagen relacionada
+            options: options,
+            correctAnswer: question.answer,  // Se utiliza la respuesta correcta real
+        });
     };
     
 
-    // Función para leer la pregunta y las opciones de respuesta de Wikidata
-    const readWikidata = () => {
-        fetch("http://localhost:3001/wikidata/question")
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    // Seleccionamos una pregunta aleatoria
-                    const question = data[Math.floor(Math.random() * data.length)];
-                    setQuestionData({
-                        question: question.statements[0],  // La pregunta
-                        image: question.image,  // La imagen
-                        options: question.options || [],  // Opciones de respuesta (si están disponibles)
-                        correctAnswer: question.answer || '',  // Respuesta correcta
-                    });
-                } else {
-                    console.error("No se recibieron preguntas válidas.");
-                }
-            })
-            .catch(error => {
-                console.error('Error al obtener los datos de Wikidata:', error);
-            });
-    };
-    
-
-    // Llamamos a la función para obtener los datos al montar el componente
+    // Cargar las preguntas al montar el componente
     useEffect(() => {
-        readWikidata();
-    }, []);  // El array vacío asegura que solo se ejecute una vez al cargar el componente
+        getQuestions();
+    }, []);
+
+    // Cuando se carguen las preguntas y no hay una pregunta activa, se elige una
+    useEffect(() => {
+        if (questionData.question === '' && questions.length > 0) {
+            chooseQuestion();
+        }
+    }, [questions]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -90,27 +112,24 @@ const GamePanel = () => {
                             {questionData.question}
                         </Typography>
                         <Box
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                maxWidth: '100%',
-                                maxHeight: '50%',
-                                marginTop: '20px',
-                                transform: showChat ? 'scale(0.8)' : 'scale(1)',
-                                transition: 'transform 0.5s',
-                            }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: '20px',
+                        }}
                         >
-                            <Box
-                                component="img"
-                                src={questionData.image}  // Usamos la imagen desde los datos
-                                alt="Imagen del juego"
-                                style={{
-                                    maxWidth: '100%',
-                                    maxHeight: '100%',
-                                    aspectRatio: '1',
-                                    objectFit: 'cover',
-                                }}
-                            />
+                        <Box
+                            component="img"
+                            src={questionData.image}
+                            alt="Imagen del juego"
+                            style={{
+                            width: '100%',        // se adapta al contenedor
+                            maxWidth: '400px',     // ancho máximo de la imagen
+                            maxHeight: '400px',    // altura máxima de la imagen
+                            objectFit: 'contain',  // se mantiene la proporción sin recortes
+                            }}
+                        />
                         </Box>
 
                         {/* Botones de respuestas */}
@@ -174,7 +193,7 @@ const GamePanel = () => {
                 {!showChat && (
                     <Button
                         variant="contained"
-                        onClick={() => setShowChat(!showChat)}
+                        onClick={() => setShowChat(true)}
                         style={{
                             position: 'absolute',
                             bottom: '20px',

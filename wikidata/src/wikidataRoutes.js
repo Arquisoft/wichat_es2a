@@ -3,6 +3,9 @@ const app = express();
 const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
+const cors = require('cors');
+
+app.use(cors());
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://mongodb-wichat_es2a:27017/wikidatadb";
 
