@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, Button } from '@mui/material';
+import { Box, Grid, Paper, Typography, Button, Snackbar, Alert } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
-import { Close } from '@mui/icons-material';
 import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
@@ -18,15 +17,24 @@ const GamePanel = () => {
         correctAnswer: ''
     });
     const [questions, setQuestions] = useState([]);
+    // Estado para almacenar la respuesta seleccionada
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    // Estado para controlar el Snackbar
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    // Función para comprobar la respuesta del usuario
+    // Función para comprobar la respuesta del usuario y mostrar feedback
     const handleAnswerClick = (answer) => {
+        setSelectedAnswer(answer);
         if (answer === questionData.correctAnswer) {
-            alert("Respuesta correcta");
+            setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
         } else {
-            alert("Respuesta incorrecta");
+            setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
         }
-        chooseQuestion();
+        // Se deshabilitan las opciones y se espera 2 segundos para cambiar de pregunta
+        setTimeout(() => {
+            setSelectedAnswer(null);
+            chooseQuestion();
+        }, 2000);
     };
 
     // Función para obtener las preguntas desde el servidor
@@ -54,23 +62,21 @@ const GamePanel = () => {
         const question = questions[randomIndex];
         // Se elimina la pregunta elegida del listado
         setQuestions(prev => prev.filter((_, index) => index !== randomIndex));
-    
-        // Se asegura que la respuesta correcta esté en las opciones
+
         let options = question.options || [];
         if (!options.includes(question.answer)) {
             options.push(question.answer);
         }
-        // Mezclar las opciones
+        // Mezclar las opciones para que no siempre aparezca en la misma posición
         options = options.sort(() => Math.random() - 0.5);
-    
+
         setQuestionData({
-            question: question.statements,  // Texto de la pregunta
-            image: question.image,           // Imagen relacionada
+            question: question.statements,
+            image: question.image,
             options: options,
-            correctAnswer: question.answer,  // Se utiliza la respuesta correcta real
+            correctAnswer: question.answer,
         });
     };
-    
 
     // Cargar las preguntas al montar el componente
     useEffect(() => {
@@ -84,15 +90,23 @@ const GamePanel = () => {
         }
     }, [questions]);
 
+    // Función para determinar el estilo de cada botón según la respuesta seleccionada
+    const getButtonStyle = (respuesta) => {
+        if (!selectedAnswer) return {};
+        if (respuesta === questionData.correctAnswer) {
+            return { backgroundColor: 'green', color: 'white' };
+        }
+        if (respuesta === selectedAnswer && respuesta !== questionData.correctAnswer) {
+            return { backgroundColor: 'red', color: 'white' };
+        }
+        return {};
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Grid container style={{ height: '100vh', overflow: 'hidden' }}>
                 <Nav />
-
-                {/* Espacio entre Nav y el contenido */}
                 <Grid item xs={12} style={{ height: '20px' }} />
-
-                {/* Parte izquierda - Panel del juego */}
                 <Grid
                     item
                     xs={showChat ? 8 : 12}
@@ -112,27 +126,25 @@ const GamePanel = () => {
                             {questionData.question}
                         </Typography>
                         <Box
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: '20px',
-                        }}
-                        >
-                        <Box
-                            component="img"
-                            src={questionData.image}
-                            alt="Imagen del juego"
                             style={{
-                            width: '100%',        // se adapta al contenedor
-                            maxWidth: '400px',     // ancho máximo de la imagen
-                            maxHeight: '400px',    // altura máxima de la imagen
-                            objectFit: 'contain',  // se mantiene la proporción sin recortes
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '20px',
                             }}
-                        />
+                        >
+                            <Box
+                                component="img"
+                                src={questionData.image}
+                                alt="Imagen del juego"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '400px',
+                                    maxHeight: '400px',
+                                    objectFit: 'contain',
+                                }}
+                            />
                         </Box>
-
-                        {/* Botones de respuestas */}
                         <Grid
                             container
                             spacing={2}
@@ -149,10 +161,12 @@ const GamePanel = () => {
                                         variant="contained"
                                         onClick={() => handleAnswerClick(respuesta)}
                                         fullWidth
+                                        disabled={selectedAnswer !== null}
                                         style={{
                                             padding: '10px',
                                             fontSize: '0.9rem',
                                             textAlign: 'center',
+                                            ...getButtonStyle(respuesta)
                                         }}
                                     >
                                         {respuesta}
@@ -162,8 +176,6 @@ const GamePanel = () => {
                         </Grid>
                     </Paper>
                 </Grid>
-
-                {/* Parte derecha - Panel del chat */}
                 {showChat && (
                     <Grid
                         item
@@ -188,8 +200,6 @@ const GamePanel = () => {
                         <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer}/>
                     </Grid>
                 )}
-
-                {/* Botón flotante MessageCircle en la esquina inferior derecha */}
                 {!showChat && (
                     <Button
                         variant="contained"
@@ -208,6 +218,21 @@ const GamePanel = () => {
                     </Button>
                 )}
             </Grid>
+            {/* Snackbar para mostrar el feedback de la respuesta */}
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={() => setSnackbar({ ...snackbar, open: false })} 
+                    severity={snackbar.severity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 };
