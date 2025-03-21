@@ -7,6 +7,7 @@ import defaultTheme from './config/default-Theme.json';
 import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
+const TOTAL_QUESTIONS = 10;
 
 const GamePanel = () => {
     const [showChat, setShowChat] = useState(false);
@@ -17,30 +18,17 @@ const GamePanel = () => {
         correctAnswer: ''
     });
     const [questions, setQuestions] = useState([]);
-    // Estado para almacenar la respuesta seleccionada
     const [selectedAnswer, setSelectedAnswer] = useState(null);
-    // Estado para controlar el Snackbar
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-
-    // Función para comprobar la respuesta del usuario y mostrar feedback
-    const handleAnswerClick = (answer) => {
-        setSelectedAnswer(answer);
-        if (answer === questionData.correctAnswer) {
-            setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
-        } else {
-            setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
-        }
-        // Se deshabilitan las opciones y se espera 2 segundos para cambiar de pregunta
-        setTimeout(() => {
-            setSelectedAnswer(null);
-            chooseQuestion();
-        }, 2000);
-    };
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [incorrectCount, setIncorrectCount] = useState(0);
+    const [gameEnded, setGameEnded] = useState(false);
 
     // Función para obtener las preguntas desde el servidor
     const getQuestions = async () => {
         try {
-            const response = await fetch("http://localhost:3001/wikidata/question?category=Actores&n=10");
+            const response = await fetch("http://localhost:3001/wikidata/question?category=Lugares&n=10");
             const data = await response.json();
             if (data && data.length > 0) {
                 setQuestions(data);
@@ -60,14 +48,12 @@ const GamePanel = () => {
         }
         const randomIndex = Math.floor(Math.random() * questions.length);
         const question = questions[randomIndex];
-        // Se elimina la pregunta elegida del listado
         setQuestions(prev => prev.filter((_, index) => index !== randomIndex));
 
         let options = question.options || [];
         if (!options.includes(question.answer)) {
             options.push(question.answer);
         }
-        // Mezclar las opciones para que no siempre aparezca en la misma posición
         options = options.sort(() => Math.random() - 0.5);
 
         setQuestionData({
@@ -78,19 +64,30 @@ const GamePanel = () => {
         });
     };
 
-    // Cargar las preguntas al montar el componente
-    useEffect(() => {
-        getQuestions();
-    }, []);
-
-    // Cuando se carguen las preguntas y no hay una pregunta activa, se elige una
-    useEffect(() => {
-        if (questionData.question === '' && questions.length > 0) {
-            chooseQuestion();
+    // Función para manejar la respuesta seleccionada por el usuario
+    const handleAnswerClick = (answer) => {
+        setSelectedAnswer(answer);
+        if (answer === questionData.correctAnswer) {
+            setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
+            setCorrectCount(prev => prev + 1);
+        } else {
+            setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
+            setIncorrectCount(prev => prev + 1);
         }
-    }, [questions]);
 
-    // Función para determinar el estilo de cada botón según la respuesta seleccionada
+        // Espera 2 segundos para mostrar el feedback y luego avanzar o finalizar el juego
+        setTimeout(() => {
+            if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
+                setGameEnded(true);
+            } else {
+                setCurrentQuestionIndex(prev => prev + 1);
+                setSelectedAnswer(null);
+                chooseQuestion();
+            }
+        }, 2000);
+    };
+
+    // Estilo condicional de los botones según la respuesta
     const getButtonStyle = (respuesta) => {
         if (!selectedAnswer) return {};
         if (respuesta === questionData.correctAnswer) {
@@ -101,6 +98,76 @@ const GamePanel = () => {
         }
         return {};
     };
+
+    // Reinicia el juego para volver a jugar
+    const resetGame = () => {
+        setCorrectCount(0);
+        setIncorrectCount(0);
+        setCurrentQuestionIndex(0);
+        setGameEnded(false);
+        setSelectedAnswer(null);
+        setQuestions([]);
+        setQuestionData({ question: '', image: '', options: [], correctAnswer: '' });
+        getQuestions();
+    };
+
+    // Cargar las preguntas al montar el componente
+    useEffect(() => {
+        getQuestions();
+    }, []);
+
+    // Cuando se carguen las preguntas y no hay una pregunta activa, se elige una
+    useEffect(() => {
+        if (questionData.question === '' && questions.length > 0 && !gameEnded) {
+            chooseQuestion();
+        }
+    }, [questions, gameEnded, questionData.question]);
+
+    // Si el juego terminó, se muestra la vista resumen
+    if (gameEnded) {
+        const performanceMessage =
+            correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
+        return (
+            <ThemeProvider theme={theme}>
+                <Grid
+                    container
+                    style={{
+                        height: '100vh',
+                        overflow: 'hidden',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: theme.palette.background.default,
+                    }}
+                >
+                    <Paper style={{ padding: '32px', textAlign: 'center' }}>
+                        <Typography variant="h4" gutterBottom>
+                            Resumen del Juego
+                        </Typography>
+                        <Typography variant="h6">
+                            Preguntas contestadas: {TOTAL_QUESTIONS}
+                        </Typography>
+                        <Typography variant="h6" color="green">
+                            Respuestas correctas: {correctCount}
+                        </Typography>
+                        <Typography variant="h6" color="red">
+                            Respuestas incorrectas: {incorrectCount}
+                        </Typography>
+                        <Typography variant="h5" style={{ marginTop: '16px' }}>
+                            {performanceMessage}
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={resetGame}
+                            style={{ marginTop: '24px' }}
+                        >
+                            Jugar de Nuevo
+                        </Button>
+                    </Paper>
+                </Grid>
+            </ThemeProvider>
+        );
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -197,7 +264,7 @@ const GamePanel = () => {
                             overflowY: 'auto',
                         }}
                     >
-                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer}/>
+                        <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer} />
                     </Grid>
                 )}
                 {!showChat && (
@@ -218,7 +285,6 @@ const GamePanel = () => {
                     </Button>
                 )}
             </Grid>
-            {/* Snackbar para mostrar el feedback de la respuesta */}
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={3000}
