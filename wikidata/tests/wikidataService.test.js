@@ -1,46 +1,70 @@
-const request = require('supertest');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongoose = require('mongoose');
+const service = require('../src/services/wikidataService');
+const repository = require('../src/repositories/wikidataRepository');
+const fakeAnswers = require('../src/services/wikidataFakeAnswersService');
 
-const { fetchQuestionsFromWikidata } = require('../wikidataService');
-const wikidataRepository = require('../repositories/wikidataRepository');
+jest.mock('../src/repositories/wikidataRepository');
+jest.mock('../src/services/wikidataFakeAnswersService');
+jest.mock('node-fetch', () => jest.fn());
 
-let mongoServer;
+describe('wikidataService', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
+  it('should fetch questions from Wikidata and insert them if they do not exist', async () => {
+    const category = 'Science';
+    const questions = [{ id: 1, question: 'What is science?' }];
     
-    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-    wikidataRepository.init(mongoose, mongoUri);
-});
+    repository.existsQuestions.mockResolvedValue(false); 
+    repository.insertQuestions.mockResolvedValue(undefined);
+    repository.getQuestions.mockResolvedValue(questions);
 
-afterAll(async () => {
-    await mongoose.connection.close();
-    await mongoServer.stop();
-});
+    service.fetchQuestionsFromWikidata = jest.fn().mockResolvedValue(questions);
 
-describe('Wikidata Service', () => {
-    beforeEach(async () => {
-        await wikidataRepository.deleteQuestions(); // ✅ Usar repositorio para limpiar BD
-    });
+    const result = await service.getQuestions(category, 1);
 
-    it('should fetch questions from Wikidata and store them in MongoDB', async () => {
-        const questions = await fetchQuestionsFromWikidata();
-        
-        expect(Array.isArray(questions)).toBe(true);
-        expect(questions.length).toBeGreaterThan(0);
+    expect(repository.existsQuestions).toHaveBeenCalledWith(category);
+    expect(repository.insertQuestions).toHaveBeenCalledWith(questions);
+    expect(result).toEqual(questions); 
+  });
 
-        await wikidataRepository.insertQuestions(questions);
+  it('should return questions from the database if they exist', async () => {
+    const category = 'History';
+    const questions = [{ id: 2, question: 'Who was the first president?' }];
 
-        const questionsInDb = await wikidataRepository.getQuestions(questions[0].category, 10);
-        expect(questionsInDb.length).toBeGreaterThan(0);
+    repository.existsQuestions.mockResolvedValue(true);
+    repository.getQuestions.mockResolvedValue(questions);
 
-        questionsInDb.forEach((q) => {
-            expect(q).toHaveProperty('statements');
-            expect(q).toHaveProperty('answer');
-            expect(q).toHaveProperty('image');
-            expect(q).toHaveProperty('category');
-        });
-    }, 20000);
+    const result = await service.getQuestions(category, 1);
+
+    expect(repository.existsQuestions).toHaveBeenCalledWith(category);
+    expect(repository.insertQuestions).not.toHaveBeenCalled(); 
+    expect(result).toEqual(questions); 
+  });
+
+  it('should check if the user answer is correct', async () => {
+    const userOption = 'Option A';
+    const correctAnswer = 'Option A';
+
+    const isCorrect = await service.checkCorrectAnswer(userOption, correctAnswer);
+
+    expect(isCorrect).toBe(true); 
+  });
+
+  it('should return false if the user answer is incorrect', async () => {
+    const userOption = 'Option B';
+    const correctAnswer = 'Option A';
+
+    const isCorrect = await service.checkCorrectAnswer(userOption, correctAnswer);
+
+    expect(isCorrect).toBe(false); 
+  });
+
+  it('should clear all questions from the database', async () => {
+    repository.deleteQuestions.mockResolvedValue(undefined);
+
+    await service.clearAllQuestions();
+
+    expect(repository.deleteQuestions).toHaveBeenCalled(); 
+  });
 });

@@ -1,3 +1,5 @@
+/*
+
 const express = require('express');
 const mongoose = require('mongoose');
 const apiRoutes = require('./api');
@@ -40,3 +42,5 @@ async function startServer() {
 }
 
 startServer();
+
+*/
