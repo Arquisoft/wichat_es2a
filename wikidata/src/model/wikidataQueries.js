@@ -10,7 +10,7 @@
 module.exports = [
         {
             category: "Lugares",
-            sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
+            sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
                 ?item wdt:P31 wd:Q515;  # Ciudad
                       wdt:P18 ?image;   # Imagen
                       wdt:P17 ?answer.  # País de la ciudad (respuesta correcta)
@@ -20,7 +20,7 @@ module.exports = [
         },
         {
             category: "Arte",
-            sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
+            sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
                 ?item wdt:P31 wd:Q3305213;  # Es una pintura
                       wdt:P18 ?image.      # Tiene imagen
                 SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
@@ -30,7 +30,7 @@ module.exports = [
         },          
         {
             category: "Actores",
-            sparql: `SELECT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
+            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
                 ?item wdt:P31 wd:Q5;
                       wdt:P106 wd:Q33999;  # Ocupación: Actor
                       wdt:P18 ?image.      # Imagen
@@ -40,7 +40,7 @@ module.exports = [
         },
         {
             category: "Cantantes",
-            sparql: `SELECT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
+            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
                 ?item wdt:P31 wd:Q5;     # Humano
                       wdt:P106 wd:Q177220; # Ocupación: Cantante
                       wdt:P18 ?image.      # Imagen
@@ -50,7 +50,7 @@ module.exports = [
         },
         {
             category: "Pintores",
-            sparql: `SELECT ?itemLabel ?image ?answerLabel WHERE {
+            sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
                     ?item wdt:P31 wd:Q3305213;  # Es una pintura
                             wdt:P18 ?image;        # Tiene imagen
                             wdt:P170 ?answer.      # Su autor (respuesta correcta)
