@@ -8,6 +8,7 @@ import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
+const CATEGORY = "Lugares";
 
 const GamePanel = () => {
   const [showChat, setShowChat] = useState(false);
@@ -24,14 +25,12 @@ const GamePanel = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
-  // Estado para la pantalla de carga inicial y para la imagen de cada pregunta
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Función para obtener las preguntas desde el servidor
   const getQuestions = async () => {
     try {
-      const response = await fetch("http://localhost:3001/wikidata/question?category=Actores&n="+TOTAL_QUESTIONS);
+      const response = await fetch("http://localhost:3001/wikidata/question?category="+CATEGORY+"&n="+TOTAL_QUESTIONS);
       const data = await response.json();
       if (data && data.length > 0) {
         setQuestions(data);
@@ -43,7 +42,6 @@ const GamePanel = () => {
     }
   };
 
-  // Función para elegir una pregunta al azar y eliminarla del listado
   const chooseQuestion = () => {
     if (questions.length === 0) {
       getQuestions();
@@ -51,17 +49,14 @@ const GamePanel = () => {
     }
     const randomIndex = Math.floor(Math.random() * questions.length);
     const question = questions[randomIndex];
-    // Se elimina la pregunta elegida del listado
     setQuestions(prev => prev.filter((_, index) => index !== randomIndex));
 
     let options = question.options || [];
     if (!options.includes(question.answer)) {
       options.push(question.answer);
     }
-    // Mezclar las opciones para que no aparezcan siempre en la misma posición
     options = options.sort(() => Math.random() - 0.5);
 
-    // Al cambiar de pregunta se reinicia el estado de carga de la imagen
     setImageLoaded(false);
 
     setQuestionData({
@@ -72,7 +67,6 @@ const GamePanel = () => {
     });
   };
 
-  // Función para manejar la respuesta seleccionada por el usuario
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
@@ -83,7 +77,6 @@ const GamePanel = () => {
       setIncorrectCount(prev => prev + 1);
     }
 
-    // Se espera 2 segundos para mostrar el feedback y luego se avanza o finaliza el juego
     setTimeout(() => {
       if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
         setGameEnded(true);
@@ -95,7 +88,6 @@ const GamePanel = () => {
     }, 2000);
   };
 
-  // Estilo condicional de los botones según la respuesta
   const getButtonStyle = (respuesta) => {
     if (!selectedAnswer) return {};
     if (respuesta === questionData.correctAnswer) {
@@ -107,7 +99,6 @@ const GamePanel = () => {
     return {};
   };
 
-  // Reinicia el juego para volver a jugar
   const resetGame = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
@@ -120,26 +111,22 @@ const GamePanel = () => {
     getQuestions();
   };
 
-  // Cargar las preguntas al montar el componente
   useEffect(() => {
     getQuestions();
   }, []);
 
-  // Cuando se carguen las preguntas y no hay una pregunta activa, se elige una
   useEffect(() => {
     if (questionData.question === '' && questions.length > 0 && !gameEnded) {
       chooseQuestion();
     }
   }, [questions, gameEnded, questionData.question]);
 
-  // Controlar la salida de la pantalla de carga inicial: se espera a tener la primera pregunta y la imagen cargada
   useEffect(() => {
     if (questionData.question !== '' && imageLoaded && initialLoading) {
       setInitialLoading(false);
     }
   }, [questionData.question, imageLoaded, initialLoading]);
 
-  // Fallback: si la imagen tarda demasiado, se fuerza la salida del loading (por ejemplo, a los 5 segundos)
   useEffect(() => {
     if (questionData.question !== '' && initialLoading) {
       const timer = setTimeout(() => {
@@ -149,7 +136,6 @@ const GamePanel = () => {
     }
   }, [questionData.question, initialLoading]);
 
-  // Pantalla de carga inicial con mensaje "Cargando preguntas..."
   if (initialLoading) {
     return (
       <ThemeProvider theme={theme}>
