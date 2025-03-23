@@ -27,3 +27,5 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        EMPATHY_API_KEY: ${{ secrets.EMPATHY_API_KEY }}

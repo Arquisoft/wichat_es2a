@@ -4,7 +4,7 @@
   "description": "Service for obtaining and storing questions from Wikidata",
   "main": "server.js",
   "scripts": {
-    "start": "node wikidataService.js",
+    "start": "node src/wikidataRoutes.js",
     "test": "jest"
   },
   "repository": {
@@ -21,7 +21,8 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongoose": "^8.9.3",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "wikidata": "file:"
   },
   "devDependencies": {
     "jest": "^29.7.0",
