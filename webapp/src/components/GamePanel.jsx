@@ -4,8 +4,6 @@ import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
-import { Close } from '@mui/icons-material';
-import Nav from './Nav';
 
 const theme = createTheme(defaultTheme);
 
@@ -65,7 +63,6 @@ const GamePanel = () => {
     return (
         <ThemeProvider theme={theme}>
             <Grid container style={{ height: '100vh', overflow: 'hidden' }}>
-                <Nav />
 
                 {/* Espacio entre Nav y el contenido */}
                 <Grid item xs={12} style={{ height: '20px' }} />
