@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
 const cors = require('cors');
+const { Game } = require("./model/wikidataModel");
 
 app.use(cors());
 
@@ -34,11 +35,28 @@ app.get("/wikidata/question", async (req, res) => {
 // Configuring the route to check if the user's answer is correct.
 // This route will receive the user's answer, and the correct answer.
 // Example: http://localhost:3001/wikidata/verify?userOption=Option1&answer=CorrectAnswer
-app.get("/wikidata/verify", async (req, res) => {
-    const { id, userOption, answer } = req.query;
+app.post("/wikidata/verify", async (req, res) => {
+    console.log("/wikidata/verify route hit with body:", req.body);
+    const { userId, userOption, answer } = req.body; 
     try {
-        const isCorrect = await service.checkCorrectAnswer(id, userOption, answer);
-        res.json({ correct: isCorrect });
+        const isCorrect = await service.checkCorrectAnswer(userOption, answer); 
+        let games = await Game.find({ userId });
+        let game = games[games.length-1];
+        if (!game) {
+            return res.status(404).json({ error: "No active game found for this user" });
+        }
+        if (isCorrect) {
+            game.correct += 1;
+        } else {
+            game.wrong += 1;
+        }
+        await game.save();
+
+        res.json({
+            isCorrect: isCorrect, 
+            correctCount: game.correct,
+            wrongCount: game.wrong
+        });
     } catch (error) {
         console.error("Error verifying the answer:", error);
         res.status(500).json({ error: "Error verifying the answer" });
@@ -71,7 +89,8 @@ app.post('/game/start', async (req, res) => {
             userId,
             correct: 0,
             wrong: 0,
-            duration: 0
+            duration: 0,
+            createdAt: new Date()
         });
 
         return res.json({ message: "Game started successfully" });
@@ -120,37 +139,38 @@ app.post('/game/end', async (req, res) => {
 // This route will return the statistics of the games played by the user.
 // Example: http://localhost:3001/game/statistics?userId=123
 app.get('/game/statistics', async (req, res) => {
-     try {
-         const { userId } = req.query;
- 
-         if (!userId) {
-             return res.status(400).json({ error: "userId is required" });
-         }
- 
-         const games = await Game.find({ userId });
- 
-         if (!games || games.length === 0) {
-             return res.status(404).json({ error: "No games found for this user" });
-         }
- 
-         const statistics = games.map(game => ({
-             correct: game.correct,
-             wrong: game.wrong,
-             duration: game.duration,
-             createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
-                 year: 'numeric',
-                 month: '2-digit',
-                 day: '2-digit',
-                 hour: '2-digit',
-                 minute: '2-digit',
-                 second: '2-digit'
-             })
-         }));
- 
-         res.json(statistics);
-     } catch (error) {
-         console.error("Error fetching game statistics:", error);
-         res.status(500).json({ error: "Server error" });
-     }
- });
+    try {
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
+
+        const games = await Game.find({ userId });
+
+        if (!games || games.length === 0) {
+            return res.status(404).json({ error: "No games found for this user" });
+        }
+
+        const statistics = games.map(game => ({
+            correct: game.correct,
+            wrong: game.wrong,
+            duration: game.duration,
+            createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            })
+        }));
+
+        res.json(statistics);
+    } catch (error) {
+        console.error("Error fetching game statistics:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 
