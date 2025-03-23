@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
 const cors = require('cors');
-const router = express.Router();
 const { Game } = require("./model/wikidataModel");
 
 app.use(cors());
@@ -21,7 +20,7 @@ app.listen(PORT, () => {
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
 // Example: http://localhost:3001/wikidata/question?category=Lugares&n=10
-router.get("/wikidata/question", async (req, res) => {
+app.get("/wikidata/question", async (req, res) => {
     const { category, n } = req.query;
     try {
         const questions = await service.getQuestions(category, n);
@@ -36,7 +35,7 @@ router.get("/wikidata/question", async (req, res) => {
 // Configuring the route to check if the user's answer is correct.
 // This route will receive the user's answer, and the correct answer.
 // Example: http://localhost:3001/wikidata/verify?userOption=Option1&answer=CorrectAnswer
-router.post("/wikidata/verify", async (req, res) => {
+app.post("/wikidata/verify", async (req, res) => {
     console.log("/wikidata/verify route hit with body:", req.body);
     const { userId, userOption, answer } = req.body; 
     try {
@@ -66,7 +65,7 @@ router.post("/wikidata/verify", async (req, res) => {
 
 // Configuring the route to clear all the questions from the database.
 // Example: http://localhost:3001/wikidata/clear
-router.get("/wikidata/clear", async (req, res) => {
+app.get("/wikidata/clear", async (req, res) => {
     try {
         await service.clearAllQuestions();
         res.json({ message: "Questions cleared successfully" });
@@ -79,7 +78,7 @@ router.get("/wikidata/clear", async (req, res) => {
 // Configuring the route to start a new game.
 // This route will create a new game in the database.
 // Example: http://localhost:3001/game/start
-router.post('/game/start', async (req, res) => {
+app.post('/game/start', async (req, res) => {
     try {
         const { userId } = req.body;
         if (!userId) {
@@ -104,7 +103,7 @@ router.post('/game/start', async (req, res) => {
 // Configuring the route to end the game.
 // This route will end the game and calculate the duration of the game.
 // Example: http://localhost:3001/game/end
-router.post('/game/end', async (req, res) => {
+app.post('/game/end', async (req, res) => {
     try {
         const { userId } = req.body;
 
@@ -139,7 +138,7 @@ router.post('/game/end', async (req, res) => {
 // Configuring the route to update the game statistics.
 // This route will return the statistics of the games played by the user.
 // Example: http://localhost:3001/game/statistics?userId=123
-router.get('/game/statistics', async (req, res) => {
+app.get('/game/statistics', async (req, res) => {
     try {
         const { userId } = req.query;
 
@@ -174,5 +173,4 @@ router.get('/game/statistics', async (req, res) => {
     }
 });
 
-module.exports = router;
 
