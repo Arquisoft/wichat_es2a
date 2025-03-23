@@ -8,6 +8,7 @@ import Nav from "./components/Nav";
 import AddUser from './components/AddUser';
 import Login from './components/Login';
 import GamePanel from "./components/GamePanel";
+import Home from "./components/Home";
 import defaultTheme from "./components/config/default-Theme.json";
 import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 
@@ -27,6 +28,7 @@ function App() {
             {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
             <Route element={<ProtectedRoute />}>
               <Route path="/game" element={<GamePanel />} />
+              <Route path="/home" element={<Home />} />
             </Route>
 
             {/* Redirección por defecto */}

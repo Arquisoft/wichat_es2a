@@ -50,7 +50,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(response.data));
       setOpenSnackbar(true); // Mostramos el snackbar
       // Redirigimos al usuario a la página del juego
-      navigate('/game');
+      navigate('/home');
       setOpenSnackbar(true); // Mostramos el snackbar
 
     } catch (error) {
