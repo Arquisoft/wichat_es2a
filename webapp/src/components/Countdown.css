@@ -1,0 +1,10 @@
+/* Hoja de estilos para el componente Countdown */
+/* Sirven para la animación del circulo que se va vaciando segun pasa el tiempo */
+
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
