@@ -1,7 +1,7 @@
 // src/components/AddUser.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, TextField, Button, Snackbar } from '@mui/material';
+import { Container, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
@@ -16,6 +16,10 @@ const AddUser = () => {
       await axios.post(`${apiEndpoint}/adduser`, { username, password });
       setOpenSnackbar(true);
     } catch (error) {
+      // Verificamos si el error tiene el mensaje
+      if (error.response && error.response.data.error){
+        setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
+      }
       setError(error.response.data.error);
     }
   };
@@ -29,6 +33,8 @@ const AddUser = () => {
       <Typography component="h1" variant="h5">
         Add User
       </Typography>
+
+      {/* Formulario para agregar un usuario */}
       <TextField
         name="username"
         margin="normal"
@@ -37,6 +43,7 @@ const AddUser = () => {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
+
       <TextField
         name="password"
         margin="normal"
@@ -46,13 +53,25 @@ const AddUser = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+
+      {/* Botón para agregar un usuario */}
       <Button variant="contained" color="primary" onClick={addUser}>
         Add User
       </Button>
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} message="User added successfully" />
+
+      {/* Mostrar el mensaje de error en la interfaz de usuario */}
       {error && (
-        <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')} message={`Error: ${error}`} />
+        <Alert severity="error" sx={{mt:2}}>
+          {error}
+        </Alert>
       )}
+
+      {/* Snackbar para mostrar un mensaje de éxito */}
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar} 
+        message="User added successfully" />
     </Container>
   );
 };
