@@ -1,48 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+import Nav from "./components/Nav";
 import AddUser from './components/AddUser';
 import Login from './components/Login';
-import CssBaseline from '@mui/material/CssBaseline';
-// import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Nav from "./components/Nav"
-import defaultTheme from "./components/config/default-Theme.json"
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import GamePanel from "./components/GamePanel";
+import Home from "./components/Home";
+import defaultTheme from "./components/config/default-Theme.json";
+import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 
 const theme = createTheme(defaultTheme);
 
 function App() {
-  const [showLogin, setShowLogin] = useState(true);
-
-  const handleToggleView = () => {
-    setShowLogin(!showLogin);
-  };
-
   return (
-<ThemeProvider theme={theme}>
-  <CssBaseline />
-  <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-    <Nav />
-    <Typography component="h1" variant="h5" align="center" sx={{ marginTop: 2 }}>
-      Welcome to the 2025 edition of the Software Architecture course
-    </Typography>
-    {showLogin ? <Login /> : <AddUser />}
-    <Typography component="div" align="center" sx={{ marginTop: 2 }}>
-      {showLogin ? (
-        <Link name="gotoregister" component="button" variant="body2" onClick={handleToggleView}>
-          Don't have an account? Register here.
-        </Link>
-      ) : (
-        <Link component="button" variant="body2" onClick={handleToggleView}>
-          Already have an account? Login here.
-        </Link>
-      )}
-    </Typography>
-  </Box>
-</ThemeProvider>
-    //<GamePanel/>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router> {/* Asegurar que Routes esté dentro de BrowserRouter */}
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Nav />
+          <Routes> {/* Definimos las rutas */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/adduser" element={<AddUser />} />
+
+            {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/game" element={<GamePanel />} />
+              <Route path="/home" element={<Home />} />
+            </Route>
+
+            {/* Redirección por defecto */}
+            <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
+          </Routes>
+        </Box>
+      </Router>
+    </ThemeProvider>
   );
 }
 
