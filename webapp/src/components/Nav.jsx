@@ -9,6 +9,7 @@ import {
 import { ReactComponent as CustomIcon } from '../media/logoS.svg';
 import { useTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
+import { useNavigate } from 'react-router-dom';
 
 const pages = [
     { code: 'home', link: '/home', name: 'Home' },
@@ -46,7 +47,7 @@ const MenuDrawer = ({ open, onClose }) => (
     </Drawer>
 );
 
-const UserMenu = ({ anchorEl, open, onClose }) => (
+const UserMenu = ({ anchorEl, open, onClose, onLogout }) => (
     <Menu
         sx={{ mt: '45px' }}
         anchorEl={anchorEl}
@@ -56,8 +57,14 @@ const UserMenu = ({ anchorEl, open, onClose }) => (
         open={open}
         onClose={onClose}
     >
-        {["Perfil", "Configuración", "Cerrar Sesión"].map((text) => (
-            <MenuItem key={text} onClick={onClose}>
+        {["Perfil", "Configuración", "Cerrar Sesión"].map((text, index) => (
+            <MenuItem key={text} onClick={()=>{
+              if(index===2){ // Cerrar Sesión
+                onLogout();
+              }
+              onClose(); // Cerrar el menú
+            }}>
+
                 <Typography textAlign="center">{text}</Typography>
             </MenuItem>
         ))}
@@ -68,6 +75,15 @@ const Nav = () => {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const navigate = useNavigate(); // Hook de navegación
+
+    // Función para cerrar sesión
+    const handleLogout = () => {
+        // Eliminar el usuario del almacenamiento local
+        localStorage.removeItem('user');
+        // Redirigir al usuario a la página de inicio
+        navigate('/login');
+    };
 
     return (
         <AppBar position="static" sx={{background: theme.palette.primary.main}}>
@@ -107,7 +123,12 @@ const Nav = () => {
             <MenuDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
             {/* User Dropdown Menu */}
-            <UserMenu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={() => setAnchorElUser(null)} />
+            <UserMenu 
+                anchorEl={anchorElUser} 
+                open={Boolean(anchorElUser)} 
+                onClose={() => setAnchorElUser(null)} 
+                onLogout={handleLogout} // Pasa la función de cerrar sesión
+            />
         </AppBar>
     );
 };
