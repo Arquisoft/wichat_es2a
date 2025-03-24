@@ -14,7 +14,11 @@ const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
 const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
 
-app.use(cors());
+// Configure CORS to allow requests from webapp
+app.use(cors({
+  origin: process.env.WEBAPP_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 
 //Prometheus configuration
@@ -48,11 +52,58 @@ app.post('/adduser', async (req, res) => {
 
 app.post('/askllm', async (req, res) => {
   try {
-    // Forward the add user request to the user service
+    // Forward the LLM question request to the LLM service
     const llmResponse = await axios.post(llmServiceUrl+'/ask', req.body);
     res.json(llmResponse.data);
   } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data.error });
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.error || 'An error occurred while communicating with the LLM service' 
+    });
+  }
+});
+
+// Get conversation history for a user
+app.get('/conversations/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const llmResponse = await axios.get(`${llmServiceUrl}/conversations/${userId}`);
+    res.json(llmResponse.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.error || 'An error occurred while retrieving conversation history' 
+    });
+  }
+});
+
+// Clear conversation history for a user
+app.delete('/conversations/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { preservePrePrompt } = req.query;
+    
+    const llmResponse = await axios.delete(
+      `${llmServiceUrl}/conversations/${userId}`, 
+      { params: { preservePrePrompt } }
+    );
+    
+    res.json(llmResponse.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.error || 'An error occurred while clearing conversation history' 
+    });
+  }
+});
+
+// Update conversation settings
+app.put('/conversations/:userId/settings', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const llmResponse = await axios.put(`${llmServiceUrl}/conversations/${userId}/settings`, req.body);
+    res.json(llmResponse.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.error || 'An error occurred while updating conversation settings' 
+    });
   }
 });
 

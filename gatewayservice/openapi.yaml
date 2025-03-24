@@ -142,3 +142,263 @@ paths:
                     type: string
                     description: Error information.
                     example: Internal Server Error
+  /askllm:
+    post:
+      summary: Ask a question to the LLM service
+      operationId: askLLM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  description: The question to ask the LLM
+                  example: "What can you tell me about Barcelona?"
+                model:
+                  type: string
+                  description: The LLM model to use
+                  enum: [gemini, empathy]
+                  example: gemini
+                userId:
+                  type: string
+                  description: User ID for conversation tracking
+                  example: "65f756db3fa22d227a4b7c7d"
+                useHistory:
+                  type: boolean
+                  description: Whether to use conversation history
+                  example: true
+                maxHistoryLength:
+                  type: integer
+                  description: Maximum number of messages to keep in history
+                  example: 10
+                answer:
+                  type: string
+                  description: The location about which hints are provided
+                  example: "Barcelona"
+      responses:
+        '200':
+          description: Successful response from LLM
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                    description: The answer from the LLM
+                    example: "Barcelona is a beautiful city on the Mediterranean coast of Spain..."
+        '400':
+          description: Bad request or missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error information
+                    example: "Missing required field: question"
+        '500':
+          description: Internal server error or LLM service error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error information
+                    example: "Error processing LLM request"
+  /conversations/{userId}:
+    get:
+      summary: Get conversation history for a user
+      operationId: getConversation
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "65f756db3fa22d227a4b7c7d"
+      responses:
+        '200':
+          description: Conversation history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: User ID
+                    example: "65f756db3fa22d227a4b7c7d"
+                  model:
+                    type: string
+                    description: The LLM model being used
+                    example: "gemini"
+                  maxHistoryLength:
+                    type: integer
+                    description: Maximum number of messages in history
+                    example: 20
+                  messages:
+                    type: array
+                    description: Conversation messages
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum: [user, assistant, system]
+                          example: "user"
+                        content:
+                          type: string
+                          example: "What can you tell me about Barcelona?"
+                        timestamp:
+                          type: string
+                          format: date-time
+                          example: "2024-03-24T14:30:00.000Z"
+                        isPrePrompt:
+                          type: boolean
+                          example: false
+        '404':
+          description: No conversation found for this user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No conversation found for this user"
+        '500':
+          description: Failed to retrieve conversation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to retrieve conversation"
+    delete:
+      summary: Clear conversation history for a user
+      operationId: clearConversation
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "65f756db3fa22d227a4b7c7d"
+        - name: preservePrePrompt
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+          description: Whether to preserve the system pre-prompt
+          example: true
+      responses:
+        '200':
+          description: Conversation history cleared successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Conversation history cleared while preserving system preprompt"
+        '404':
+          description: No conversation found for this user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No conversation found for this user"
+        '500':
+          description: Failed to clear conversation history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to clear conversation history"
+  /conversations/{userId}/settings:
+    put:
+      summary: Update conversation settings for a user
+      operationId: updateConversationSettings
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID
+          example: "65f756db3fa22d227a4b7c7d"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                maxHistoryLength:
+                  type: integer
+                  description: Maximum number of messages to keep in history
+                  example: 15
+                model:
+                  type: string
+                  description: The LLM model to use
+                  enum: [gemini, empathy]
+                  example: "gemini"
+      responses:
+        '200':
+          description: Conversation settings updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "65f756db3fa22d227a4b7c7d"
+                  model:
+                    type: string
+                    example: "gemini"
+                  maxHistoryLength:
+                    type: integer
+                    example: 15
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                        content:
+                          type: string
+                        timestamp:
+                          type: string
+                        isPrePrompt:
+                          type: boolean
+        '500':
+          description: Failed to update conversation settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to update conversation settings"

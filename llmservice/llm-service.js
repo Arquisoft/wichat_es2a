@@ -1,12 +1,16 @@
 const axios = require('axios');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const Conversation = require('./conversation-model');
 require('dotenv').config();
 
 const app = express();
 app.disable('x-powered-by');
 const port = 8003;
+
+// CORS configuration
+app.use(cors());
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/llmdb';
@@ -162,6 +166,8 @@ app.post('/ask', async (req, res) => {
     validateRequiredFields(req, ['question', 'model', 'userId', 'answer']);
     
     const { question, model, userId, useHistory, maxHistoryLength, answer } = req.body;
+
+    console.log('User ID:', userId);
     
     // Base preprompt
     let prePrompt = 
