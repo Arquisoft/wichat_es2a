@@ -26,6 +26,9 @@ const Countdown = () => {
     return (
         <div className='countdown-container'>
             <svg width='100' height='100'>
+
+                {/* Circulo gris de fondo */}
+                {/* Circulo estatico que siempre se ve cuando vaya desapareciendo el otro */}
                 <circle
                     cx='50'
                     cy='50'
@@ -35,6 +38,9 @@ const Countdown = () => {
                     strokeWidth='4'
                     fill='none'
                 />
+
+                {/* Circulo verde de primer plano */}
+                {/* Circulo que se va vaciando segun van pasando los segundos */}
                 <circle
                     cx='50'
                     cy='50'
@@ -48,6 +54,18 @@ const Countdown = () => {
                     strokeDashoffset={offset}
                     style={{ transition: 'stroke-dashoffset 1s linear' }}
                 />
+
+                {/* Texto interior con el numero de segundos que quedan para responder la pregunta */}
+                <text
+                    x='50%'
+                    y='50%'
+                    dominantBaseline='middle'
+                    textAnchor='middle'
+                    className='number'
+                    fill='green'
+                >
+                    {seconds}
+                </text>
             </svg>
         </div>
     );
