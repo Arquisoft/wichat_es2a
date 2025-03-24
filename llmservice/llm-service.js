@@ -166,10 +166,7 @@ app.post('/ask', async (req, res) => {
     validateRequiredFields(req, ['question', 'model', 'userId', 'answer']);
     
     const { question, model, userId, useHistory, maxHistoryLength, answer } = req.body;
-
-    console.log('User ID:', userId);
     
-    // Base preprompt
     let prePrompt = 
     `Eres un asistente que da pistas sobre una ubicación. 
     En cada mensaje se te pasara la conversacion que has tenido con el usuario hasta el momento
@@ -199,7 +196,7 @@ app.post('/ask', async (req, res) => {
 
       // Append the user's current question to the context
       conversationContext += `Actual user question: ${question}\n\n`;
-      
+
       // Get answer from LLM
       responseAnswer = await sendQuestionToLLM(question, model, conversationContext);
       
@@ -210,6 +207,7 @@ app.post('/ask', async (req, res) => {
       // Standard operation without history
       // Create a simple context with just the preprompt
       const simpleContext = `System: ${prePrompt}\n\nUser: ${question}`;
+      console.log("Simple context being sent to LLM:", simpleContext);
       responseAnswer = await sendQuestionToLLM(question, model, simpleContext);
     }
     
@@ -241,36 +239,45 @@ app.get('/conversations/:userId', async (req, res) => {
   }
 });
 
-// Endpoint to clear conversation history for a user
 app.delete('/conversations/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const { preservePrePrompt = true } = req.query; // Option to preserve preprompt
-    
+    let { preservePrePrompt = true } = req.query;
+
+    preservePrePrompt = preservePrePrompt === 'true';
+
     const userIdStr = safeUserId(userId);
-    
-    const conversation = await Conversation.findOne({ userId: userIdStr });
-    
-    if (!conversation) {
-      return res.status(404).json({ error: 'No conversation found for this user' });
-    }
-    
+
     if (preservePrePrompt) {
-      // Keep only the preprompt message
+      const conversation = await Conversation.findOne({ userId: userIdStr });
+
+      if (!conversation) {
+        console.log(`No conversation found for userId: ${userIdStr}`);
+        return res.status(404).json({ error: 'No conversation found for this user' });
+      }
+
       const prePromptMessage = conversation.messages.find(msg => msg.isPrePrompt);
       conversation.messages = prePromptMessage ? [prePromptMessage] : [];
+
+      await conversation.save();
+
+      console.log(`Conversation cleared while preserving preprompt for userId: ${userIdStr}`);
+      return res.json({ 
+        message: 'Conversation history cleared while preserving system preprompt' 
+      });
     } else {
-      // Clear all messages including preprompt
-      conversation.messages = [];
+      const result = await Conversation.deleteOne({ userId: userIdStr });
+
+      if (result.deletedCount === 0) {
+        console.log(`No conversation found to delete for userId: ${userIdStr}`);
+        return res.status(404).json({ error: 'No conversation found for this user' });
+      }
+
+      console.log(`Conversation entry deleted successfully for userId: ${userIdStr}`);
+      return res.json({ 
+        message: 'Conversation entry deleted successfully' 
+      });
     }
-    
-    await conversation.save();
-    
-    res.json({ 
-      message: preservePrePrompt 
-        ? 'Conversation history cleared while preserving system preprompt' 
-        : 'All conversation history cleared successfully'
-    });
   } catch (error) {
     console.error('Error clearing conversation:', error);
     res.status(500).json({ error: 'Failed to clear conversation history' });

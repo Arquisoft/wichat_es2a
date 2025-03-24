@@ -23,30 +23,25 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
     const previousAnswerRef = useRef(correctAnswer);
 
-    // Función simplificada para obtener el userId del localStorage
+
     const getUserId = () => {
         try {
-            // Obtenemos el objeto de usuario directamente del localStorage
             const userDataStr = window.localStorage.getItem('user');
             if (!userDataStr) {
-                console.log("No se encontró información de usuario en localStorage");
                 return null;
             }
             
             const userData = JSON.parse(userDataStr);
             const parsedToken = userData?.token;
             
-            // Extraemos el userId del token decodificado
             if (parsedToken) {
                 const decoded = jwtDecode(userData.token);
                 const decodedUserId = decoded?.userId;
                 if (decodedUserId) {
-                    console.log("UserId obtenido correctamente:", decodedUserId);
                     return decodedUserId;
                 }
             }
             
-            console.log("No se pudo encontrar userId en los datos de usuario");
             return null;
         } catch (error) {
             console.error("Error al recuperar userId:", error);
@@ -54,18 +49,14 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         }
     };
 
-    // Función para limpiar el historial de conversaciones en el servidor
     const clearConversationHistory = async (currentUserId) => {
         if (!currentUserId) return false;
         
         try {
             setIsLoading(true);
             
-            // Llamada al endpoint del gateway para borrar la conversación
-            // El parámetro preservePrePrompt=false asegura que se elimine también el preprompt
             await axios.delete(`${GATEWAY_URL}/conversations/${currentUserId}?preservePrePrompt=false`);
             
-            console.log("Historial de conversación eliminado correctamente");
             return true;
         } catch (error) {
             console.error("Error al eliminar el historial de conversación:", error);
@@ -75,7 +66,6 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         }
     };
 
-    // Efecto para inicializar el userId
     useEffect(() => {
         const currentUserId = getUserId();
         if (currentUserId) {
@@ -84,24 +74,19 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         setTokenFetchAttempted(true);
     }, []);
 
-    // Efecto para detectar cambios en correctAnswer y resetear el chat
     useEffect(() => {
-        // Si es la primera carga, solo guardar la referencia
         if (previousAnswerRef.current === correctAnswer) {
             return;
         }
         
-        // Si ha cambiado la respuesta correcta, limpiar el chat
         const resetChat = async () => {
             const currentUserId = userId || getUserId();
             
             if (currentUserId) {
-                // Limpiar conversación en la base de datos
                 const success = await clearConversationHistory(currentUserId);
                 
-                // Resetear los mensajes locales
                 setMessages([
-                    { text: `¡Nueva pregunta! ¿Necesitas ayuda para adivinar ${correctAnswer}?`, sender: 'bot' },
+                    { text: `¡Hola! ¿Cómo puedo ayudarte?`, sender: 'bot' },
                 ]);
                 
                 if (success) {
@@ -121,11 +106,9 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         };
         
         resetChat();
-        // Actualizar la referencia a la nueva respuesta
         previousAnswerRef.current = correctAnswer;
     }, [correctAnswer, userId]);
 
-    // Scroll al final del chat cuando hay nuevos mensajes
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -133,7 +116,6 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const handleSendMessage = async () => {
         if (input.trim() === '' || isLoading) return;
 
-        // Intentamos obtener el userId si aún no está establecido
         let currentUserId = userId;
         if (!currentUserId) {
             currentUserId = getUserId();
@@ -191,7 +173,6 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         setNotification({ ...notification, open: false });
     };
 
-    // If we're still waiting for the token on first render
     if (!tokenFetchAttempted) {
         return (
             <ThemeProvider theme={theme}>
@@ -205,7 +186,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         );
     }
 
-    // Chat UI remains the same
+
     return (
         <ThemeProvider theme={theme}>
             <Grid container sx={{ height: '100vh' }}>
@@ -235,7 +216,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                                     color: theme.palette.primary.contrastText,
                                 }}
                             >
-                                Chat {userId ? `(ID: ${userId.substring(0, 5)}...)` : '(No ID)'}
+                                Chat
                             </Typography>
                             <IconButton
                                 color="primary"
