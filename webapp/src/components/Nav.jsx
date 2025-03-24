@@ -9,7 +9,7 @@ import {
 import { ReactComponent as CustomIcon } from '../media/logoS.svg';
 import { useTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const pages = [
     { code: 'home', link: '/home', name: 'Home' },
@@ -87,7 +87,6 @@ const Nav = () => {
     };
 
     return (
-        <Router>
             <AppBar position="static" sx={{background: theme.palette.primary.main}}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>

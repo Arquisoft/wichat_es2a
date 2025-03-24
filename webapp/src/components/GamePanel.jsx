@@ -4,12 +4,15 @@ import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 const CATEGORY = "Lugares";
 
 const GamePanel = () => {
+  const navigate = useNavigate();
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
     question: '',
@@ -66,25 +69,38 @@ const GamePanel = () => {
     });
   };
 
-  const handleAnswerClick = (answer) => {
+  const handleAnswerClick = async (answer) => {
     setSelectedAnswer(answer);
-    if (answer === questionData.correctAnswer) {
-      setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
-      setCorrectCount(prev => prev + 1);
-    } else {
-      setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
-      setIncorrectCount(prev => prev + 1);
-    }
+    try {
+      const userId = localStorage.getItem('user');
+      const response = await axios.post('http://localhost:3001/game/verify', {
+        userId: userId,
+        userOption: answer,
+        answer: questionData.correctAnswer,
+      });
+      const { correct, correctCount, wrongCount } = response.data;
 
-    setTimeout(() => {
-      if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
-        setGameEnded(true);
+      if (correct) {
+        setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
+        setCorrectCount(correctCount);
       } else {
-        setCurrentQuestionIndex(prev => prev + 1);
-        setSelectedAnswer(null);
-        chooseQuestion();
+        setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
+        setIncorrectCount(wrongCount);
       }
-    }, 2000);
+
+      setTimeout(() => {
+        if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
+          handleGameEnd();
+        } else {
+          setCurrentQuestionIndex((prev) => prev + 1);
+          setSelectedAnswer(null);
+          chooseQuestion();
+        }
+      }, 2000);
+    } catch (error) {
+      console.error('Error al verificar la respuesta:', error);
+      setSnackbar({ open: true, message: 'Error al verificar la respuesta', severity: 'error' });
+    }
   };
 
   const getButtonStyle = (respuesta) => {
@@ -109,6 +125,38 @@ const GamePanel = () => {
     setInitialLoading(true);
     getQuestions();
   };
+
+  const startGame = async () => {
+    try {
+        const userId = localStorage.getItem('user');
+        if (userId) {
+            await axios.post('http://localhost:3001/game/start', { userId });
+        }
+    } catch (error) {
+        console.error('Error al iniciar el juego:', error);
+    }
+};
+
+const endGame = async () => {
+    try {
+        const userId = localStorage.getItem('user');
+        if (userId) {
+            await axios.post('http://localhost:3001/game/end', { userId });
+        }
+    } catch (error) {
+        console.error('Error al finalizar el juego:', error);
+    }
+};
+
+useEffect(() => {
+    startGame();
+}, []);
+
+const handleGameEnd = () => {
+    endGame();
+    setGameEnded(true);
+    navigate('/summary'); // Navigate to a summary page or another route
+};
 
   useEffect(() => {
     getQuestions();

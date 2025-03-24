@@ -1,48 +1,62 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { AuthContext } from './context/AuthContext';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
-const GameHistoryUI = () => {
-    const [history, setHistory] = useState([]);
-    const { userId } = useContext(AuthContext);
+const GameHistoryUI = ({ userId }) => {
+    const [gameHistory, setGameHistory] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        const fetchGameHistory = async () => {
+            try {
+                const response = await axios.get(`/game/statistics`, {
+                    params: { userId }
+                });
+                setGameHistory(response.data);
+            } catch (err) {
+                setError("Failed to fetch game history. Please try again later.");
+            }
+        };
+
         if (userId) {
-            fetch(`http://localhost:3001/api/game/statistics?userId=${userId}`)
-                .then(response => response.json())
-                .then(data => setHistory(data))
-                .catch(error => console.error('Error fetching game history:', error));
+            fetchGameHistory();
         }
     }, [userId]);
 
+    if (error) {
+        return <Typography color="error">{error}</Typography>;
+    }
+
+    if (!error && gameHistory.length === 0) {
+        return <Typography>No hay datos disponibles en el historial de juegos.</Typography>;
+    }
+
     return (
-        <Box sx={{ padding: 4 }}>
-            <Typography variant="h4" gutterBottom>
+        <TableContainer component={Paper}>
+            <Typography variant="h6" gutterBottom>
                 Game History
             </Typography>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell align="right">Correct Answers</TableCell>
-                            <TableCell align="right">Wrong Answers</TableCell>
-                            <TableCell align="right">Duration (seconds)</TableCell>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Correct Answers</TableCell>
+                        <TableCell>Wrong Answers</TableCell>
+                        <TableCell>Duration (seconds)</TableCell>
+                        <TableCell>Date</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {gameHistory.map((game, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{game.correct}</TableCell>
+                            <TableCell>{game.wrong}</TableCell>
+                            <TableCell>{game.duration}</TableCell>
+                            <TableCell>{game.createdAt}</TableCell>
                         </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {history.map((game, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{game.createdAt}</TableCell>
-                                <TableCell align="right">{game.correct}</TableCell>
-                                <TableCell align="right">{game.wrong}</TableCell>
-                                <TableCell align="right">{game.duration}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 };
 
