@@ -23,6 +23,15 @@ const Countdown = () => {
     const circumference = 100;
     const offset = ((30 - seconds) / 30) * circumference;
 
+
+    // Determina el color según el tiempo restante
+    // Empieza en color verde pero cuando quedan 10 segundos pasa a rojo
+    const initColor = 'green';
+    const endColor = 'red';
+    const isCritical = seconds <= 10;
+    const circleColor = isCritical ? endColor : initColor;
+    const textColor = isCritical ? endColor : initColor;
+
     return (
         <div className='countdown-container'>
             <svg width='100' height='100'>
@@ -47,7 +56,7 @@ const Countdown = () => {
                     r='15'
                     // color verde para el circulo que se va vaciando
                     // es el tiempo restante para contestar
-                    stroke='green'
+                    stroke={circleColor}
                     strokeWidth='4'
                     fill='none'
                     strokeDasharray={circumference}
@@ -62,7 +71,7 @@ const Countdown = () => {
                     dominantBaseline='middle'
                     textAnchor='middle'
                     className='number'
-                    fill='green'
+                    fill={textColor}
                 >
                     {seconds}
                 </text>

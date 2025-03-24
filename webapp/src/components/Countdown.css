@@ -1,6 +1,4 @@
 /* Hoja de estilos para el componente Countdown */
-/* Sirven para la animación del circulo que se va vaciando segun pasa el tiempo */
-
 
 /* Parte del circulo */
 .countdown-container {
@@ -9,7 +7,6 @@
     align-items: center;
     flex-direction: column;
 }
-
 
 /* Parte del numero interior */
 .number {
