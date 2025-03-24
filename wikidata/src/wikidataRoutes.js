@@ -8,7 +8,7 @@ const { Game } = require("./model/wikidataModel");
 
 app.use(cors());
 
-const mongoUri = process.env.MONGODB_URI || "mongodb://mongodb-wichat_es2a:27017/wikidatadb";
+const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";
 
 repository.init(mongoose, mongoUri);
 
