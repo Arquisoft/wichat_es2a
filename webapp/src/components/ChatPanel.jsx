@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, TextField, IconButton, CircularProgress } from '@mui/material';
+import { Box, Grid, Paper, Typography, TextField, IconButton, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { Send, Close } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
@@ -20,68 +20,112 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const [userId, setUserId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [tokenFetchAttempted, setTokenFetchAttempted] = useState(false);
+    const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
+    const previousAnswerRef = useRef(correctAnswer);
 
-    // Function to extract userId from token
-    const extractUserIdFromToken = (token) => {
-        if (!token) {
-            console.log("No token found in localStorage");
-            return null;
-        }
-        
+    // Función simplificada para obtener el userId del localStorage
+    const getUserId = () => {
         try {
-            console.log("Token found, attempting to decode");
-            const decoded = jwtDecode(token);
-            console.log("Decoded token:", decoded);
-            
-            if (!decoded) {
-                console.log("Token decoded as null or undefined");
+            // Obtenemos el objeto de usuario directamente del localStorage
+            const userDataStr = window.localStorage.getItem('user');
+            if (!userDataStr) {
+                console.log("No se encontró información de usuario en localStorage");
                 return null;
             }
             
-            const extractedUserId = decoded.userId || decoded.sub || decoded._id;
-            console.log("Extracted userId:", extractedUserId);
-            return extractedUserId;
+            const userData = JSON.parse(userDataStr);
+            const parsedToken = userData?.token;
+            
+            // Extraemos el userId del token decodificado
+            if (parsedToken) {
+                const decoded = jwtDecode(userData.token);
+                const decodedUserId = decoded?.userId;
+                if (decodedUserId) {
+                    console.log("UserId obtenido correctamente:", decodedUserId);
+                    return decodedUserId;
+                }
+            }
+            
+            console.log("No se pudo encontrar userId en los datos de usuario");
+            return null;
         } catch (error) {
-            console.error("Error decoding token:", error);
+            console.error("Error al recuperar userId:", error);
             return null;
         }
     };
 
-    useEffect(() => {
-        const initializeUserId = () => {
-            console.log("Initializing userId");
-            const storedToken = window.localStorage.getItem('token');
-            console.log("Token from localStorage:", storedToken ? "Found (not showing for security)" : "Not found");
+    // Función para limpiar el historial de conversaciones en el servidor
+    const clearConversationHistory = async (currentUserId) => {
+        if (!currentUserId) return false;
+        
+        try {
+            setIsLoading(true);
             
-            const extractedUserId = extractUserIdFromToken(storedToken);
+            // Llamada al endpoint del gateway para borrar la conversación
+            // El parámetro preservePrePrompt=false asegura que se elimine también el preprompt
+            await axios.delete(`${GATEWAY_URL}/conversations/${currentUserId}?preservePrePrompt=false`);
             
-            if (extractedUserId) {
-                console.log("Setting userId state to:", extractedUserId);
-                setUserId(extractedUserId);
-            } else {
-                console.log("No valid userId could be extracted from token");
-                // Try to find user information from other localStorage items
-                try {
-                    const userInfo = window.localStorage.getItem('userInfo');
-                    if (userInfo) {
-                        const parsedUserInfo = JSON.parse(userInfo);
-                        if (parsedUserInfo && parsedUserInfo._id) {
-                            console.log("Found userId in userInfo:", parsedUserInfo._id);
-                            setUserId(parsedUserInfo._id);
-                        }
-                    }
-                } catch (e) {
-                    console.error("Error parsing userInfo:", e);
-                }
-            }
-            
-            setTokenFetchAttempted(true);
-        };
+            console.log("Historial de conversación eliminado correctamente");
+            return true;
+        } catch (error) {
+            console.error("Error al eliminar el historial de conversación:", error);
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        initializeUserId();
+    // Efecto para inicializar el userId
+    useEffect(() => {
+        const currentUserId = getUserId();
+        if (currentUserId) {
+            setUserId(currentUserId);
+        }
+        setTokenFetchAttempted(true);
     }, []);
 
-    // Scroll to bottom of chat when messages change
+    // Efecto para detectar cambios en correctAnswer y resetear el chat
+    useEffect(() => {
+        // Si es la primera carga, solo guardar la referencia
+        if (previousAnswerRef.current === correctAnswer) {
+            return;
+        }
+        
+        // Si ha cambiado la respuesta correcta, limpiar el chat
+        const resetChat = async () => {
+            const currentUserId = userId || getUserId();
+            
+            if (currentUserId) {
+                // Limpiar conversación en la base de datos
+                const success = await clearConversationHistory(currentUserId);
+                
+                // Resetear los mensajes locales
+                setMessages([
+                    { text: `¡Nueva pregunta! ¿Necesitas ayuda para adivinar ${correctAnswer}?`, sender: 'bot' },
+                ]);
+                
+                if (success) {
+                    setNotification({
+                        open: true,
+                        message: "Conversación anterior eliminada. Iniciando nueva conversación.",
+                        severity: "info"
+                    });
+                }
+            } else {
+                setNotification({
+                    open: true,
+                    message: "No se pudo identificar el usuario para limpiar la conversación anterior.",
+                    severity: "warning"
+                });
+            }
+        };
+        
+        resetChat();
+        // Actualizar la referencia a la nueva respuesta
+        previousAnswerRef.current = correctAnswer;
+    }, [correctAnswer, userId]);
+
+    // Scroll al final del chat cuando hay nuevos mensajes
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -89,18 +133,14 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const handleSendMessage = async () => {
         if (input.trim() === '' || isLoading) return;
 
-        // Final attempt to get userId if it's still null
+        // Intentamos obtener el userId si aún no está establecido
         let currentUserId = userId;
         if (!currentUserId) {
-            console.log("userId is still null in handleSendMessage, making final attempt");
-            const storedToken = window.localStorage.getItem('token');
-            currentUserId = extractUserIdFromToken(storedToken);
+            currentUserId = getUserId();
             
             if (currentUserId) {
-                console.log("Finally got userId:", currentUserId);
                 setUserId(currentUserId);
             } else {
-                console.error('No user ID available after multiple attempts');
                 setMessages((prevMessages) => [
                     ...prevMessages, 
                     { text: input, sender: 'user' },
@@ -117,8 +157,6 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         setIsLoading(true);
 
         try {
-            console.log("Sending request to LLM with userId:", currentUserId);
-            
             const payload = {
                 question: input,
                 model: 'gemini',
@@ -126,21 +164,15 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                 useHistory: true,
                 answer: correctAnswer,
             };
-            
-            console.log("Request payload:", payload);
 
             const response = await axios.post(`${GATEWAY_URL}/askllm`, payload);
-            console.log("LLM response:", response.data);
-
             const llmResponse = { text: response.data.answer, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, llmResponse]);
         } catch (error) {
             console.error('Error al enviar la pregunta al LLM:', error);
-            // Show more detailed error information
             let errorMessage = "Error al obtener la respuesta";
             if (error.response) {
                 errorMessage += `: ${error.response.data.error || error.response.statusText}`;
-                console.log("Error response data:", error.response.data);
             }
             setMessages((prevMessages) => [...prevMessages, {text: errorMessage, sender: 'bot'}]);
         } finally {
@@ -150,6 +182,13 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
 
     const handleCloseChat = () => {
         setShowChat(false);
+    };
+
+    const handleCloseNotification = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setNotification({ ...notification, open: false });
     };
 
     // If we're still waiting for the token on first render
@@ -270,6 +309,22 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                     </Paper>
                 </Grid>
             </Grid>
+            
+            {/* Notificación para informar sobre el estado del reset del chat */}
+            <Snackbar 
+                open={notification.open} 
+                autoHideDuration={4000} 
+                onClose={handleCloseNotification}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={handleCloseNotification} 
+                    severity={notification.severity}
+                    sx={{ width: '100%' }}
+                >
+                    {notification.message}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 };
