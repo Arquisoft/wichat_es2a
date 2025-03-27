@@ -13,6 +13,7 @@ const port = 8000;
 const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
 const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
+const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
 
 // Configure CORS to allow requests from webapp
 app.use(cors({
@@ -106,6 +107,64 @@ app.put('/conversations/:userId/settings', async (req, res) => {
     });
   }
 });
+
+app.get('/wikidata/question/:category/:number', async (req, res) => {
+  try {
+    console.log("Requesting questions from Wikidata");
+    const category = req.params.category;
+    const number = req.params.number;
+    const response = await axios.get(`${wikidataServiceUrl}/wikidata/question/${category}/${number}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error getting the questions from Wikidata' });
+  }
+});
+
+app.post('/wikidata/verify', async (req, res) => {
+  try {
+    const response = await axios.post(`${wikidataServiceUrl}/wikidata/verify`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error verifying the answer' });
+  }
+});
+
+app.get('/wikidata/clear', async (req, res) => {
+  try {
+    const response = await axios.get(`${wikidataServiceUrl}/wikidata/clear`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error clearing questions' });
+  }
+});
+
+app.post('/game/start', async (req, res) => {
+  try {
+    const response = await axios.post(`${wikidataServiceUrl}/game/start`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error starting the game' });
+  }
+});
+
+app.post('/game/end', async (req, res) => {
+  try {
+    const response = await axios.post(`${wikidataServiceUrl}/game/end`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error ending the game' });
+  }
+});
+
+app.get('/game/statistics', async (req, res) => {
+  try {
+    const response = await axios.get(`${wikidataServiceUrl}/game/statistics`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game statistics' });
+  }
+});
+
 
 // Read the OpenAPI YAML file synchronously
 openapiPath='./openapi.yaml'
