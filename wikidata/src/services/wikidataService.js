@@ -110,6 +110,7 @@ const service = {
         for (let question of questions){
             await repository.deleteQuestion(question._id);
         }
+        console.log("Questions deleted successfully");
     }
 
 };

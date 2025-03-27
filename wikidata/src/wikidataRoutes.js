@@ -7,7 +7,7 @@ const cors = require('cors');
 
 app.use(cors());
 
-const mongoUri = process.env.MONGODB_URI || "mongodb://mongodb-wichat_es2a:27017/wikidatadb";
+const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";
 
 repository.init(mongoose, mongoUri);
 
@@ -18,9 +18,10 @@ app.listen(PORT, () => {
 
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
-// Example: http://localhost:3001/wikidata/question?category=Lugares&n=10
-app.get("/wikidata/question", async (req, res) => {
-    const { category, n } = req.query;
+// Example: http://localhost:3001/wikidata/question/Lugares/10
+app.get("/wikidata/question/:category/:number", async (req, res) => {
+    const category= req.params.category;
+    const n = req.params.number;
     try {
         const questions = await service.getQuestions(category, n);
         service.deleteQuestions(questions);

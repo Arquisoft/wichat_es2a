@@ -5,14 +5,12 @@ import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 const CATEGORY = "Lugares";
 
 const GamePanel = () => {
-  const navigate = useNavigate();
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
     question: '',
@@ -32,21 +30,24 @@ const GamePanel = () => {
 
   const getQuestions = async () => {
     try {
-      const response = await fetch("http://localhost:3001/wikidata/question?category="+CATEGORY+"&n="+TOTAL_QUESTIONS);
-      const data = await response.json();
-      if (data && data.length > 0) {
+      const response = await axios.get("http://localhost:8000/wikidata/question/"+CATEGORY+"/"+TOTAL_QUESTIONS);
+      const data = response.data;
+      if (data && data.length == TOTAL_QUESTIONS) {
+        console.log("Preguntas recibidas: ", data.length);
         setQuestions(data);
       } else {
         console.error("No se recibieron preguntas válidas.");
+        getQuestions();
       }
     } catch (error) {
       console.error("Error al recibir preguntas: ", error);
     }
   };
+  
 
-  const chooseQuestion = () => {
+  const chooseQuestion = async () => {
     if (questions.length === 0) {
-      getQuestions();
+      await getQuestions();
       return;
     }
     const randomIndex = Math.floor(Math.random() * questions.length);
@@ -188,7 +189,7 @@ const handleGameEnd = () => {
       <ThemeProvider theme={theme}>
         <Grid
           container
-          style={{ height: '100vh' }}
+          style={{ height: '90vh' }}
           direction="column"
           justifyContent="center"
           alignItems="center"
@@ -248,7 +249,7 @@ const handleGameEnd = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container style={{ height: '100vh', overflow: 'hidden' }}>
+      <Grid container style={{ height: '90vh', overflow: 'hidden' }}>
         <Grid item xs={12} style={{ height: '20px' }} />
         <Grid
           item
@@ -304,11 +305,11 @@ const handleGameEnd = () => {
                 onError={() => setImageLoaded(true)}
                 style={{
                   width: '100%',
-                  maxWidth: '400px',
-                  maxHeight: '400px',
-                  objectFit: 'contain',
+                  maxWidth: '70vw',    
+                  maxHeight: '55vh',   
+                  objectFit: 'contain', 
                   opacity: imageLoaded ? 1 : 0.7,
-                }}
+                }}                
               />
             </Box>
             <Grid

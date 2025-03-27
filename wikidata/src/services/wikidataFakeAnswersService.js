@@ -19,6 +19,7 @@ const fakeAnswers = {
         while (fakeAnswersSet.size < 3) {
             let randomAnswer = categoryAnswers.answers[Math.floor(Math.random() * categoryAnswers.answers.length)];
             if (randomAnswer !== correctAnswer) {
+
                 fakeAnswersSet.add(randomAnswer);
             }
         }

@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, TextField, IconButton } from '@mui/material';
+import { Box, Grid, Paper, Typography, TextField, IconButton, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { Send, Close } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-
+// Gateway service URL
+const GATEWAY_URL = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const theme = createTheme(defaultTheme);
 
@@ -17,46 +18,174 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
     const [input, setInput] = useState('');
     const chatEndRef = useRef(null);
     const [userId, setUserId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [tokenFetchAttempted, setTokenFetchAttempted] = useState(false);
+    const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
+    const previousAnswerRef = useRef(correctAnswer);
+
+
+    const getUserId = () => {
+        try {
+            const userDataStr = window.localStorage.getItem('user');
+            if (!userDataStr) {
+                return null;
+            }
+            
+            const userData = JSON.parse(userDataStr);
+            const parsedToken = userData?.token;
+            
+            if (parsedToken) {
+                const decoded = jwtDecode(userData.token);
+                const decodedUserId = decoded?.userId;
+                if (decodedUserId) {
+                    return decodedUserId;
+                }
+            }
+            
+            return null;
+        } catch (error) {
+            console.error("Error al recuperar userId:", error);
+            return null;
+        }
+    };
+
+    const clearConversationHistory = async (currentUserId) => {
+        if (!currentUserId) return false;
+        
+        try {
+            setIsLoading(true);
+            
+            await axios.delete(`${GATEWAY_URL}/conversations/${currentUserId}?preservePrePrompt=false`);
+            
+            return true;
+        } catch (error) {
+            console.error("Error al eliminar el historial de conversación:", error);
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const storedToken = window.localStorage.getItem('token');
-        if (storedToken) {
-            try {
-                const decoded = jwtDecode(storedToken);
-                setUserId(decoded.userId);
-            } catch (error) {
-                console.error("Error decoding token:", error);
-            }
+        const currentUserId = getUserId();
+        if (currentUserId) {
+            setUserId(currentUserId);
         }
+        setTokenFetchAttempted(true);
     }, []);
 
+    useEffect(() => {
+        if (previousAnswerRef.current === correctAnswer) {
+            return;
+        }
+        
+        const resetChat = async () => {
+            const currentUserId = userId || getUserId();
+            
+            if (currentUserId) {
+                const success = await clearConversationHistory(currentUserId);
+                
+                setMessages([
+                    { text: `¡Hola! ¿Cómo puedo ayudarte?`, sender: 'bot' },
+                ]);
+                
+                if (success) {
+                    setNotification({
+                        open: true,
+                        message: "Conversación anterior eliminada. Iniciando nueva conversación.",
+                        severity: "info"
+                    });
+                }
+            } else {
+                setNotification({
+                    open: true,
+                    message: "No se pudo identificar el usuario para limpiar la conversación anterior.",
+                    severity: "warning"
+                });
+            }
+        };
+        
+        resetChat();
+        previousAnswerRef.current = correctAnswer;
+    }, [correctAnswer, userId]);
+
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
     const handleSendMessage = async () => {
-        if (input.trim() === '') return;
+        if (input.trim() === '' || isLoading) return;
+
+        let currentUserId = userId;
+        if (!currentUserId) {
+            currentUserId = getUserId();
+            
+            if (currentUserId) {
+                setUserId(currentUserId);
+            } else {
+                setMessages((prevMessages) => [
+                    ...prevMessages, 
+                    { text: input, sender: 'user' },
+                    { text: "Error: No se pudo identificar al usuario. Por favor, inicia sesión de nuevo.", sender: 'bot' }
+                ]);
+                setInput('');
+                return;
+            }
+        }
 
         const userMessage = { text: input, sender: 'user' };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setInput('');
+        setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8003/ask', {
+            const payload = {
                 question: input,
                 model: 'gemini',
-                userId: userId,
+                userId: currentUserId,
                 useHistory: true,
                 answer: correctAnswer,
-            });
+            };
 
+            const response = await axios.post(`${GATEWAY_URL}/askllm`, payload);
             const llmResponse = { text: response.data.answer, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, llmResponse]);
         } catch (error) {
             console.error('Error al enviar la pregunta al LLM:', error);
-            setMessages((prevMessages) => [...prevMessages, {text: "Error al obtener la respuesta", sender: "bot"}]);
+            let errorMessage = "Error al obtener la respuesta";
+            if (error.response) {
+                errorMessage += `: ${error.response.data.error || error.response.statusText}`;
+            }
+            setMessages((prevMessages) => [...prevMessages, {text: errorMessage, sender: 'bot'}]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleCloseChat = () => {
-        setShowChat(false); // Cierra el chat
+        setShowChat(false);
     };
+
+    const handleCloseNotification = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setNotification({ ...notification, open: false });
+    };
+
+    if (!tokenFetchAttempted) {
+        return (
+            <ThemeProvider theme={theme}>
+                <Grid container sx={{ height: '100vh' }}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <CircularProgress />
+                        <Typography variant="h6" sx={{ ml: 2 }}>Cargando chat...</Typography>
+                    </Grid>
+                </Grid>
+            </ThemeProvider>
+        );
+    }
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -136,6 +265,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                                 alignItems: 'center',
                                 padding: '16px',
                                 backgroundColor: '#f1f1f1',
+                                position: 'relative',
                             }}
                         >
                             <TextField
@@ -146,18 +276,36 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 sx={{ backgroundColor: 'white', borderRadius: '8px' }}
+                                disabled={isLoading}
                             />
                             <IconButton
                                 color="primary"
                                 onClick={handleSendMessage}
                                 sx={{ marginLeft: '8px' }}
+                                disabled={isLoading}
                             >
-                                <Send />
+                                {isLoading ? <CircularProgress size={24} /> : <Send />}
                             </IconButton>
                         </Box>
                     </Paper>
                 </Grid>
             </Grid>
+            
+            {/* Notificación para informar sobre el estado del reset del chat */}
+            <Snackbar 
+                open={notification.open} 
+                autoHideDuration={4000} 
+                onClose={handleCloseNotification}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={handleCloseNotification} 
+                    severity={notification.severity}
+                    sx={{ width: '100%' }}
+                >
+                    {notification.message}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 };
