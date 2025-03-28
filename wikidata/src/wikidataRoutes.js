@@ -4,8 +4,10 @@ const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
 const cors = require('cors');
+const { Game } = require("../src/model/wikidataModel");
 
 app.use(cors());
+app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";
 
@@ -80,10 +82,12 @@ app.get("/wikidata/clear", async (req, res) => {
 // Example: http://localhost:3001/game/start
 app.post('/game/start', async (req, res) => {
     try {
+        console.log("Starting game with body:", req.body);
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
         }
+        console.log("2");
 
         await Game.create({
             userId,
@@ -92,6 +96,7 @@ app.post('/game/start', async (req, res) => {
             duration: 0,
             createdAt: new Date()
         });
+        console.log("3");
 
         return res.json({ message: "Game started successfully" });
 
@@ -105,7 +110,7 @@ app.post('/game/start', async (req, res) => {
 // Example: http://localhost:3001/game/end
 app.post('/game/end', async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId, correct, wrong } = req.body;
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
@@ -121,7 +126,8 @@ app.post('/game/end', async (req, res) => {
         const now = new Date();
         const durationInSeconds = Math.floor((now - game.createdAt) / 1000);
         game.duration = durationInSeconds;
-
+        game.correct = correct;
+        game.wrong = wrong;
         await game.save();
 
         res.json({
@@ -149,24 +155,23 @@ app.get('/game/statistics', async (req, res) => {
          const games = await Game.find({ userId });
  
          if (!games || games.length === 0) {
-             return res.status(404).json({ error: "No games found for this user" });
+         }else{
+            const statistics = games.map(game => ({
+                correct: game.correct,
+                wrong: game.wrong,
+                duration: game.duration,
+                createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                })
+            }));
+    
+            res.json(statistics);
          }
- 
-         const statistics = games.map(game => ({
-             correct: game.correct,
-             wrong: game.wrong,
-             duration: game.duration,
-             createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
-                 year: 'numeric',
-                 month: '2-digit',
-                 day: '2-digit',
-                 hour: '2-digit',
-                 minute: '2-digit',
-                 second: '2-digit'
-             })
-         }));
- 
-         res.json(statistics);
      } catch (error) {
          console.error("Error fetching game statistics:", error);
          res.status(500).json({ error: "Server error" });

@@ -5,7 +5,10 @@ import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
+
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 const CATEGORY = "Lugares";
@@ -27,10 +30,12 @@ const GamePanel = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [userId, setUserId] = useState(null);
+  
 
   const getQuestions = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/wikidata/question/"+CATEGORY+"/"+TOTAL_QUESTIONS);
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
       const data = response.data;
       if (data && data.length == TOTAL_QUESTIONS) {
         console.log("Preguntas recibidas: ", data.length);
@@ -70,38 +75,25 @@ const GamePanel = () => {
     });
   };
 
-  const handleAnswerClick = async (answer) => {
+  const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
-    try {
-      const userId = localStorage.getItem('user');
-      const response = await axios.post('http://localhost:3001/game/verify', {
-        userId: userId,
-        userOption: answer,
-        answer: questionData.correctAnswer,
-      });
-      const { correct, correctCount, wrongCount } = response.data;
-
-      if (correct) {
-        setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
-        setCorrectCount(correctCount);
-      } else {
-        setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
-        setIncorrectCount(wrongCount);
-      }
-
-      setTimeout(() => {
-        if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
-          handleGameEnd();
-        } else {
-          setCurrentQuestionIndex((prev) => prev + 1);
-          setSelectedAnswer(null);
-          chooseQuestion();
-        }
-      }, 2000);
-    } catch (error) {
-      console.error('Error al verificar la respuesta:', error);
-      setSnackbar({ open: true, message: 'Error al verificar la respuesta', severity: 'error' });
+    if (answer === questionData.correctAnswer) {
+      setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
+      setCorrectCount(prev => prev + 1);
+    } else {
+      setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
+      setIncorrectCount(prev => prev + 1);
     }
+
+    setTimeout(() => {
+      if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
+        setGameEnded(true);
+      } else {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setSelectedAnswer(null);
+        chooseQuestion();
+      }
+    }, 2000);
   };
 
   const getButtonStyle = (respuesta) => {
@@ -126,13 +118,37 @@ const GamePanel = () => {
     setInitialLoading(true);
     getQuestions();
   };
+  const getUserId = () => {
+    try {
+        const userDataStr = window.localStorage.getItem('user');
+        if (!userDataStr) {
+            return null;
+        }
+        
+        const userData = JSON.parse(userDataStr);
+        const parsedToken = userData?.token;
+        
+        if (parsedToken) {
+            const decoded = jwtDecode(userData.token);
+            const decodedUserId = decoded?.userId;
+            if (decodedUserId) {
+                return decodedUserId;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("Error al recuperar userId:", error);
+        return null;
+    }
+};
 
   const startGame = async () => {
     try {
-        const userId = localStorage.getItem('user');
-        if (userId) {
-            await axios.post('http://localhost:3001/game/start', { userId });
-        }
+        const userId = getUserId();
+        console.log("Datos enviados a /game/start:", { userId });
+        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+        console.log("Respuesta del servidor:", response.data);
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
@@ -140,9 +156,9 @@ const GamePanel = () => {
 
 const endGame = async () => {
     try {
-        const userId = localStorage.getItem('user');
+        const userId = getUserId();
         if (userId) {
-            await axios.post('http://localhost:3001/game/end', { userId });
+            await axios.post(`${apiEndpoint}/game/end`, { userId, correctCount, incorrectCount });
         }
     } catch (error) {
         console.error('Error al finalizar el juego:', error);
@@ -156,7 +172,6 @@ useEffect(() => {
 const handleGameEnd = () => {
     endGame();
     setGameEnded(true);
-    navigate('/summary'); // Navigate to a summary page or another route
 };
 
   useEffect(() => {
