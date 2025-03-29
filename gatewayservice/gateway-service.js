@@ -140,6 +140,7 @@ app.get('/wikidata/clear', async (req, res) => {
 
 app.post('/game/start', async (req, res) => {
   try {
+    console.log("Starting game with body:", req.body);
     const response = await axios.post(`${wikidataServiceUrl}/game/start`, req.body);
     res.json(response.data);
   } catch (error) {

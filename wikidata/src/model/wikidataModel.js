@@ -13,7 +13,8 @@ const gameSchema = new mongoose.Schema({
     correct: { type: Number, required: true },
     wrong: { type: Number, required: true },
     duration: { type: Number, required: true },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    isCompleted: { type: Boolean, default: false } 
 });
 
 const Question = mongoose.model('questions', questionSchema);

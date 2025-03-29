@@ -11,6 +11,7 @@ import GamePanel from "./components/GamePanel";
 import Home from "./components/Home";
 import defaultTheme from "./components/config/default-Theme.json";
 import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
+import GameHistoryUI from './components/GameHistoryUI';
 
 const theme = createTheme(defaultTheme);
 
@@ -30,6 +31,8 @@ function App() {
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
             </Route>
+
+            <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
 
             {/* Redirección por defecto */}
             <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
