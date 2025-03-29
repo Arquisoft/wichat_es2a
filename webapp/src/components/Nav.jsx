@@ -9,12 +9,13 @@ import {
 import { ReactComponent as CustomIcon } from '../media/logoS.svg';
 import { useTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const pages = [
     { code: 'home', link: '/home', name: 'Home' },
     { code: 'menu', link: '/menu', name: 'Menu' },
-    { code: 'contact', link: '/contact', name: 'Contacto' }
+    { code: 'contact', link: '/contact', name: 'Contacto' },
+    { code: 'history', link: '/history', name: 'Historial' } // Added Historial button
 ];
 
 const MenuDrawer = ({ open, onClose }) => (
@@ -86,41 +87,43 @@ const Nav = () => {
     };
 
     return (
-        <AppBar position="static" sx={{background: theme.palette.primary.main}}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    {/* Logo */}
-                    <CustomIcon />
+            <AppBar position="static" sx={{background: theme.palette.primary.main}}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        {/* Logo */}
+                        <CustomIcon />
 
-                    {/* Mobile Menu Button */}
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton size="large" onClick={() => setMobileOpen(true)} color="inherit">
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
+                        {/* Mobile Menu Button */}
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton size="large" onClick={() => setMobileOpen(true)} color="inherit">
+                                <MenuIcon />
+                            </IconButton>
+                        </Box>
 
-                    {/* Page Links */}
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button 
-                                key={page.name} 
-                                sx={{ my: 2, color: defaultTheme.palette.primary.contrastText}}>
-                                {page.name}
-                            </Button>
-                        ))}
-                    </Box>
+                        {/* Page Links */}
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                            {pages.map((page) => (
+                                <Button 
+                                    key={page.name} 
+                                    component={Link}
+                                    to={page.link}
+                                    sx={{ my: 2, color: defaultTheme.palette.primary.contrastText }}>
+                                    {page.name}
+                                </Button>
+                            ))}
+                        </Box>
 
-                    {/* Icons */}
-                    <Box sx={{ flexGrow: 0 }}>
-                        <IconButton size="large" onClick={(e) => setAnchorElUser(e.currentTarget)} color="inherit">
-                            <AccountCircleIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </Container>
+                        {/* Icons */}
+                        <Box sx={{ flexGrow: 0 }}>
+                            <IconButton size="large" onClick={(e) => setAnchorElUser(e.currentTarget)} color="inherit">
+                                <AccountCircleIcon />
+                            </IconButton>
+                        </Box>
+                    </Toolbar>
+                </Container>
 
-            {/* Drawer for Mobile Menu */}
-            <MenuDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
+                {/* Drawer for Mobile Menu */}
+                <MenuDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
             {/* User Dropdown Menu */}
             <UserMenu 

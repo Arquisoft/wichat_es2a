@@ -5,7 +5,10 @@ import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
+
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 const CATEGORY = "Lugares";
@@ -27,10 +30,12 @@ const GamePanel = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [userId, setUserId] = useState(null);
+  
 
   const getQuestions = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/wikidata/question/"+CATEGORY+"/"+TOTAL_QUESTIONS);
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
       const data = response.data;
       if (data && data.length == TOTAL_QUESTIONS) {
         console.log("Preguntas recibidas: ", data.length);
@@ -113,6 +118,54 @@ const GamePanel = () => {
     setInitialLoading(true);
     getQuestions();
   };
+  const getUserId = () => {
+    try {
+        const userDataStr = window.localStorage.getItem('user');
+        if (!userDataStr) {
+            return null;
+        }
+        
+        const userData = JSON.parse(userDataStr);
+        const parsedToken = userData?.token;
+        
+        if (parsedToken) {
+            const decoded = jwtDecode(userData.token);
+            const decodedUserId = decoded?.userId;
+            if (decodedUserId) {
+                return decodedUserId;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("Error al recuperar userId:", error);
+        return null;
+    }
+};
+
+  const startGame = async () => {
+    try {
+        const userId = getUserId();
+        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+    } catch (error) {
+        console.error('Error al iniciar el juego:', error);
+    }
+};
+
+const endGame = async () => {
+    try {
+        const userId = getUserId();
+        if (userId) {
+            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+        }
+    } catch (error) {
+        console.error('Error al finalizar el juego:', error);
+    }
+};
+
+useEffect(() => {
+    startGame();
+}, []);
 
   useEffect(() => {
     getQuestions();
@@ -158,6 +211,7 @@ const GamePanel = () => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
