@@ -82,12 +82,10 @@ app.get("/wikidata/clear", async (req, res) => {
 // Example: http://localhost:3001/game/start
 app.post('/game/start', async (req, res) => {
     try {
-        console.log("Starting game with body:", req.body);
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
         }
-        console.log("2");
 
         await Game.create({
             userId,
@@ -96,7 +94,6 @@ app.post('/game/start', async (req, res) => {
             duration: 0,
             createdAt: new Date()
         });
-        console.log("3");
 
         return res.json({ message: "Game started successfully" });
 
@@ -117,7 +114,7 @@ app.post('/game/end', async (req, res) => {
         }
 
         let games = await Game.find({ userId });
-        let game = games[games.length-1];
+        let game = games[games.length - 1];
 
         if (!game) {
             return res.status(404).json({ error: "No active game found for this user" });
@@ -128,15 +125,19 @@ app.post('/game/end', async (req, res) => {
         game.duration = durationInSeconds;
         game.correct = correct;
         game.wrong = wrong;
+        game.isCompleted = (correct + wrong === 10);
+
         await game.save();
 
         res.json({
             correct: game.correct,
             wrong: game.wrong,
-            duration: game.duration
+            duration: game.duration,
+            isCompleted: game.isCompleted
         });
 
     } catch (error) {
+        console.error("Error al finalizar el juego:", error);
         res.status(500).json({ error: "Server error" });
     }
 });
@@ -152,7 +153,7 @@ app.get('/game/statistics', async (req, res) => {
              return res.status(400).json({ error: "userId is required" });
          }
  
-         const games = await Game.find({ userId });
+         const games = await Game.find({ userId, isCompleted: true });
  
          if (!games || games.length === 0) {
          }else{

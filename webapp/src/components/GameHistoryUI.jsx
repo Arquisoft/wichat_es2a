@@ -64,7 +64,7 @@ const GameHistoryUI = () => {
         return (
             <TableContainer component={Paper}>
                 <Typography variant="h6" gutterBottom align="center">
-                    Game History
+                    Historial de Partidas
                 </Typography>
                 <Typography align="center" color="textSecondary" gutterBottom>
                     El historial está vacío debido a que no se ha jugado ninguna partida con este usuario.
@@ -72,10 +72,10 @@ const GameHistoryUI = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Correct Answers</TableCell>
-                            <TableCell>Wrong Answers</TableCell>
-                            <TableCell>Duration (seconds)</TableCell>
-                            <TableCell>Date</TableCell>
+                            <TableCell>Correctas</TableCell>
+                            <TableCell>Erróneas</TableCell>
+                            <TableCell>Duración (segundos)</TableCell>
+                            <TableCell>Fecha</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -93,15 +93,15 @@ const GameHistoryUI = () => {
     return (
         <TableContainer component={Paper}>
             <Typography variant="h6" gutterBottom align="center">
-                Game History
+                Historial de Partidas
             </Typography>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Correct Answers</TableCell>
-                        <TableCell>Wrong Answers</TableCell>
-                        <TableCell>Duration (seconds)</TableCell>
-                        <TableCell>Date</TableCell>
+                            <TableCell>Correctas</TableCell>
+                            <TableCell>Erróneas</TableCell>
+                            <TableCell>Duración (segundos)</TableCell>
+                            <TableCell>Fecha</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

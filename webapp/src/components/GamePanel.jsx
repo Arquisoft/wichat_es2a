@@ -146,9 +146,7 @@ const GamePanel = () => {
   const startGame = async () => {
     try {
         const userId = getUserId();
-        console.log("Datos enviados a /game/start:", { userId });
         const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
-        console.log("Respuesta del servidor:", response.data);
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
@@ -158,7 +156,7 @@ const endGame = async () => {
     try {
         const userId = getUserId();
         if (userId) {
-            await axios.post(`${apiEndpoint}/game/end`, { userId, correctCount, incorrectCount });
+            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
         }
     } catch (error) {
         console.error('Error al finalizar el juego:', error);
@@ -168,11 +166,6 @@ const endGame = async () => {
 useEffect(() => {
     startGame();
 }, []);
-
-const handleGameEnd = () => {
-    endGame();
-    setGameEnded(true);
-};
 
   useEffect(() => {
     getQuestions();
@@ -218,6 +211,7 @@ const handleGameEnd = () => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
