@@ -47,7 +47,7 @@ const MenuDrawer = ({ open, onClose }) => (
     </Drawer>
 );
 
-const UserMenu = ({ anchorEl, open, onClose, onLogout }) => (
+const UserMenu = ({ anchorEl, open, onClose, onLogout, navigate }) => (
     <Menu
         sx={{ mt: '45px' }}
         anchorEl={anchorEl}
@@ -59,7 +59,10 @@ const UserMenu = ({ anchorEl, open, onClose, onLogout }) => (
     >
         {["Perfil", "Configuración", "Cerrar Sesión"].map((text, index) => (
             <MenuItem key={text} onClick={()=>{
-              if(index===2){ // Cerrar Sesión
+              if(index===0){ // Perfil
+                navigate('/profile');
+              } 
+              else if(index===2){ // Cerrar Sesión
                 onLogout();
               }
               onClose(); // Cerrar el menú
@@ -130,6 +133,7 @@ const Nav = () => {
                 open={Boolean(anchorElUser)} 
                 onClose={() => setAnchorElUser(null)} 
                 onLogout={handleLogout} // Pasa la función de cerrar sesión
+                navigate={navigate} // Pasa la función de navegación
             />
         </AppBar>
     );

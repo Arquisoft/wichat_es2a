@@ -13,8 +13,10 @@ import defaultTheme from "./components/config/default-Theme.json";
 import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 import GameHistoryUI from './components/GameHistoryUI';
 import Contact from './components/Contact';
+import Profile from './components/Profile';
 
 const theme = createTheme(defaultTheme);
+
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
 
             {/* Redirección por defecto */}
