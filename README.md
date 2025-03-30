@@ -15,7 +15,7 @@
 | Natalia Blanco Agudín          | UO295340@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-NataliaBlancoAgudin-brightgreen)](https://github.com/NataliaBlancoAgudin) |
 | David Covián Gómez             | UO295168@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-DavidCG27-brightgreen)](https://github.com/DavidCG-27)           |
 | Darío Cristóbal González       | UO294401@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-daariio92-brightgreen)](https://github.com/daariio92)            |
-| Hugo Fernández Rodríguez       | UO289157@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-hugofedez-brightgreen)](https://github.com/hugo-fedez)            |
+| Hugo Fernández Rodríguez       | UO289157@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-hugofedez-brightgreen)](https://github.com/hugo-fdez)            |
 | Marcos Llanos Vega             | UO218982@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-softwaremarcos-brightgreen)](https://github.com/softwaremarcos)        |
 | Hugo Prendes Menéndez          | UO288294@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-prendess-brightgreen)](https://github.com/prendess)              |
 
