@@ -30,9 +30,8 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
             </Route>
-
-            <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
 
             {/* Redirección por defecto */}
             <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
