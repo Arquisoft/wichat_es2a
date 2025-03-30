@@ -12,6 +12,7 @@ import Home from "./components/Home";
 import defaultTheme from "./components/config/default-Theme.json";
 import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 import GameHistoryUI from './components/GameHistoryUI';
+import Contact from './components/Contact';
 
 const theme = createTheme(defaultTheme);
 
@@ -25,6 +26,7 @@ function App() {
           <Routes> {/* Definimos las rutas */}
             <Route path="/login" element={<Login />} />
             <Route path="/adduser" element={<AddUser />} />
+            <Route path="/contact" element={<Contact />} />
 
             {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
             <Route element={<ProtectedRoute />}>
