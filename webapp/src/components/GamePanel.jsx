@@ -4,7 +4,11 @@ import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
+
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 const CATEGORY = "Lugares";
@@ -26,24 +30,29 @@ const GamePanel = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [userId, setUserId] = useState(null);
+  
 
   const getQuestions = async () => {
     try {
-      const response = await fetch("http://localhost:3001/wikidata/question?category="+CATEGORY+"&n="+TOTAL_QUESTIONS);
-      const data = await response.json();
-      if (data && data.length > 0) {
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
+      const data = response.data;
+      if (data && data.length == TOTAL_QUESTIONS) {
+        console.log("Preguntas recibidas: ", data.length);
         setQuestions(data);
       } else {
         console.error("No se recibieron preguntas válidas.");
+        getQuestions();
       }
     } catch (error) {
       console.error("Error al recibir preguntas: ", error);
     }
   };
+  
 
-  const chooseQuestion = () => {
+  const chooseQuestion = async () => {
     if (questions.length === 0) {
-      getQuestions();
+      await getQuestions();
       return;
     }
     const randomIndex = Math.floor(Math.random() * questions.length);
@@ -109,6 +118,54 @@ const GamePanel = () => {
     setInitialLoading(true);
     getQuestions();
   };
+  const getUserId = () => {
+    try {
+        const userDataStr = window.localStorage.getItem('user');
+        if (!userDataStr) {
+            return null;
+        }
+        
+        const userData = JSON.parse(userDataStr);
+        const parsedToken = userData?.token;
+        
+        if (parsedToken) {
+            const decoded = jwtDecode(userData.token);
+            const decodedUserId = decoded?.userId;
+            if (decodedUserId) {
+                return decodedUserId;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("Error al recuperar userId:", error);
+        return null;
+    }
+};
+
+  const startGame = async () => {
+    try {
+        const userId = getUserId();
+        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+    } catch (error) {
+        console.error('Error al iniciar el juego:', error);
+    }
+};
+
+const endGame = async () => {
+    try {
+        const userId = getUserId();
+        if (userId) {
+            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+        }
+    } catch (error) {
+        console.error('Error al finalizar el juego:', error);
+    }
+};
+
+useEffect(() => {
+    startGame();
+}, []);
 
   useEffect(() => {
     getQuestions();
@@ -140,7 +197,7 @@ const GamePanel = () => {
       <ThemeProvider theme={theme}>
         <Grid
           container
-          style={{ height: '100vh' }}
+          style={{ height: '90vh' }}
           direction="column"
           justifyContent="center"
           alignItems="center"
@@ -154,6 +211,7 @@ const GamePanel = () => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
@@ -200,7 +258,7 @@ const GamePanel = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container style={{ height: '100vh', overflow: 'hidden' }}>
+      <Grid container style={{ height: '90vh', overflow: 'hidden' }}>
         <Grid item xs={12} style={{ height: '20px' }} />
         <Grid
           item
@@ -256,11 +314,11 @@ const GamePanel = () => {
                 onError={() => setImageLoaded(true)}
                 style={{
                   width: '100%',
-                  maxWidth: '400px',
-                  maxHeight: '400px',
-                  objectFit: 'contain',
+                  maxWidth: '70vw',    
+                  maxHeight: '55vh',   
+                  objectFit: 'contain', 
                   opacity: imageLoaded ? 1 : 0.7,
-                }}
+                }}                
               />
             </Box>
             <Grid
