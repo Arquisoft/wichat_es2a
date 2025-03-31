@@ -3,8 +3,12 @@ import React from 'react';
 import { Container, Grid, Typography, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import image from '../media/logoWiChat.svg';
+import {useTranslation} from 'react-i18next';
+import "../i18n";
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: 4, padding: { xs: 2, sm: 4 } }}>
       <Grid container spacing={4}>
@@ -14,7 +18,7 @@ const Home = () => {
             WICHAT
           </Typography>
           <Typography variant="h6" paragraph sx={{ color: 'text.secondary', fontWeight: 300, lineHeight: 1.5 }}>
-            El legendario concurso de conocimientos ahora en formato digital. ¡Pon a prueba tus habilidades y compite con otros jugadores!
+            {t('home.description')}
           </Typography>
 
           <Box>
@@ -37,7 +41,7 @@ const Home = () => {
                 },
               }}
             >
-              Comenzar a jugar
+              {t('home.playButton')}
             </Button>
           </Box>
         </Grid>
