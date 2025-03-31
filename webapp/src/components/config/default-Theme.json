@@ -17,8 +17,14 @@
         "contrastText": "#F2F2F2"
       },
       "red": {
-        "main": "#BA0000",
-        "contrastText": "#FFF"
+        "main": "#BA0F30",
+        "contrastText": "#FFF",
+        "dark": "#970C10"
+      },
+      "green": {
+        "main": "#21B6A8",
+        "contrastText": "#FFF",
+        "dark": "#209085"
       }
     },
   
