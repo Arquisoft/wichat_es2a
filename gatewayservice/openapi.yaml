@@ -402,3 +402,347 @@ paths:
                   error:
                     type: string
                     example: "Failed to update conversation settings"
+  /wikidata/question/{category}/{number}:
+    get:
+      summary: Get questions from Wikidata by category
+      operationId: getQuestions
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Category of questions
+          example: "Lugares"
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Number of questions to retrieve
+          example: "5"
+      responses:
+        '200':
+          description: Questions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        statements:
+                          type: string
+                          example: "¿A qué lugar corresponde la siguiente foto?"
+                        answer:
+                          type: string
+                          example: "Paris"
+                        image:
+                          type: string
+                          example: "https://example.com/image.jpg"
+                        category:
+                          type: string
+                          example: "Lugares"
+                        options:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Francia", "Italia", "España", "Estados Unidos"]
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid category specified"
+        '500':
+          description: Error getting the questions from Wikidata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error getting the questions from Wikidata"
+
+  /wikidata/verify:
+    post:
+      summary: Verify an answer to a Wikidata question
+      operationId: verifyAnswer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  description: The question being answered
+                  example: "¿A qué lugar corresponde la siguiente foto?"
+                answer:
+                  type: string
+                  description: The user's answer
+                  example: "Francia"
+      responses:
+        '200':
+          description: Answer verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isCorrect:
+                    type: boolean
+                    example: true
+                  correctCount:
+                    type: int
+                    example: 6
+                  wrongCount:
+                    type: int
+                    example: 2
+        '404':
+          description: No active game found for this user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No active game found for this user"
+        '500':
+          description: Error verifying answer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error verifying the answer"
+
+  /wikidata/clear:
+    get:
+      summary: Clear all Wikidata questions
+      operationId: clearWikidataQuestions
+      responses:
+        '200':
+          description: Questions cleared successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Questions cleared successfully"
+        '500':
+          description: Error clearing questions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error clearing questions"
+
+  /game/start:
+    post:
+      summary: Start a new game session
+      operationId: startGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: ID of the user starting the game
+                  example: "65f756db3fa22d227a4b7c7d"
+                category:
+                  type: string
+                  description: Game category
+                  example: "cities"
+                difficulty:
+                  type: string
+                  enum: [easy, medium, hard]
+                  example: "medium"
+      responses:
+        '200':
+          description: Game started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gameId:
+                    type: string
+                    example: "507f1f77bcf86cd799439011"
+                  message:
+                    type: string
+                    example: "Game started successfully"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing required field: userId"
+        '500':
+          description: Error starting game
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error starting the game"
+
+  /game/end:
+    post:
+      summary: End a game session
+      operationId: endGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: string
+                  description: ID of the game to end
+                  example: "507f1f77bcf86cd799439011"
+                score:
+                  type: integer
+                  description: Final score achieved
+                  example: 85
+                correctAnswers:
+                  type: integer
+                  description: Number of correct answers
+                  example: 17
+                totalQuestions:
+                  type: integer
+                  description: Total number of questions
+                  example: 20
+      responses:
+        '200':
+          description: Game ended successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Game ended successfully"
+                  finalScore:
+                    type: integer
+                    example: 85
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing required field: gameId"
+        '500':
+          description: Error ending game
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error ending the game"
+
+  /game/statistics:
+    get:
+      summary: Get game statistics
+      operationId: getGameStatistics
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter statistics by user ID
+          example: "65f756db3fa22d227a4b7c7d"
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter statistics by category
+          example: "cities"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Limit the number of results
+          example: 10
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statistics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          example: "65f756db3fa22d227a4b7c7d"
+                        gameId:
+                          type: string
+                          example: "507f1f77bcf86cd799439011"
+                        category:
+                          type: string
+                          example: "cities"
+                        score:
+                          type: integer
+                          example: 85
+                        correctAnswers:
+                          type: integer
+                          example: 17
+                        totalQuestions:
+                          type: integer
+                          example: 20
+                        date:
+                          type: string
+                          format: date-time
+                          example: "2024-03-24T14:30:00.000Z"
+        '500':
+          description: Error fetching statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error fetching game statistics"
