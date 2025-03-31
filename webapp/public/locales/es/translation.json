@@ -2,5 +2,17 @@
     "home": {
         "description": "El legendario concurso de conocimientos ahora en formato digital. ¡Pon a prueba tus habilidades y compite con otros jugadores!",
         "playButton": "Comenzar a jugar"
+    },
+    
+    "nav": {
+        "home": "Inicio",
+        "contact": "Contacto",
+        "history": "Historial"
+    },
+
+    "userMenu": {
+        "profile": "Perfil",
+        "settings": "Configuración",
+        "logout": "Cerrar Sesión"
     }
 }
