@@ -62,6 +62,7 @@ services:
       - userservice
       - authservice
       - llmservice
+      - wikidata
     ports:
       - "8000:8000"
     networks:
@@ -70,6 +71,7 @@ services:
       AUTH_SERVICE_URL: http://authservice:8002
       USER_SERVICE_URL: http://userservice:8001
       LLM_SERVICE_URL: http://llmservice:8003
+      WIKIDATA_SERVICE_URL: http://wikidata:3001
 
   webapp:
     container_name: webapp-wichat_es2a
