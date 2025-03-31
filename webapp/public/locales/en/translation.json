@@ -3,16 +3,27 @@
         "description": "The legendary knowledge contest is now in digital format. Test your skills and compete with other players!",
         "playButton": "Start playing"
     },
-
     "nav": {
         "home": "Home",
         "contact": "Contact",
         "history": "History"
     },
-    
     "userMenu": {
         "profile": "Profile",
         "settings": "Settings",
         "logout": "Logout"
+    },
+    "contact": {
+        "title": "About Us",
+        "description": "We are a team passionate about technology, developing innovative applications and digital solutions.",
+        "subtitle": "Our Team",
+        "team": {
+            "natalia": "Frontend developer passionate about UI/UX.",
+            "david": "Backend specialist and database expert.",
+            "dario": "Designer of scalable backend architectures.",
+            "hugoF": "Expert in language models and data processing.",
+            "marcos": "Frontend developer focused on accessibility.",
+            "hugoP": "Researcher in applied artificial intelligence."
+        }
     }
 }

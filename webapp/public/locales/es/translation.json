@@ -3,16 +3,27 @@
         "description": "El legendario concurso de conocimientos ahora en formato digital. ¡Pon a prueba tus habilidades y compite con otros jugadores!",
         "playButton": "Comenzar a jugar"
     },
-    
     "nav": {
         "home": "Inicio",
         "contact": "Contacto",
         "history": "Historial"
     },
-
     "userMenu": {
         "profile": "Perfil",
         "settings": "Configuración",
         "logout": "Cerrar Sesión"
+    },
+    "contact": {
+        "title": "Sobre Nosotros",
+        "description": "Somos un equipo apasionado por la tecnología, desarrollando aplicaciones innovadoras y soluciones digitales.",
+        "subtitle": "Nuestro Equipo",
+        "team": {
+            "natalia": "Desarrolladora Frontend apasionada por la UI/UX.",
+            "david": "Especialista en Backend y bases de datos.",
+            "dario": "Diseñador de arquitecturas backend escalables.",
+            "hugoF": "Experto en modelos de lenguaje y procesamiento de datos.",
+            "marcos": "Desarrollador Frontend con enfoque en accesibilidad.",
+            "hugoP": "Investigador de inteligencia artificial aplicada."
+        }
     }
 }

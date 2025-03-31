@@ -5,19 +5,22 @@ import defaultTheme from "./config/default-Theme.json";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import imageW from '../media/women.jpg';
 import imageM from '../media/men.jpg';
+import {useTranslation} from 'react-i18next';
+import "../i18n";
 
 const teamMembers = [
-    { name: 'Natalia Blanco Agudín', role: 'Desarrolladora Fronted', email: 'UO295340@uniovi.com', github: 'https://github.com/NataliaBlancoAgudin', avatar: imageW },
-    { name: 'David Covián Gómez', role: 'Desarrollador Backend', email: 'UO295168@uniovi.com', github: 'https://github.com/DavidCG-27', avatar: imageM },
-    { name: 'Darío Cristóbal González', role: 'Diseñador Backend', email: 'UO294401@uniovi.com', github: 'https://github.com/daariio92', avatar: imageM },
-    { name: 'Hugo Fernández Rogríguez', role: 'Diseñador LLM', email: 'UO289157@uniovi.com', github: 'https://github.com/hugo-fdez', avatar: imageM },
-    { name: 'Marcos Llanos Vega', role: 'Diseñador Frontend', email: 'UO218982@uniovi.com', github: 'https://github.com/softwaremarcos', avatar: imageM },
-    { name: 'Hugo Prendes Menéndez', role: 'Diseñador LLM', email: 'UO288294@uniovi.com', github: 'https://github.com/prendess', avatar: imageM },
+    { name: 'Natalia Blanco Agudín', role: 'Desarrolladora Fronted', email: 'UO295340@uniovi.com', github: 'https://github.com/NataliaBlancoAgudin', avatar: imageW, descKey: 'contact.team.natalia' },
+    { name: 'David Covián Gómez', role: 'Desarrollador Backend', email: 'UO295168@uniovi.com', github: 'https://github.com/DavidCG-27', avatar: imageM, descKey: 'contact.team.david' },
+    { name: 'Darío Cristóbal González', role: 'Diseñador Backend', email: 'UO294401@uniovi.com', github: 'https://github.com/daariio92', avatar: imageM, descKey: 'contact.team.dario' },
+    { name: 'Hugo Fernández Rogríguez', role: 'Diseñador LLM', email: 'UO289157@uniovi.com', github: 'https://github.com/hugo-fdez', avatar: imageM, descKey: 'contact.team.hugoF' },
+    { name: 'Marcos Llanos Vega', role: 'Diseñador Frontend', email: 'UO218982@uniovi.com', github: 'https://github.com/softwaremarcos', avatar: imageM, descKey: 'contact.team.marcos' },
+    { name: 'Hugo Prendes Menéndez', role: 'Diseñador LLM', email: 'UO288294@uniovi.com', github: 'https://github.com/prendess', avatar: imageM, descKey: 'contact.team.hugoP' },
 ];
 
 const theme = createTheme(defaultTheme);
 
 const Contact = () => {
+    const { t } = useTranslation();
     return (
         <ThemeProvider theme={theme}>
             <Container
@@ -34,14 +37,14 @@ const Contact = () => {
                 }}
             >
                 <Typography variant="h4" gutterBottom color="primary">
-                    Sobre Nosotros
+                    {t('contact.title')}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    Somos un equipo apasionado por la tecnología, desarrollando aplicaciones innovadoras y soluciones digitales.
+                    {t('contact.description')}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom color="primary">
-                    Nuestro Equipo
+                    {t('contact.subtitle')}
                 </Typography>
 
                 <Grid container spacing={1} justifyContent="center" sx={{ flexGrow: 1, width: '100%', maxWidth: 1000 }}>
@@ -69,7 +72,7 @@ const Contact = () => {
 
                                 <CardContent sx={{ textAlign: 'center', flexGrow: 1 }}>
                                     <Typography variant="h6" sx={{ mt: 1 }}>{member.name}</Typography>
-                                    <Typography variant="body2" color="text.secondary">{member.role}</Typography>
+                                    <Typography variant="body2" color="text.secondary">{t(member.descKey)}</Typography>
 
                                     <Box sx={{ mt: 1 }}>
                                         {/* Enlace a correo electrónico */}
