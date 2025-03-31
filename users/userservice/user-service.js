@@ -1,4 +1,3 @@
-// user-service.js
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -94,7 +93,7 @@ app.get('/listUsers', async (req, res) => {
 
 app.get('/user/:username', async (req, res) => {
   try {
-      const user = await User.findOne({ username: req.params.username }, 'username friends'); // Return only the username and friends fields (password isn't included)
+      const user = await User.findOne({ username: req.params.username }).populate('friends', 'username');
       if (!user) {
           return res.status(404).json({ error: "User not found" });
       }
