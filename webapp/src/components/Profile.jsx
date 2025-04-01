@@ -9,6 +9,8 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, plugins } from 'chart.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
+import { useTranslation } from 'react-i18next';
+import "../i18n";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -24,6 +26,7 @@ const ProfilePage = () => {
     const [gameHistory, setGameHistory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { t } = useTranslation();
 
     const getUserId = () => {
         try {
@@ -73,7 +76,14 @@ const ProfilePage = () => {
         } else {
             navigate('/login');
         }
-    }, [navigate, userId]);
+
+        const timeoutId = setTimeout(() => {
+            setGameHistory([]);
+            setLoading(false);
+        }, 4000);
+
+        return () => clearTimeout(timeoutId);
+    }, [navigate, userId, t]);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -86,55 +96,14 @@ const ProfilePage = () => {
                 <Container maxWidth="xl">
                     <Box sx={{ textAlign: 'center', mb: 4 }}>
                         <Typography variant="h4" sx={{ mt: 2 }}>
-                            ¡Bienvenido/a {user.username || 'Usuario'}!
+                            {t('profile.welcomeUser', {user: user.username || t('profile.user')})}
                         </Typography>
                     </Box>
 
-                    <Grid container spacing={4} sx={{ padding: 2 }}>
-
-                        {/* Columna izquierda: Gráfico de estadísticas */}
-                        <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <Box sx={{ mt: 4, width: '100%' }}>
-                                <Typography variant="h6" gutterBottom align="center">
-                                    Estadísticas de Respuestas
-                                </Typography>
-
-                                <Paper sx={{ padding: 2, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                    {gameHistory && gameHistory.length > 0 ? (
-                                        <Pie data={data} options={options} height={250} />
-                                    ) : (
-                                        <Typography variant="body1" color="textSecondary">
-                                            Aquí aparecerán tus estadísticas
-                                        </Typography>
-                                    )}
-                                </Paper>
-                            </Box>
-                        </Grid>
-
-                        {/* Columna derecha: Información del usuario */}
-                        <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <Box sx={{ textAlign: 'center', mt: 4 }}>
-                                <Avatar sx={{ width: 120, height: 120, margin: 'auto' }} src={user.avatar} />
-                                <Typography variant="body1" sx={{ mt: 1 }}>
-                                    Aquí puedes ver y editar tu perfil.
-                                </Typography>
-
-                                <Box sx={{ mt: 3 }}>
-                                    <Button variant="contained" color="primary" onClick={() => navigate('/edit-profile')}>
-                                        Editar Perfil
-                                    </Button>
-                                </Box>
-
-                                <Box sx={{ mt: 2 }}>
-                                    <Button variant="outlined" color="error" onClick={handleLogout}>
-                                        Cerrar Sesión
-                                    </Button>
-                                </Box>
-                            </Box>
-
-                            {error && <Typography color="error" align="center">{error}</Typography>}
-
-                        </Grid>
+                    <Grid container justifyContent="center">
+                        <Typography variant="h6" align="center">
+                            <CircularProgress /> {t('profile.loadingGameHistory')}
+                        </Typography>
                     </Grid>
                 </Container>
             </ThemeProvider>
@@ -151,10 +120,10 @@ const ProfilePage = () => {
         : 0;
 
     const data = {
-        labels: ['Correctas', 'Erróneas'],
+        labels: [t('profile.correctAnswer'), t('profile.wrongAnswer')],
         datasets: [
             {
-                label: 'Estadísticas de Juego',
+                label: t('profile.gameStatics'),
                 data: [correctAnswers, wrongAnswers],
                 backgroundColor: [
                     theme.palette.green.main,
@@ -184,7 +153,7 @@ const ProfilePage = () => {
             <Container maxWidth="xl">
                 <Box sx={{ textAlign: 'center', mb: 4 }}>
                     <Typography variant="h4" sx={{ mt: 2 }}>
-                        ¡Bienvenido/a {user.username || 'Usuario'}!
+                        {t('profile.welcomeUser', {user: user.username || t('profile.user')})}
                     </Typography>
                 </Box>
 
@@ -194,16 +163,16 @@ const ProfilePage = () => {
                     <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Box sx={{ mt: 4, width: '100%' }}>
                             <Typography variant="h6" gutterBottom align="center">
-                                Estadísticas de Respuestas
+                                {t('profile.responseStatics')}
                             </Typography>
 
                             <Paper sx={{ padding: 2, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                {gameHistory && gameHistory.length > 0 ? (
-                                    <Pie data={data} options={options} height={250} />
-                                ) : (
+                                {!gameHistory || gameHistory.length === 0 ? (
                                     <Typography variant="body1" color="textSecondary">
-                                        Aquí aparecerán tus estadísticas
+                                        {t('profile.noStaticsAvailable')}
                                     </Typography>
+                                ) : (
+                                    <Pie data={data} options={options} height={250}></Pie>
                                 )}
                             </Paper>
                         </Box>
@@ -214,18 +183,18 @@ const ProfilePage = () => {
                         <Box sx={{ textAlign: 'center', mt: 4 }}>
                             <Avatar sx={{ width: 120, height: 120, margin: 'auto' }} src={user.avatar} />
                             <Typography variant="body1" sx={{ mt: 1 }}>
-                                Aquí puedes ver y editar tu perfil.
+                                {t('profile.editProfileInfo')}
                             </Typography>
 
                             <Box sx={{ mt: 3 }}>
                                 <Button variant="contained" color="primary" onClick={() => navigate('/edit-profile')}>
-                                    Editar Perfil
+                                    {t('profile.editProfile')}
                                 </Button>
                             </Box>
 
                             <Box sx={{ mt: 2 }}>
                                 <Button variant="outlined" color="error" onClick={handleLogout}>
-                                    Cerrar Sesión
+                                    {t('profile.logout')}
                                 </Button>
                             </Box>
                         </Box>

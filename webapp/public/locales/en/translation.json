@@ -25,5 +25,19 @@
             "marcos": "Frontend developer focused on accessibility.",
             "hugoP": "Researcher in applied artificial intelligence."
         }
+    },
+    "profile": {
+        "welcomeUser": "Welcome {{user}}!",
+        "loadingGameHistory": "Loading game history...",
+        "correctAnswer": "Correct Answers",
+        "wrongAnswer": "Wrong Answers",
+        "gameStatics": "Game Statistics",
+        "user": "User",
+        "responseStatics": "Game Statistics",
+        "noStaticsAvailable": "No statistics available.",
+        "editProfileInfo": "Here you can view and edit your profile.",
+        "editProfile": "Edit Profile",
+        "logout": "Log Out",
+        "errorLoadingStats": "Error loading user statistics."
     }
 }

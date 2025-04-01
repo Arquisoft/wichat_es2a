@@ -25,5 +25,19 @@
             "marcos": "Desarrollador Frontend con enfoque en accesibilidad.",
             "hugoP": "Investigador de inteligencia artificial aplicada."
         }
+    },
+    "profile": {
+        "welcomeUser": "¡Bienvenido/a {{user}}!",
+        "loadingGameHistory": "Cargando historial de juegos...",
+        "correctAnswer": "Respuestas correctas",
+        "wrongAnswer": "Respuestas incorrectas",
+        "gameStatics": "Estadísticas de Juego",
+        "user": "Usuario",
+        "responseStatics": "Estadísticas del Juego",
+        "noStaticsAvailable": "No hay estadísticas disponibles.",
+        "editProfileInfo": "Aquí puedes ver y editar tu perfil.",
+        "editProfile": "Editar perfil",
+        "logout": "Cerrar Sesión",
+        "errorLoadingStats": "Error al cargar las estadísticas del usuario."
     }
 }
