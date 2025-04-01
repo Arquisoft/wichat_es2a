@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Container, Typography, Box, Avatar, Button, CircularProgress,
+    Container, Typography, Box, Avatar, Button,
     Paper, Grid
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, plugins } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,6 @@ const ProfilePage = () => {
         username: '',
     });
     const [gameHistory, setGameHistory] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { t } = useTranslation();
 
@@ -63,8 +62,6 @@ const ProfilePage = () => {
                     setGameHistory(data);
                 } catch (error) {
                     setError("Error al cargar las estadísticas del usuario.");
-                } finally {
-                    setLoading(false);
                 }
             }
         };
@@ -76,39 +73,12 @@ const ProfilePage = () => {
         } else {
             navigate('/login');
         }
-
-        const timeoutId = setTimeout(() => {
-            setGameHistory([]);
-            setLoading(false);
-        }, 4000);
-
-        return () => clearTimeout(timeoutId);
     }, [navigate, userId, t]);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
         navigate('/login');
     };
-
-    if (loading) {
-        return (
-            <ThemeProvider theme={theme}>
-                <Container maxWidth="xl">
-                    <Box sx={{ textAlign: 'center', mb: 4 }}>
-                        <Typography variant="h4" sx={{ mt: 2 }}>
-                            {t('profile.welcomeUser', {user: user.username || t('profile.user')})}
-                        </Typography>
-                    </Box>
-
-                    <Grid container justifyContent="center">
-                        <Typography variant="h6" align="center">
-                            <CircularProgress /> {t('profile.loadingGameHistory')}
-                        </Typography>
-                    </Grid>
-                </Container>
-            </ThemeProvider>
-        )
-    }
 
     // Datos para el gráfico de estadísticas
     const correctAnswers = (gameHistory && Array.isArray(gameHistory))
