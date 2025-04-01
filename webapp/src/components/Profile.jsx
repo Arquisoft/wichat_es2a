@@ -142,8 +142,13 @@ const ProfilePage = () => {
     }
 
     // Datos para el gráfico de estadísticas
-    const correctAnswers = gameHistory.reduce((total, game) => total + game.correct, 0);
-    const wrongAnswers = gameHistory.reduce((total, game) => total + game.wrong, 0);
+    const correctAnswers = (gameHistory && Array.isArray(gameHistory))
+        ? gameHistory.reduce((total, game) => total + game.correct, 0)
+        : 0;
+
+    const wrongAnswers = (gameHistory && Array.isArray(gameHistory))
+        ? gameHistory.reduce((total, game) => total + game.wrong, 0)
+        : 0;
 
     const data = {
         labels: ['Correctas', 'Erróneas'],
