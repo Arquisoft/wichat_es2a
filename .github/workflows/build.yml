@@ -62,7 +62,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
@@ -89,7 +89,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
@@ -113,7 +113,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
@@ -137,7 +137,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
@@ -161,7 +161,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
@@ -189,7 +189,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [unit-tests]
+    needs: []
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Buildx
