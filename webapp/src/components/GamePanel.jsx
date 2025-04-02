@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import loading from '../media/loading.gif';
 
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
@@ -199,7 +200,7 @@ useEffect(() => {
           justifyContent="center"
           alignItems="center"
         >
-          <CircularProgress style={{ marginBottom: '16px' }} />
+          <img src={loading} alt="Loading" />
           <Typography variant="h6">Cargando preguntas...</Typography>
         </Grid>
       </ThemeProvider>
