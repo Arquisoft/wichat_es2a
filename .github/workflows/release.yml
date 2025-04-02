@@ -92,14 +92,12 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@v5
       env:
         API_URI: http://${{ secrets.DEPLOY_HOST }}:8000
-        LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       with:
           name: arquisoft/wichat_es2a/webapp
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
           workdir: webapp
-          buildargs: API_URI,LLM_API_KEY
           tags: "${{ steps.get_version.outputs.VERSION }}"
           platforms: linux/amd64,linux/arm64
 
@@ -259,6 +257,6 @@ jobs:
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/llmservice:latest|ghcr.io/arquisoft/wichat_es2a/llmservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest|ghcr.io/arquisoft/wichat_es2a/gatewayservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/wikidata:latest|ghcr.io/arquisoft/wichat_es2a/wikidata:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
-           docker compose --profile prod down
-           docker compose --profile prod pull
-           docker compose --profile prod up -d
+           sudo docker compose --profile prod down
+           sudo docker compose --profile prod pull
+           sudo docker compose --profile prod up -d
