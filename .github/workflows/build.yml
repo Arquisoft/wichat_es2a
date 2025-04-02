@@ -19,7 +19,7 @@ on:
       runTests:
         description: 'Ejecutar tests'
         required: true
-        default: 'true'
+        default: 'false'
         type: choice
         options:
           - 'true'
