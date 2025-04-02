@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';   // Importamos el hook useNavigate
 import { Container, Grid, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
 import image from '../media/login.svg';
+import {useTranslation} from 'react-i18next';
+import "../i18n";
 
 
 const Login = () => {
@@ -17,6 +19,7 @@ const Login = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);  // Estado para manejar la carga
   const navigate = useNavigate(); // Hook de navegación
+  const { t } = useTranslation();
 
   // Variables de entorno para la API y la clave de la API
   const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
@@ -79,35 +82,35 @@ const Login = () => {
           {/* Mostrar el mensaje de error en la interfaz de usuario */}
           {error && (
             <Alert severity="error" sx={{ mt: 2 }}>
-              {error}
+              {t('login.error_message')}
             </Alert>
           )}
           <Typography component="h1" variant="h5">
-            Log in to your account
+            {t('login.title')}
           </Typography>
 
           <Typography variant="body2" sx={{ marginTop: 2 }}>
-            Don't have an account? <Link to="/adduser" style={{ color: '#1976D2', textDecoration: 'none' }}>Sign up</Link>
+            {t('login.signup')} <Link to="/adduser" style={{ color: '#1976D2', textDecoration: 'none' }}>{t('login.signup_link')}</Link>
           </Typography>
 
           {/* Formulario para login */}
           <TextField
             margin="normal"
             fullWidth
-            label="Username"
+            label={t('login.username')}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             margin="normal"
             fullWidth
-            label="Password"
+            label={t('login.password')}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value.toString())}
           />
           <Button variant="contained" color="primary" onClick={loginUser} disabled={loading}>
-            {loading ? "Loggin in..." : "Login"}
+            {loading ? t('login.logging_in') : t('login.login_button')}
           </Button>
 
         </Grid>

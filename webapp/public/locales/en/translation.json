@@ -39,5 +39,16 @@
         "editProfile": "Edit Profile",
         "logout": "Log Out",
         "errorLoadingStats": "Error loading user statistics."
+    },
+    "login": {
+        "title": "Log in to your account",
+        "signup": "Don't have an account?",
+        "signup_link": "Sign up",
+        "username": "Username",
+        "password": "Password",
+        "login_button": "Login",
+        "logging_in": "Logging in...",
+        "error_message": "Login error",
+        "success_message": "Login successful"
     }
 }

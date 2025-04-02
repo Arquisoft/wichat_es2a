@@ -39,5 +39,16 @@
         "editProfile": "Editar perfil",
         "logout": "Cerrar Sesión",
         "errorLoadingStats": "Error al cargar las estadísticas del usuario."
+    },
+    "login": {
+        "title": "Inicia sesión en tu cuenta",
+        "signup": "¿No tienes una cuenta?",
+        "signup_link": "Regístrate",
+        "username": "Nombre de usuario",
+        "password": "Contraseña",
+        "login_button": "Iniciar sesión",
+        "logging_in": "Iniciando sesión...",
+        "error_message": "Error al iniciar sesión",
+        "success_message": "Inicio de sesión exitoso"
     }
 }
