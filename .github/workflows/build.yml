@@ -220,5 +220,11 @@ jobs:
         key: ${{ secrets.DEPLOY_KEY }}
         command: |
           wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
+          # Ensure we're only pulling images and not building
+          sed -i 's/build:/# build:/g' docker-compose.yml
+          sed -i 's/context:/# context:/g' docker-compose.yml
+          sed -i 's/platforms:/# platforms:/g' docker-compose.yml
+          sed -i 's/- linux\/amd64/# - linux\/amd64/g' docker-compose.yml
+          sed -i 's/- linux\/arm64/# - linux\/arm64/g' docker-compose.yml
           sudo docker compose --profile prod down
           sudo docker compose --profile prod up -d --pull always
