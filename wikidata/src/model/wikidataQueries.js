@@ -14,96 +14,140 @@ module.exports = [
         {
             category: "Lugares",
             sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
-                ?item wdt:P31 wd:Q515;  # Ciudad
-                      wdt:P18 ?image;   # Imagen
-                      wdt:P17 ?answer.  # País de la ciudad (respuesta correcta)
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } 
-            ORDER BY RAND()
-            LIMIT 10`,
+                    {
+                        SELECT ?item ?itemLabel ?image ?answerLabel WHERE {
+                        ?item wdt:P31 wd:Q515;    # Ciudad
+                                wdt:P18 ?image;     # Imagen
+                                wdt:P17 ?answer.    # País de la ciudad (respuesta correcta)
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "es". 
+                                                ?answer rdfs:label ?answerLabel. }
+                        } LIMIT 200
+                    }
+                    }
+                    ORDER BY RAND()
+                    LIMIT 10
+                    `,
             statement: "¿A qué lugar corresponde la siguiente foto?"
         },
         {
             category: "Arte",
             sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
-                ?item wdt:P31 wd:Q3305213;  # Es una pintura
-                      wdt:P18 ?image.      # Tiene imagen
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                {
+                    SELECT ?item ?itemLabel ?image WHERE {
+                    ?item wdt:P31 wd:Q3305213;  # Es una pintura
+                            wdt:P18 ?image.       # Tiene imagen
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                    } LIMIT 200
+                }
                 BIND(?itemLabel AS ?answerLabel)
-            } 
-            ORDER BY RAND()
-            LIMIT 10`,
+                }
+                ORDER BY RAND()
+                LIMIT 10
+                `,
             statement: "¿Cuál es el nombre de la obra?"
         },          
         {
             category: "Actores",
-            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
-                ?item wdt:P31 wd:Q5;
-                      wdt:P106 wd:Q33999;  # Ocupación: Actor
-                      wdt:P18 ?image.      # Imagen
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } 
-            ORDER BY RAND()
-            LIMIT 10`,
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                    {
+                        SELECT ?item ?itemLabel ?image WHERE {
+                        ?item wdt:P31 wd:Q5;             # Es humano
+                                wdt:P106 wd:Q33999;        # Actor
+                                wdt:P18 ?image.            # Tiene imagen
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                        } LIMIT 200
+                    }
+                    }
+                    ORDER BY RAND()
+                    LIMIT 10
+            `,
             statement: "¿Quién es este actor?"
         },
         {
             category: "Cantantes",
-            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
-                ?item wdt:P31 wd:Q5;     # Humano
-                      wdt:P106 wd:Q177220; # Ocupación: Cantante
-                      wdt:P18 ?image.      # Imagen
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-            } 
-            ORDER BY RAND()
-            LIMIT 10`,
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                {
+                    SELECT ?item ?itemLabel ?image WHERE {
+                    ?item wdt:P31 wd:Q5;           # Humano
+                            wdt:P106 wd:Q177220;     # Ocupación: Cantante
+                            wdt:P18 ?image.          # Imagen
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                    } LIMIT 200
+                }
+                }
+                ORDER BY RAND()
+                LIMIT 10
+                `,
             statement: "¿Quién es este cantante?"
         },
         {
             category: "Pintores",
             sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
-                    ?item wdt:P31 wd:Q3305213;  # Es una pintura
-                            wdt:P18 ?image;        # Tiene imagen
-                            wdt:P170 ?answer.      # Su autor (respuesta correcta)
-                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-                    } 
+                    {
+                        SELECT ?item ?itemLabel ?image ?answerLabel WHERE {
+                        ?item wdt:P31 wd:Q3305213;   # Es una pintura
+                                wdt:P18 ?image;        # Tiene imagen
+                                wdt:P170 ?answer.      # Autor (respuesta correcta)
+                        SERVICE wikibase:label { 
+                            bd:serviceParam wikibase:language "es". 
+                            ?answer rdfs:label ?answerLabel.
+                        }
+                        } LIMIT 200
+                    }
+                    }
                     ORDER BY RAND()
-                    LIMIT 10`,
+                    LIMIT 10
+                    `,
             statement: "¿Quién es el autor de esta obra?"
         },
         {
             category: "Futbolistas",
-            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
-                            ?item wdt:P31 wd:Q5;     # Humano
-                                wdt:P106 wd:Q937857; # Ocupación: Futbolista
-                                wdt:P18 ?image.      # Imagen
-                            SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-                        } 
-                        ORDER BY RAND()
-                        LIMIT 10`,
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                    {
+                        SELECT ?item ?itemLabel ?image WHERE {
+                        ?item wdt:P31 wd:Q5;            # Humano
+                                wdt:P106 wd:Q937857;      # Futbolista
+                                wdt:P18 ?image.           # Imagen
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                        } LIMIT 200
+                    }
+                    }
+                    ORDER BY RAND()
+                    LIMIT 10
+                    `,
             statement: "¿Quién es este futbolista?"
         },
         {
             category: "Banderas",
-            sparql: `SELECT DISTINCT ?itemLabel ?image ( ?itemLabel AS ?answerLabel ) WHERE {
-                            ?item wdt:P31 wd:Q6256;     # País
-                                wdt:P41 ?image.      # Bandera
-                            SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-                        } 
-                        ORDER BY RAND()
-                        LIMIT 10`,
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                {
+                    SELECT ?item ?itemLabel ?image WHERE {
+                    ?item wdt:P31 wd:Q6256;      # País
+                            wdt:P41 ?image.        # Bandera
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                    } LIMIT 200
+                }
+                }
+                ORDER BY RAND()
+                LIMIT 10
+                `,
             statement: "¿De qué país es esta bandera?"
         },
         {
             category: "Filosofos",
             sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
-                        ?item wdt:P31 wd:Q5;              # Humano
-                            wdt:P106 wd:Q4964182;       # Ocupación: Filósofo
-                            wdt:P18 ?image.             # Imagen
+                    {
+                        SELECT ?item ?itemLabel ?image WHERE {
+                        ?item wdt:P31 wd:Q5;             # Humano
+                                wdt:P106 wd:Q4964182;      # Filósofo
+                                wdt:P18 ?image.            # Imagen
                         SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                        } LIMIT 200
+                    }
                     }
                     ORDER BY RAND()
-                    LIMIT 10`,
+                    LIMIT 10
+                    `,
             statement: "¿Quién es este filósofo?"
         }
     ];

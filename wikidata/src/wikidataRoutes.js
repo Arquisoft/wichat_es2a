@@ -25,8 +25,8 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
     const category= req.params.category;
     const n = req.params.number;
     try {
+        console.log("actualizado");
         const questions = await service.getQuestions(category, n);
-        service.deleteQuestions(questions);
         res.json(questions);
     } catch (error) {
         console.error("Error getting the questions:", error);

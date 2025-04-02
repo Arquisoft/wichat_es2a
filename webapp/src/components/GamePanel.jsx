@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, Button, Snackbar, Alert, CircularProgress, LinearProgress } from '@mui/material';
+import { Box, Grid, Paper, Typography, Button, CircularProgress, LinearProgress } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -23,7 +23,6 @@ const GamePanel = () => {
   });
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
@@ -78,10 +77,8 @@ const GamePanel = () => {
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
-      setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
       setCorrectCount(prev => prev + 1);
     } else {
-      setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
       setIncorrectCount(prev => prev + 1);
     }
 
@@ -394,20 +391,6 @@ useEffect(() => {
           </Button>
         )}
       </Grid>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </ThemeProvider>
   );
 };

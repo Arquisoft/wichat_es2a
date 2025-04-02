@@ -73,15 +73,28 @@ const service = {
      * @returns An array of n questions from the database of the specified category.
      */
     getQuestions: async function(category, n){
-        if (await repository.existsQuestions(category)){
-            return await repository.getQuestions(category, n);
-        }
-        else
-        {
-            const questions = await service.fetchQuestionsFromWikidata(category);
-            await repository.insertQuestions(questions);
-            return await repository.getQuestions(category, n);
-        }
+        const questions = await service.fetchQuestionsFromWikidata(category);
+        await repository.insertQuestions(questions);
+        return questions;
+    },
+
+    /**
+     * Get all questions from the database.
+     * @returns All questions from the database.
+     */
+    getAllQuestions: async function(){
+        const questions = await repository.getAllQuestions();
+        return questions;
+    },
+
+    /**
+     * Get all questions from the database of a specific category.
+     * @param {String} category - The category of the questions.
+     * @returns All questions from the database of the specified category.
+     */
+    getAllQuestionsFromCategory: async function(category){
+        const questions = await repository.getAllQuestionsFromCategory(category);
+        return questions;
     },
 
     /**
