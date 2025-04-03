@@ -47,7 +47,7 @@ function App() {
     // </ThemeProvider>
     <ThemeProvider theme={theme}>
       <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Countdown />
+      <Countdown questionTime={10}/>
       </Box>
     </ThemeProvider>
    

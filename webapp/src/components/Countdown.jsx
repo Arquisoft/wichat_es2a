@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react';
 // Añadimos la hoja de estilos para la animación del circulo
 import './Countdown.css';
 
-const Countdown = () => {
+const Countdown = ( {questionTime}) => {
 
+    
     // Tiempo por pregunta: 30 segundos
-    const questionTime = 30;
+    //const questionTime = 30;
+
+    // Ahora el tiempo de pregunta esta parametrizado
+    // Se escoge al crear el componente
+
+    // Si no se pasa el tiempo de pregunta, se usa el valor por defecto
+    const defaultQuestionTime = 30;
+    questionTime = questionTime || defaultQuestionTime;
+    
 
     const [seconds, setSeconds] = useState(questionTime);
 
@@ -21,14 +30,15 @@ const Countdown = () => {
     }, [seconds]);
 
     const circumference = 200;
-    const offset = ((30 - seconds) / 30) * circumference;
+    const offset = ((questionTime - seconds) / questionTime) * circumference;
 
 
     // Determina el color según el tiempo restante
     // Empieza en color verde pero cuando quedan 10 segundos pasa a rojo
     const initColor = 'green';
     const endColor = 'red';
-    const isCritical = seconds <= 10;
+    const colorChangeTime = Math.min(10, questionTime/2);
+    const isCritical = seconds <= colorChangeTime;
     const circleColor = isCritical ? endColor : initColor;
     const textColor = isCritical ? endColor : initColor;
 
