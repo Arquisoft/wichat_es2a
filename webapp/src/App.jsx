@@ -21,36 +21,31 @@ const theme = createTheme(defaultTheme);
 
 function App() {
   return (
-    // <ThemeProvider theme={theme}>
-    //   <CssBaseline />
-    //   <Router> {/* Asegurar que Routes esté dentro de BrowserRouter */}
-    //     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-    //       <Nav />
-    //       <Routes> {/* Definimos las rutas */}
-    //         <Route path="/login" element={<Login />} />
-    //         <Route path="/adduser" element={<AddUser />} />
-    //         <Route path="/contact" element={<Contact />} />
-
-    //         {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
-    //         <Route element={<ProtectedRoute />}>
-    //           <Route path="/game" element={<GamePanel />} />
-    //           <Route path="/home" element={<Home />} />
-    //           <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
-    //           <Route path="/profile" element={<Profile />} />
-    //         </Route>
-
-    //         {/* Redirección por defecto */}
-    //         <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
-    //       </Routes>
-    //     </Box>
-    //   </Router>
-    // </ThemeProvider>
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Countdown questionTime={10}/>
-      </Box>
+      <CssBaseline />
+      <Router> {/* Asegurar que Routes esté dentro de BrowserRouter */}
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Nav />
+          <Routes> {/* Definimos las rutas */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/adduser" element={<AddUser />} />
+            <Route path="/contact" element={<Contact />} />
+
+            {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/game" element={<GamePanel />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+
+            {/* Redirección por defecto */}
+            <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
+          </Routes>
+        </Box>
+      </Router>
     </ThemeProvider>
-   
+  
   );
 }
 

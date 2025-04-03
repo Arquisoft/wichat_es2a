@@ -14,7 +14,7 @@ const Countdown = ( {questionTime}) => {
     // Si no se pasa el tiempo de pregunta, se usa el valor por defecto
     const defaultQuestionTime = 30;
     questionTime = questionTime || defaultQuestionTime;
-    
+
 
     const [seconds, setSeconds] = useState(questionTime);
 
@@ -44,15 +44,15 @@ const Countdown = ( {questionTime}) => {
 
     return (
         <div className='countdown-container'>
-            <svg width='200' height='200'>
+            <svg width='60' height='60'>
 
                 {/* Circulo gris de fondo */}
                 {/* Circulo estatico que siempre se ve cuando vaya desapareciendo el otro */}
                 <circle
-                    cx='100'
-                    cy='100'
-                    r='30'
-                    // color gris para cuando se vaya vaciando el circulo al pasar el tiempo
+                    cx='30'
+                    cy='30'
+                    r='25'
+                    // Color gris para cuando se vaya vaciando el circulo al pasar el tiempo
                     stroke='#eeeeee'
                     strokeWidth='10'
                     fill='none'
@@ -61,9 +61,9 @@ const Countdown = ( {questionTime}) => {
                 {/* Circulo verde de primer plano */}
                 {/* Circulo que se va vaciando segun van pasando los segundos */}
                 <circle
-                    cx='100'
-                    cy='100'
-                    r='30'
+                    cx='30'
+                    cy='30'
+                    r='25'
                     // color verde para el circulo que se va vaciando
                     // es el tiempo restante para contestar
                     stroke={circleColor}

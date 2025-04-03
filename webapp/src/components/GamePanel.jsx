@@ -6,12 +6,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import Countdown from './Countdown';
 
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
-const CATEGORY = "Lugares";
+const CATEGORY = "Futbolistas";
 
 const GamePanel = () => {
   const [showChat, setShowChat] = useState(false);
@@ -31,6 +32,9 @@ const GamePanel = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [userId, setUserId] = useState(null);
+
+  const [countdownKey, setCountdownKey] = useState(0);
+
   
 
   const getQuestions = async () => {
@@ -75,6 +79,10 @@ const GamePanel = () => {
     });
   };
 
+  const resetCountdownTime = () => {
+    setCountdownKey(prev => prev + 1);
+  }
+
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
@@ -92,6 +100,7 @@ const GamePanel = () => {
         setCurrentQuestionIndex(prev => prev + 1);
         setSelectedAnswer(null);
         chooseQuestion();
+        resetCountdownTime();
       }
     }, 2000);
   };
@@ -274,17 +283,51 @@ useEffect(() => {
             position: 'relative',
           }}
         >
-          <Paper elevation={3} style={{ padding: '16px', height: '100%' }}>
+
+      
+
+
+          <Box 
+            style={{ 
+              display: 'flex', 
+              flexDirection:'column', 
+              justifyContent: 'space-between', 
+              alignItems: 'center' 
+              }}>
+          
+          <Box
+            style={{ 
+              display: 'flex', 
+              flexDirection:'row', 
+              justifyContent: 'space-around', 
+              width: '100%'
+              }}>
+
+            {/* Texto con el indice de la pregunta */}
+            <Typography variant="h4" align="center">
+                  {`Pregunta ${currentQuestionIndex + 1} de ${TOTAL_QUESTIONS}`}
+            </Typography>
+
+            {/* Cuenta atras del tiempo para responder esa pregunta */}
+            <Countdown key={countdownKey} />
+          </Box>
+          
+
+
+          
+          <Paper elevation={3} style={{ padding: '2%', height: '100%' }}>
+
             <Typography variant="h4" align="center" gutterBottom>
               {questionData.question}
             </Typography>
+
             {/* Contenedor de la imagen con spinner y mensaje overlay mientras carga */}
             <Box
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: '20px',
+                marginTop: '3%',
                 position: 'relative',
               }}
             >
@@ -314,8 +357,9 @@ useEffect(() => {
                 onError={() => setImageLoaded(true)}
                 style={{
                   width: '100%',
-                  maxWidth: '70vw',    
-                  maxHeight: '55vh',   
+                  maxWidth: '70vw',
+                  maxHeight: '40vh',  
+                  height: '50%',   
                   objectFit: 'contain', 
                   opacity: imageLoaded ? 1 : 0.7,
                 }}                
@@ -351,6 +395,11 @@ useEffect(() => {
               ))}
             </Grid>
           </Paper>
+
+          </Box>
+
+
+
         </Grid>
         {showChat && (
           <Grid
