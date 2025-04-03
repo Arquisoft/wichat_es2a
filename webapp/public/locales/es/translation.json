@@ -50,5 +50,16 @@
         "logging_in": "Iniciando sesión...",
         "error_message": "Error al iniciar sesión",
         "success_message": "Inicio de sesión exitoso"
+    },
+    "signup": {
+        "createAccount": "Crea tu cuenta",
+        "haveAccount": "¿Ya tienes una cuenta?",
+        "loginNow": "Inicia sesión ahora",
+        "username": "Nombre de usuario",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "button": "Registrarse",
+        "userAdded": "Usuario agregado exitosamente",
+        "image": "Imagen de registro"
     }
 }

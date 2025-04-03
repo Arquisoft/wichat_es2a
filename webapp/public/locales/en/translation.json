@@ -50,5 +50,16 @@
         "logging_in": "Logging in...",
         "error_message": "Login error",
         "success_message": "Login successful"
+    },
+    "signup": {
+        "createAccount": "Create your account",
+        "haveAccount": "Have an account?",
+        "loginNow": "Log in now",
+        "username": "Username",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "button": "Sign up",
+        "userAdded": "User added successfully",
+        "image": "Signup image"
     }
 }
