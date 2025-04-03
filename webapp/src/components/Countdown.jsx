@@ -15,6 +15,19 @@ const Countdown = ( {questionTime, onCountdownFinish}) => {
     const defaultQuestionTime = 30;
     questionTime = questionTime || defaultQuestionTime;
 
+    // Constantes graficas
+
+    // Altura SVG
+    const svgHeight = 60;
+    // Anchura SVG
+    const svgWidth = 60
+    // Centro del circulo en SVG
+    const centerX = svgWidth / 2;
+    const centerY = svgHeight / 2;
+
+    // Radio del círculo
+    const circleRadius = 25; 
+
 
     const [seconds, setSeconds] = useState(questionTime);
 
@@ -32,7 +45,7 @@ const Countdown = ( {questionTime, onCountdownFinish}) => {
     }, [seconds, onCountdownFinish]);
 
 
-    const circumference = 200;
+    const circumference = Math.PI * 2 * circleRadius;
     const offset = ((questionTime - seconds) / questionTime) * circumference;
 
 
@@ -47,14 +60,14 @@ const Countdown = ( {questionTime, onCountdownFinish}) => {
 
     return (
         <div className='countdown-container'>
-            <svg width='60' height='60'>
+            <svg width={svgWidth} height={svgHeight}>
 
                 {/* Circulo gris de fondo */}
                 {/* Circulo estatico que siempre se ve cuando vaya desapareciendo el otro */}
                 <circle
-                    cx='30'
-                    cy='30'
-                    r='25'
+                    cx={centerX}
+                    cy={centerY}
+                    r={circleRadius}
                     // Color gris para cuando se vaya vaciando el circulo al pasar el tiempo
                     stroke='#eeeeee'
                     strokeWidth='10'
@@ -64,9 +77,9 @@ const Countdown = ( {questionTime, onCountdownFinish}) => {
                 {/* Circulo verde de primer plano */}
                 {/* Circulo que se va vaciando segun van pasando los segundos */}
                 <circle
-                    cx='30'
-                    cy='30'
-                    r='25'
+                    cx={centerX}
+                    cy={centerY}
+                    r={circleRadius}
                     // color verde para el circulo que se va vaciando
                     // es el tiempo restante para contestar
                     stroke={circleColor}
