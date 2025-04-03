@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // Añadimos la hoja de estilos para la animación del circulo
 import './Countdown.css';
 
-const Countdown = ( {questionTime}) => {
+const Countdown = ( {questionTime, onCountdownFinish}) => {
 
     
     // Tiempo por pregunta: 30 segundos
@@ -24,10 +24,13 @@ const Countdown = ( {questionTime}) => {
             interval = setInterval(() => {
                 setSeconds(prev => prev - 1);
             }, 1000);
+        } else if (seconds === 0) {
+            // Aquí se llama la función recibida cuando se acaba el tiempo
+            onCountdownFinish();
         }
-
         return () => clearInterval(interval);
-    }, [seconds]);
+    }, [seconds, onCountdownFinish]);
+
 
     const circumference = 200;
     const offset = ((questionTime - seconds) / questionTime) * circumference;

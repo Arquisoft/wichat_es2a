@@ -83,6 +83,24 @@ const GamePanel = () => {
     setCountdownKey(prev => prev + 1);
   }
 
+
+  // Esta función se pasa al Countdown y se ejecutará cuando termine el tiempo
+  const handleCountdownFinish = () => {
+    nextQuestion();
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
+      setGameEnded(true);
+    } else {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setSelectedAnswer(null);
+      chooseQuestion();
+      resetCountdownTime();
+    }
+  }
+
+
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
@@ -94,14 +112,7 @@ const GamePanel = () => {
     }
 
     setTimeout(() => {
-      if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
-        setGameEnded(true);
-      } else {
-        setCurrentQuestionIndex(prev => prev + 1);
-        setSelectedAnswer(null);
-        chooseQuestion();
-        resetCountdownTime();
-      }
+      nextQuestion();
     }, 2000);
   };
 
@@ -309,7 +320,11 @@ useEffect(() => {
             </Typography>
 
             {/* Cuenta atras del tiempo para responder esa pregunta */}
-            <Countdown key={countdownKey} />
+            <Countdown 
+              key={countdownKey} 
+              questionTime={10} 
+              onCountdownFinish={handleCountdownFinish}
+            />
           </Box>
           
 
