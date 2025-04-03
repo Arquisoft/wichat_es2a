@@ -34,30 +34,30 @@ const Countdown = () => {
 
     return (
         <div className='countdown-container'>
-            <svg width='100' height='100'>
+            <svg width='200' height='200'>
 
                 {/* Circulo gris de fondo */}
                 {/* Circulo estatico que siempre se ve cuando vaya desapareciendo el otro */}
                 <circle
-                    cx='50'
-                    cy='50'
-                    r='15'
+                    cx='100'
+                    cy='100'
+                    r='30'
                     // color gris para cuando se vaya vaciando el circulo al pasar el tiempo
                     stroke='#eeeeee'
-                    strokeWidth='4'
+                    strokeWidth='10'
                     fill='none'
                 />
 
                 {/* Circulo verde de primer plano */}
                 {/* Circulo que se va vaciando segun van pasando los segundos */}
                 <circle
-                    cx='50'
-                    cy='50'
-                    r='15'
+                    cx='100'
+                    cy='100'
+                    r='30'
                     // color verde para el circulo que se va vaciando
                     // es el tiempo restante para contestar
                     stroke={circleColor}
-                    strokeWidth='4'
+                    strokeWidth='10'
                     fill='none'
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
