@@ -25,8 +25,8 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
     const category= req.params.category;
     const n = req.params.number;
     try {
+        console.log("actualizado");
         const questions = await service.getQuestions(category, n);
-        service.deleteQuestions(questions);
         res.json(questions);
     } catch (error) {
         console.error("Error getting the questions:", error);
@@ -178,4 +178,31 @@ app.get('/game/statistics', async (req, res) => {
          res.status(500).json({ error: "Server error" });
      }
  });
+
+ // Configuring the route to get all questions from the database.
+// This route will return all the questions from the database.
+// Example: http://localhost:3001/questions
+ app.get('/questions', async (req, res) => {
+    try {
+        const questions = await repository.getAllQuestions();
+        res.json(questions);
+    } catch (error) {
+        console.error("Error getting all questions:", error);
+        res.status(500).json({ error: "Error getting all questions" });
+    }
+});
+
+// Configuring the route to get all questions from a specific category.
+// This route will return all the questions from the specified category.
+// Example: http://localhost:3001/questions/Lugares
+app.get('/questions/:category', async (req, res) => {
+    try {
+        const category = req.params.category;
+        const questions = await repository.getAllQuestionsFromCategory(category);
+        res.json(questions);
+    } catch (error) {
+        console.error("Error getting questions from category:", error);
+        res.status(500).json({ error: "Error getting questions from category" });
+    }
+});
 
