@@ -20,7 +20,7 @@ const Countdown = () => {
         return () => clearInterval(interval);
     }, [seconds]);
 
-    const circumference = 100;
+    const circumference = 200;
     const offset = ((30 - seconds) / 30) * circumference;
 
 
