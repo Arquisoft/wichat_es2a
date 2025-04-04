@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 const Group = require('./group-model')
 const User = require('./user-model');
 
@@ -15,8 +16,6 @@ app.use(express.json());
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
 mongoose.connect(mongoUri);
 
-
-
 // Function to validate required fields in the request body
 function validateRequiredFields(req, requiredFields) {
     for (const field of requiredFields) {
@@ -25,6 +24,7 @@ function validateRequiredFields(req, requiredFields) {
       }
     }
 }
+
 app.post('/createGroup', async (req, res) => {
   try {
       validateRequiredFields(req, ['groupName', 'username']);
@@ -83,6 +83,72 @@ app.post('/addUserToGroup', async (req, res) => {
 }
 });
 
+app.get('/getGroupUsers', async (req, res) => {
+    try {
+        const { groupName } = req.query;
+
+        if (!groupName) {
+            return res.status(400).json({ error: 'Group name is required' });
+        }
+
+        const group = await Group.findOne({ name: groupName }).populate('users.user', 'username');
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const users = group.users.map(member => ({
+            username: member.user.username,
+            role: member.role,
+            gameHistoryLink: `/game/statistics?userId=${member.user._id}` // Enlace para consultar el historial de partidas
+        }));
+
+        res.json({ groupName: group.name, users });
+    } catch (error) {
+        console.error("Error fetching group users:", error);
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/listGroupUsers', async (req, res) => {
+    try {
+        const { groupName } = req.query;
+
+        if (!groupName) {
+            return res.status(400).json({ error: 'Group name is required' });
+        }
+
+        const group = await Group.findOne({ name: groupName }).populate('users.user', 'username');
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const users = group.users.map(member => ({
+            username: member.user.username,
+            role: member.role
+        }));
+
+        res.json({ groupName: group.name, users });
+    } catch (error) {
+        console.error("Error fetching group users:", error);
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/getUserGameHistory', async (req, res) => {
+    try {
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        const response = await axios.get(`http://localhost:3001/game/statistics`, { params: { userId } });
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error fetching user game history:", error);
+        res.status(400).json({ error: error.message });
+    }
+});
 
 const server = app.listen(port, () => {
   console.log(`Group Service listening at http://localhost:${port}`);
