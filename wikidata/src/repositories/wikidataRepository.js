@@ -39,6 +39,20 @@ const repository = {
     }
   },
 
+  /**
+   * Get all questions from the database.
+   * @returns {Promise<Array<Question>>} A promise that resolves to an array of all questions in the database.
+   */
+  getAllQuestions: async function () {
+    try {
+      await module.exports.checkUp();
+      let questions = await Question.find({});
+      return questions;
+    } catch (error) {
+      throw new Error(`Error getting all questions: ${error.message}`);
+    }
+  },
+
  /**
   * Inserts multiple questions into the database.
   *
@@ -76,6 +90,22 @@ const repository = {
       return result;
     } catch (error) {
       throw new Error(`Error getting questions: ${error.message}`);
+    }
+  },
+
+  /**
+   * Get all questions from the database based on the specified category.
+   * @param {String} category - Question category
+   * @throws {Error} Throws an error if the database connection check fails or if there is an error during the retrieval process.
+   * @returns {Promise<Array<Question>>} A promise that resolves to an array of questions from the specified category.
+   */
+  getAllQuestionsFromCategory: async function (category) {
+    try {
+      await module.exports.checkUp();
+      let questions = await Question.find({ category: category });
+      return questions;
+    } catch (error) {
+      throw new Error(`Error getting all questions from category ${category}: ${error.message}`);
     }
   },
 
