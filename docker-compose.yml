@@ -87,6 +87,25 @@ services:
       LLM_SERVICE_URL: http://llmservice:8003
       WIKIDATA_SERVICE_URL: http://wikidata:3001
 
+  apiservice:
+    container_name: apiservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/apiservice:latest
+    build: ./apiservice
+    profiles: ["dev", "prod"]
+    depends_on:
+      - mongodb
+      - authservice
+      - userservice
+      - wikidata
+    ports:
+      - "8008:8000"
+    networks:
+      - mynetwork
+    environment:
+      AUTH_SERVICE_URL: http://authservice:8002
+      USER_SERVICE_URL: http://userservice:8001
+      WIKIDATA_SERVICE_URL: http://wikidata:3001
+
   webapp:
     container_name: webapp-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/webapp:latest
