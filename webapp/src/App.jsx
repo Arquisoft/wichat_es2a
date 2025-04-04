@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 import GameHistoryUI from './components/GameHistoryUI';
 import Contact from './components/Contact';
 import Profile from './components/Profile';
+import Countdown from './components/Countdown'; // Importar el componente Countdown
 
 const theme = createTheme(defaultTheme);
 
@@ -44,6 +45,7 @@ function App() {
         </Box>
       </Router>
     </ThemeProvider>
+  
   );
 }
 
