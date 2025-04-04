@@ -59,9 +59,15 @@ const Login = () => {
     } catch (error) {
       // Caputramos errores de autenticación y mostramos el mensaje adecuado
       if (error.response && error.response.data.error) {
-        setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
+        const errorMessage = error.response.data.error;
+        console.log(errorMessage);
+        if(errorMessage === 'No existe') {
+          setError(t('errors.loginUsername'));
+        } 
+        else if(errorMessage === 'Missing required field') {
+          setError(t('errors.loginEmptyField'));
+        }
       }
-      setError(error.response.data.error);
 
     } finally {
       setLoading(false);  // Desactivamos la carga
@@ -82,7 +88,7 @@ const Login = () => {
           {/* Mostrar el mensaje de error en la interfaz de usuario */}
           {error && (
             <Alert severity="error" sx={{ mt: 2 }}>
-              {t('login.error_message')}
+              {error}
             </Alert>
           )}
           <Typography component="h1" variant="h5">

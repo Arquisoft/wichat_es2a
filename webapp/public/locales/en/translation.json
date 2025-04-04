@@ -66,6 +66,8 @@
         "signupUsername": "This username is already registered. Please choose another one.",
         "signupConfirmPassword": "The passwords do not match. Make sure both are identical.",
         "signupEmptyField": "Please fill in all fields before proceeding.",
-        "genericError": "An unexpected error occurred. Please try again later."
+        "genericError": "An unexpected error occurred. Please try again later.",
+        "loginUsername": "Please provide a valid email address and password.",
+        "loginEmptyField": "Please fill in all fields before proceeding."
     }
 }

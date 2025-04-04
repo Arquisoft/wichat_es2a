@@ -42,9 +42,7 @@ const AddUser = () => {
         else{
           setError(t('errors.genericError'));
         }
-
       }
-      
     }
   };
 

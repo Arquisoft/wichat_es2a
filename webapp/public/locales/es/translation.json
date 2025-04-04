@@ -66,6 +66,8 @@
         "signupUsername": "Este nombre de usuario ya está registrado. Por favor, elige otro.",
         "signupConfirmPassword": "Las contraseñas no coinciden. Asegúrate de que ambas sean iguales.",
         "signupEmptyField": "Por favor, completa todos los campos antes de continuar.",
-         "genericError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+        "genericError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+        "loginUsername": "Por favor, proporciona una dirección de correo electrónico y una contraseña válidas.",
+        "loginEmptyField": "Por favor, completa todos los campos antes de continuar."
     }
 }
