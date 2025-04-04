@@ -57,10 +57,14 @@ services:
     image: ghcr.io/arquisoft/wichat_es2a/llmservice:latest
     profiles: ["dev", "prod"]
     build: ./llmservice
+    depends_on:
+      - mongodb
     ports:
       - "8003:8003"
     networks:
       - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/llmdb
 
   gatewayservice:
     container_name: gatewayservice-wichat_es2a
@@ -72,6 +76,7 @@ services:
       - userservice
       - authservice
       - llmservice
+      - wikidata
     ports:
       - "8000:8000"
     networks:
@@ -80,6 +85,7 @@ services:
       AUTH_SERVICE_URL: http://authservice:8002
       USER_SERVICE_URL: http://userservice:8001
       LLM_SERVICE_URL: http://llmservice:8003
+      WIKIDATA_SERVICE_URL: http://wikidata:3001
 
   webapp:
     container_name: webapp-wichat_es2a
@@ -127,6 +133,18 @@ services:
     depends_on: 
       - prometheus
 
+  wikidata:
+    container_name: wikidata-wichat_es2a
+    build: ./wikidata
+    profiles: ["dev", "prod"]
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/wikidatadb
 
 volumes:
   mongodb_data:

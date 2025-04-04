@@ -1,0 +1,32 @@
+{
+  "name": "wikidata",
+  "version": "1.0.0",
+  "description": "Service for obtaining and storing questions from Wikidata",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/wikidataRoutes.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arquisoft/wichat_es2a.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arquisoft/wichat_es2a/issues"
+  },
+  "homepage": "https://github.com/arquisoft/wichat_es2a#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.3",
+    "node-fetch": "^2.7.0",
+    "wikidata": "file:"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.3",
+    "supertest": "^7.0.0"
+  }
+}

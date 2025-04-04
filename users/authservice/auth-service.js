@@ -50,7 +50,7 @@ app.post('/login',  [
       // Respond with the token and user information
       res.json({ token: token, username: username, createdAt: user.createdAt });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'Por favor, proporciona una dirección de correo electrónico y una contraseña válidas.' });
     }
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });

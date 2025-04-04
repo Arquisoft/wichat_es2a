@@ -1,0 +1,35 @@
+{
+    "palette": {
+      "primary": {
+        "main": "#05445e",
+        "contrastText": "#FFF"
+      },
+      "secondary": {
+        "main": "#189ab4",
+        "contrastText": "#2e3487"
+      },
+      "dark": {
+        "main": "#0f0f5e",
+        "contrastText": "#F2F2F2"
+      },
+      "light": {
+        "main": "#5e86cf",
+        "contrastText": "#F2F2F2"
+      },
+      "red": {
+        "main": "#BA0F30",
+        "contrastText": "#FFF",
+        "dark": "#970C10"
+      },
+      "green": {
+        "main": "#21B6A8",
+        "contrastText": "#FFF",
+        "dark": "#209085"
+      }
+    },
+  
+    "typography": {
+      "fontFamily": "'Verdana, sans-serif'",
+      "fontSize": 16
+    }
+  }

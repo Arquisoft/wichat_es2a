@@ -30,6 +30,12 @@ app.post('/adduser', async (req, res) => {
         // Check if required fields are present in the request body
         validateRequiredFields(req, ['username', 'password']);
 
+        // Verificar si el nombre de usuario ya existe
+        const existingUser = await User.findOne({ username:req.body.username });
+        if (existingUser) {
+            return res.status(400).json({ error: "El nombre de usuario ya existe." });
+        }
+        
         // Encrypt the password before saving it
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -75,27 +81,28 @@ app.post('/addFriend', async(req,res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
 });
 
-app.post('/listFriends', async (req, res) => {
+app.get('/listUsers', async (req, res) => {
+    try {
+        const users = await User.find({}, 'username friends'); // Return only the username and friends fields (password isn't included)
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+  });
+
+app.get('/user/:username', async (req, res) => {
   try {
-      validateRequiredFields(req, ['username']);
-
-      const { username } = req.body;
-      const user = await User.findOne({ username }).populate('friends', 'username');
-
+      const user = await User.findOne({ username: req.params.username }, 'username friends'); // Return only the username and friends fields (password isn't included)
       if (!user) {
-          return res.status(404).json({ error: "Usuario no encontrado" });
+          return res.status(404).json({ error: "User not found" });
       }
-
-      res.status(200).json({ friends: user.friends || [] }); 
+      res.status(200).json(user);
   } catch (error) {
       res.status(500).json({ error: error.message });
   }
 });
-
-
 
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
