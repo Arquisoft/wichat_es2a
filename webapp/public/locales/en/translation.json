@@ -61,5 +61,11 @@
         "button": "Sign up",
         "userAdded": "User added successfully",
         "image": "Signup image"
+    },
+    "errors": {
+        "signupUsername": "This username is already registered. Please choose another one.",
+        "signupConfirmPassword": "The passwords do not match. Make sure both are identical.",
+        "signupEmptyField": "Please fill in all fields before proceeding.",
+        "genericError": "An unexpected error occurred. Please try again later."
     }
 }

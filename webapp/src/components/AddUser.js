@@ -28,9 +28,23 @@ const AddUser = () => {
     } catch (error) {
       // Verificamos si el error tiene el mensaje
       if (error.response && error.response.data.error) {
-        setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
+        const errorMessage = error.response.data.error;
+        // Si el error es de validación, mostramos el mensaje de error
+        if(errorMessage === 'El nombre de usuario ya existe.'){
+          setError(t('errors.signupUsername'));
+        }
+        else if(errorMessage === 'Las contraseñas no coinciden.'){
+          setError(t('errors.signupConfirmPassword'));
+        }
+        else if(errorMessage === 'Missing required field'){
+          setError(t('errors.signupEmptyField'));
+        }
+        else{
+          setError(t('errors.genericError'));
+        }
+
       }
-      setError(error.response.data.error);
+      
     }
   };
 

@@ -20,7 +20,7 @@ mongoose.connect(mongoUri);
 function validateRequiredFields(req, requiredFields) {
     for (const field of requiredFields) {
       if (!(field in req.body) || req.body[field]==="") {
-        throw new Error(`Missing required field: ${field}`);
+        throw new Error(`Missing required field`);
       }
     }
 }
@@ -40,7 +40,7 @@ app.post('/adduser', async (req, res) => {
 
         // Verificar que las contraseñas coincidan
         if(password !== confirmPassword){
-          return res.status(400).json({ error: "Las contraseñas no coinciden, por favor vuelva a internarlo"});
+          return res.status(400).json({ error: "Las contraseñas no coinciden."});
         }
         
         // Encrypt the password before saving it

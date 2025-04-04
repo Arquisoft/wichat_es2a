@@ -61,5 +61,11 @@
         "button": "Registrarse",
         "userAdded": "Usuario agregado exitosamente",
         "image": "Imagen de registro"
+    },
+    "errors": {
+        "signupUsername": "Este nombre de usuario ya está registrado. Por favor, elige otro.",
+        "signupConfirmPassword": "Las contraseñas no coinciden. Asegúrate de que ambas sean iguales.",
+        "signupEmptyField": "Por favor, completa todos los campos antes de continuar.",
+         "genericError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
     }
 }
