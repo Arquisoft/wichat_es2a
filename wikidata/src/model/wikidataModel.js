@@ -5,7 +5,8 @@ const questionSchema = new mongoose.Schema({
     answer: { type: String, required: true },
     image: { type: String, required: true },
     category: { type: String, required: true },
-    options: { type: Array, required: true }
+    options: { type: Array, required: true },
+    lang: { type: String, required: true, default: 'es' },
 });
 
 const gameSchema = new mongoose.Schema({
@@ -14,7 +15,8 @@ const gameSchema = new mongoose.Schema({
     wrong: { type: Number, required: true },
     duration: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now },
-    isCompleted: { type: Boolean, default: false } 
+    isCompleted: { type: Boolean, default: false },
+    lang: { type: String, required: true, default: 'es' },
 });
 
 const Question = mongoose.model('questions', questionSchema);

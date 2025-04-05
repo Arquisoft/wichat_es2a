@@ -69,5 +69,18 @@
         "genericError": "An unexpected error occurred. Please try again later.",
         "loginUsername": "Please provide a valid email address and password.",
         "loginEmptyField": "Please fill in all fields before proceeding."
+    },
+    "game": {
+        "correctAnswer": "Correct answer",
+        "incorrectAnswer": "Incorrect answer",
+        "loadingQuestions": "Loading questions...",
+        "summaryTitle": "Game Summary",
+        "questionsAnswered": "Questions answered",
+        "correctAnswers": "Correct answers",
+        "incorrectAnswers": "Incorrect answers",
+        "goodJob": "Good job!",
+        "tryAgain": "Keep trying!",
+        "playAgain": "Play again",
+        "loadingQuestion": "Loading question..."
     }
 }

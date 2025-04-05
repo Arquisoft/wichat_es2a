@@ -66,11 +66,11 @@ const repository = {
    * @throws {Error} Throws an error if the database connection check fails or if there is an error during the retrieval process.
    * @returns A random set of questions from the database based on the specified category
    */
-  getQuestions: async function (category, n = 10) {
+  getQuestions: async function (category, n = 10, lang = 'es') {
     try {
       await module.exports.checkUp();
       let result = await Question.aggregate([
-        { $match: { category: category } },
+        { $match: { category: category, lang: lang } }, // filtramos por categoria y idioma
         { $sample: { size: parseInt(n) } }
       ]);
       return result;
@@ -98,10 +98,10 @@ const repository = {
    * @returns {Promise<boolean>} A promise that resolves to true if there are questions in the database, and false otherwise.
    * @throws {Error} Throws an error if the database connection check fails or if there is an error during the check process.
    */
-  existsQuestions: async function (category) {
+  existsQuestions: async function (category, lang="es") {
     try {
       await module.exports.checkUp();
-      let count = await Question.countDocuments({ category: category });
+      let count = await Question.countDocuments({ category: category, lang: lang });
       return count > 0;
     } catch (error) {
       throw new Error(`Error checking questions: ${error.message}`);

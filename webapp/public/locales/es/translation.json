@@ -69,5 +69,18 @@
         "genericError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
         "loginUsername": "Por favor, proporciona una dirección de correo electrónico y una contraseña válidas.",
         "loginEmptyField": "Por favor, completa todos los campos antes de continuar."
+    },
+    "game": {
+        "correctAnswer": "Respuesta correcta",
+        "incorrectAnswer": "Respuesta incorrecta",
+        "loadingQuestions": "Cargando preguntas...",
+        "summaryTitle": "Resumen del Juego",
+        "questionsAnswered": "Preguntas contestadas",
+        "correctAnswers": "Respuestas correctas",
+        "incorrectAnswers": "Respuestas incorrectas",
+        "goodJob": "¡Buen trabajo!",
+        "tryAgain": "¡Sigue intentando!",
+        "playAgain": "Jugar de Nuevo",
+        "loadingQuestion": "Cargando pregunta..."
     }
 }

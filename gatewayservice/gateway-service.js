@@ -108,12 +108,14 @@ app.put('/conversations/:userId/settings', async (req, res) => {
   }
 });
 
-app.get('/wikidata/question/:category/:number', async (req, res) => {
+// Ahora acepta un parámetro de idioma opcional
+app.get('/wikidata/question/:category/:number/:lang', async (req, res) => {
   try {
     console.log("Requesting questions from Wikidata");
-    const category = req.params.category;
-    const number = req.params.number;
-    const response = await axios.get(`${wikidataServiceUrl}/wikidata/question/${category}/${number}`);
+    // Extraemos los parámetros de la URL
+    const { category, number, lang} = req.params; 
+    console.log("language:", lang)
+    const response = await axios.get(`${wikidataServiceUrl}/wikidata/question/${category}/${number}/${lang}`);
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error getting the questions from Wikidata' });
@@ -141,7 +143,9 @@ app.get('/wikidata/clear', async (req, res) => {
 app.post('/game/start', async (req, res) => {
   try {
     console.log("Starting game with body:", req.body);
-    const response = await axios.post(`${wikidataServiceUrl}/game/start`, req.body);
+
+    const { userId, lang = "es"} = req.body;
+    const response = await axios.post(`${wikidataServiceUrl}/game/start`, {userId, lang});
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error starting the game' });

@@ -11,16 +11,20 @@ const service = {
      * Use the SPARQL query to get the data from Wikidata.
      * Generate the fake answers using the `getFakeAnswers` function.
      * @param {String} category - The category of the questions.
+     * @param {String} lang - The language of the questions.
      * @returns {Array} - An array of questions.
      */
-    fetchQuestionsFromWikidata: async function(category) {
+    fetchQuestionsFromWikidata: async function(category, lang='es') {
         let questions = [];
         const query = queries.find(q => q.category === category);
         if (!query) {
             console.error(`Category ${category} not found in the queries`);
             return questions;
         }
-        const url = `${WIKIDATA_SPARQL_URL}?query=${encodeURIComponent(query.sparql)}&format=json`;
+        const sparqlQuery = query?.sparql[lang] || query?.sparql["es"];
+        const statement = query?.statements[lang] || query?.statements["es"];
+
+        const url = `${WIKIDATA_SPARQL_URL}?query=${encodeURIComponent(sparqlQuery)}&format=json&uselang=${lang}`;
         try {
             const response = await fetch(url);
             if (!response.ok) {
@@ -30,13 +34,14 @@ const service = {
             const data = await response.json();
             const newQuestions = data.results.bindings.map(entry => {
                 const correctAnswer = entry.answerLabel ? entry.answerLabel : "Desconocido";
-                const options = fakeAnswers.getFakeAnswers(correctAnswer, query.category);
+                const options = fakeAnswers.getFakeAnswers(correctAnswer, query.category, lang);
                 return {
-                    statements: query.statement,
+                    statements: statement,
                     answer: entry.answerLabel ? entry.answerLabel.value : "Desconocido",
                     image: entry.image.value,
                     category: query.category,
-                    options: options
+                    options: options,
+                    lang: lang // idioma de la pregunta
                 };
             });
             
@@ -53,15 +58,15 @@ const service = {
      * @param {String} category - The category of the questions.
      * @returns A question from the database of the specified category.
      */
-    getQuestion: async function(category) {
-        if (await repository.existsQuestions(category)){
-            return await repository.getQuestions(category, 1);
+    getQuestion: async function(category,lang="es") {
+        if (await repository.existsQuestions(category, lang)){
+            return await repository.getQuestions(category, 1, lang);
         }
         else
         {
-            const questions = await service.fetchQuestionsFromWikidata(category);
+            const questions = await service.fetchQuestionsFromWikidata(category, lang);
             await repository.insertQuestions(questions);
-            return await repository.getQuestions(category, 1);
+            return await repository.getQuestions(category, 1, lang);
         }
     },
 
@@ -70,17 +75,18 @@ const service = {
      * If any question of the category exists in the database, generate new questions from wikidata, insert them into the database and return n questions.
      * @param {String} category - The category of the questions.
      * @param {int} n - Number of questions to retrieve
+     * @param {String} lang - Language of the questions.
      * @returns An array of n questions from the database of the specified category.
      */
-    getQuestions: async function(category, n){
-        if (await repository.existsQuestions(category)){
-            return await repository.getQuestions(category, n);
+    getQuestions: async function(category, n, lang='es') {
+        if (await repository.existsQuestions(category, lang)){
+            return await repository.getQuestions(category, n, lang);
         }
         else
         {
-            const questions = await service.fetchQuestionsFromWikidata(category);
+            const questions = await service.fetchQuestionsFromWikidata(category, lang);
             await repository.insertQuestions(questions);
-            return await repository.getQuestions(category, n);
+            return await repository.getQuestions(category, n, lang);
         }
     },
 

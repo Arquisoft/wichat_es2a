@@ -1,6 +1,51 @@
 module.exports = [{
-    category: "Actores",
-    answers : [
+  category: "Actores",
+  answers: {
+    es: [
+      "Leonardo DiCaprio", "Meryl Streep", "Tom Hanks", "Scarlett Johansson", "Denzel Washington",
+      "Brad Pitt", "Angelina Jolie", "Robert De Niro", "Al Pacino", "Natalie Portman",
+      "Johnny Depp", "Morgan Freeman", "Emma Stone", "Harrison Ford", "Nicole Kidman",
+      "Matt Damon", "Cate Blanchett", "Keanu Reeves", "Joaquin Phoenix", "Anne Hathaway",
+      "Jake Gyllenhaal", "Charlize Theron", "Tom Hardy", "Julia Roberts", "Chris Hemsworth",
+      "Ryan Gosling", "Christian Bale", "Hugh Jackman", "Sandra Bullock", "Javier Bardem",
+      "Ben Affleck", "Amy Adams", "Mark Ruffalo", "Tilda Swinton", "Edward Norton",
+      "Viola Davis", "Jeff Bridges", "Jessica Chastain", "Samuel L. Jackson", "Michael Fassbender",
+      "Cillian Murphy", "Robert Pattinson", "Chris Evans", "Zoe Saldana", "Salma Hayek",
+      "Liam Neeson", "Ewan McGregor", "Saoirse Ronan", "Anya Taylor-Joy", "Margot Robbie",
+      "Florence Pugh", "Benedict Cumberbatch", "Idris Elba", "Jared Leto", "Pedro Pascal",
+      "Oscar Isaac", "Timothée Chalamet", "Daniel Radcliffe", "Emma Watson", "Rupert Grint",
+      "Gal Gadot", "Henry Cavill", "Ezra Miller", "Jason Momoa", "Tom Holland",
+      "Zendaya", "Paul Rudd", "Sebastian Stan", "Anthony Mackie", "Elizabeth Olsen",
+      "Jeremy Renner", "Karen Gillan", "Chris Pratt", "Dave Bautista", "Josh Brolin",
+      "Michael B. Jordan", "Halle Berry", "Winona Ryder", "Hugh Grant", "Helena Bonham Carter",
+      "Gary Oldman", "Ian McKellen", "Patrick Stewart", "Dwayne Johnson", "Brendan Fraser",
+      "John Travolta", "Gene Hackman", "Jack Nicholson", "Sophia Loren", "Jean Dujardin",
+      "Maggie Smith", "Michelle Yeoh", "Ben Kingsley", "Chadwick Boseman", "Mahershala Ali",
+      "John Boyega", "Lupita Nyong'o", "Daniel Kaluuya", "Rami Malek", "Rachel Weisz",
+      "Eddie Redmayne", "Olivia Colman", "Regina King", "Jodie Comer", "Tommy Lee Jones",
+      "Forest Whitaker", "Cate Blanchett", "Glenn Close", "Frances McDormand", "Anthony Hopkins",
+      "Willem Dafoe", "Richard Gere", "Melissa McCarthy", "Mads Mikkelsen", "Taron Egerton",
+      "Adam Driver", "Andrew Garfield", "Jamie Foxx", "Colin Farrell", "Rachel McAdams",
+      "Michael Caine", "Emily Blunt", "Evangeline Lilly", "Rosamund Pike", "Bryce Dallas Howard",
+      "Sam Rockwell", "Gina Rodriguez", "James McAvoy", "Felicity Jones", "Matt Smith",
+      "Emma Mackey", "Austin Butler", "Dev Patel", "Sophie Turner", "Nicholas Hoult",
+      "Millie Bobby Brown", "Finn Wolfhard", "Noah Centineo", "Joey King", "Sadie Sink",
+      "Kaitlyn Dever", "Zoë Kravitz", "Jenna Ortega", "Bella Ramsey", "Hailee Steinfeld",
+      "John Krasinski", "Emily Mortimer", "Adam Sandler", "Will Smith", "Woody Harrelson",
+      "Kevin Hart", "Melissa Benoist", "Hugh Dancy", "Lucy Boynton", "Natalia Dyer",
+      "Freddie Highmore", "Dafne Keen", "Florence Kasumba", "Tessa Thompson", "Gaten Matarazzo",
+      "Caleb McLaughlin", "Maya Hawke", "Sadie Sink", "Ansel Elgort", "Lily Collins",
+      "Jodie Foster", "Kristen Bell", "Sophia Lillis", "Jack Black", "Reese Witherspoon",
+      "Sarah Paulson", "Jessica Lange", "Steve Buscemi", "Tim Roth", "Jesse Eisenberg",
+      "Brie Larson", "Riz Ahmed", "Oscar Nunez", "Gael García Bernal", "Diego Luna",
+      "Michael Peña", "Tenoch Huerta", "Ana de Armas", "Stephanie Beatriz", "Eiza González",
+      "Luis Gerardo Méndez", "Kate del Castillo", "Salma Hayek", "Alfonso Herrera",
+      "Yalitza Aparicio", "Mauricio Ochmann", "Sandra Echeverría", "Cecilia Suárez",
+      "Manolo Cardona", "Miguel Ángel Silvestre", "Javier Cámara", "Blanca Suárez",
+      "Mario Casas", "Macarena García", "Álvaro Morte", "Itziar Ituño", "Úrsula Corberó",
+      "Jaime Lorente", "Najwa Nimri", "Miguel Herrán", "Paco León", "Carmen Machi"
+    ],
+    en: [
       "Leonardo DiCaprio", "Meryl Streep", "Tom Hanks", "Scarlett Johansson", "Denzel Washington",
       "Brad Pitt", "Angelina Jolie", "Robert De Niro", "Al Pacino", "Natalie Portman",
       "Johnny Depp", "Morgan Freeman", "Emma Stone", "Harrison Ford", "Nicole Kidman",
@@ -44,10 +89,33 @@ module.exports = [{
       "Mario Casas", "Macarena García", "Álvaro Morte", "Itziar Ituño", "Úrsula Corberó",
       "Jaime Lorente", "Najwa Nimri", "Miguel Herrán", "Paco León", "Carmen Machi"
     ]
-  },
-  {
-    category : "Cantantes",
-    answers : [
+  }
+},
+{
+  category: "Cantantes",
+  answers: {
+    es: [
+      "Freddie Mercury", "Beyoncé", "Elvis Presley", "Shakira", "Michael Jackson",
+      "Adele", "Madonna", "Frank Sinatra", "Whitney Houston", "Ed Sheeran",
+      "Lady Gaga", "David Bowie", "Rihanna", "Paul McCartney", "Elton John",
+      "Bruno Mars", "Ariana Grande", "Bob Dylan", "Taylor Swift", "John Lennon",
+      "Dua Lipa", "Mariah Carey", "Luis Miguel", "Celine Dion", "Prince",
+      "Jennifer Lopez", "Billie Eilish", "Andrea Bocelli", "Maluma", "Eminem",
+      "The Weeknd", "Amy Winehouse", "Harry Styles", "Rosalía", "Coldplay",
+      "Shawn Mendes", "Bad Bunny", "Selena Quintanilla", "Britney Spears", "Ozzy Osbourne",
+      "Travis Scott", "Post Malone", "Kanye West", "Drake", "Camila Cabello",
+      "Doja Cat", "Olivia Rodrigo", "Justin Bieber", "Karol G", "J Balvin",
+      "Anuel AA", "Daddy Yankee", "Rauw Alejandro", "Miley Cyrus", "Nicki Minaj",
+      "Christina Aguilera", "Alicia Keys", "Bruno Mars", "Sam Smith", "Calvin Harris",
+      "David Guetta", "Sia", "Katy Perry", "Charlie Puth", "Imagine Dragons",
+      "OneRepublic", "Fonseca", "Pablo Alborán", "Melendi", "Ricardo Arjona",
+      "Alejandro Sanz", "Luis Fonsi", "Chayanne", "Enrique Iglesias", "Marc Anthony",
+      "Juan Gabriel", "José José", "Vicente Fernández", "Gloria Trevi", "Natalie Imbruglia",
+      "Fito Páez", "Julieta Venegas", "Zoé", "Café Tacvba", "Maná",
+      "Caifanes", "Hombres G", "El Tri", "Los Fabulosos Cadillacs", "Molotov",
+      "Babasónicos", "Bunbury", "Andrés Calamaro", "Nirvana", "Linkin Park"
+    ],
+    en: [
       "Freddie Mercury", "Beyoncé", "Elvis Presley", "Shakira", "Michael Jackson",
       "Adele", "Madonna", "Frank Sinatra", "Whitney Houston", "Ed Sheeran",
       "Lady Gaga", "David Bowie", "Rihanna", "Paul McCartney", "Elton John",
@@ -68,10 +136,12 @@ module.exports = [{
       "Caifanes", "Hombres G", "El Tri", "Los Fabulosos Cadillacs", "Molotov",
       "Babasónicos", "Bunbury", "Andrés Calamaro", "Nirvana", "Linkin Park"
     ]
-  },
-  {
-    category : "Arte",
-    answers : [
+  }
+},
+{
+  category: "Arte",
+  answers: {
+    es: [
       "La Gioconda", "La última cena", "La persistencia de la memoria", "Las meninas", "La noche estrellada",
       "El nacimiento de Venus", "La creación de Adán", "El grito", "Guernica", "El jardín de las delicias",
       "La joven de la perla", "El beso", "Las dos Fridas", "La rendición de Breda", "El caballero de la mano en el pecho",
@@ -94,11 +164,37 @@ module.exports = [{
       "Madonna del Prato", "La Melancolía", "El rapto de las hijas de Leucipo", "La Asunción de la Virgen",
       "El rapto de Proserpina", "San Sebastián", "El rapto de las Sabinas", "Baco y Ariadna", "El astrónomo",
       "El jardinero", "El portador de flores", "La Virgen de las Rocas", "El baño de Diana", "La batalla de San Romano"
+    ],
+    en: [
+      "Mona Lisa", "The Last Supper", "The Persistence of Memory", "Las Meninas", "The Starry Night",
+      "The Birth of Venus", "The Creation of Adam", "The Scream", "Guernica", "The Garden of Earthly Delights",
+      "Girl with a Pearl Earring", "The Kiss", "The Two Fridas", "The Surrender of Breda", "The Cavalier with his Hand on his Chest",
+      "Saturn Devouring his Son", "The Last Judgment", "Impression, Sunrise", "The Luncheon on the Grass",
+      "Liberty Leading the People", "Sunflowers", "Bacchus", "The Arnolfini Wedding", "Dead Christ",
+      "The Gleaners", "The Raft of the Medusa", "The Night Watch", "The Deposition from the Cross",
+      "The School of Athens", "Woman with a Hat", "The Executions of the 3rd of May", "The Virgin of Chancellor Rolin",
+      "Portrait of Giovanni Arnolfini and his Wife", "St. John the Baptist", "The Temptation of St. Anthony",
+      "Portrait of a Man with a Red Turban", "The Three Graces", "The Birth of Venus (Bouguereau)",
+      "The Burial of the Count of Orgaz", "The Washing of the Feet", "Mars Disarmed by Venus and the Graces",
+      "Venus of Urbino", "Judith Decapitating Holofernes", "The Annunciation", "The Primavera", "The Hay Wain",
+      "Portrait of Dorian Gray", "The Rape of Europa", "The Marriage of the Virgin", "Lady with an Ermine",
+      "The Martyrdom of St. Bartholomew", "The Blue Boy", "View of Delft", "The Lacemaker", "The Wedding at Cana",
+      "The Storm on the Sea of Galilee", "Self-portrait with Bandaged Ear", "The Rowers' Lunch",
+      "The Swing", "Ballerina Balancing", "The Sleeping Gypsy", "The Naked Maja", "The Card Players",
+      "The Umbrellas", "St. Jerome Writing", "The Son of Man", "The Laundresses",
+      "Portrait of the Artist's Mother", "The Venus of the Mirror", "The Wanderer above the Sea of Fog",
+      "The Turkish Bath", "Woman before a Mirror", "Crucified Christ", "Leda and the Swan", "Portrait of Infanta Margarita",
+      "The Blue Violinist", "Woman with a Parasol", "Self-portrait with Monkey", "The Death of Marat",
+      "Madonna del Prato", "Melancholy", "The Rape of the Daughters of Leucippus", "The Assumption of the Virgin",
+      "The Rape of Proserpina", "Saint Sebastian", "The Rape of the Sabines", "Bacchus and Ariadne", "The Astronomer",
+      "The Gardener", "The Flower Carrier", "The Virgin of the Rocks", "The Bath of Diana", "The Battle of San Romano"
     ]
-  },
-  {
-    category : "Lugares",
-    answers : [
+  }
+},
+{
+  category: "Lugares",
+  answers: {
+    es: [
       "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia",
       "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin",
       "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil",
@@ -120,11 +216,36 @@ module.exports = [{
       "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago",
       "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu",
       "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"
+    ],
+    en: [
+      "Afghanistan", "Albania", "Germany", "Andorra", "Angola", "Antigua and Barbuda", "Saudi Arabia", "Algeria",
+      "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "The Bahamas", "Bangladesh", "Barbados", "Bahrain",
+      "Belgium", "Belize", "Benin", "Belarus", "Myanmar", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil",
+      "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Bhutan", "Cape Verde", "Cambodia", "Cameroon", "Canada", "Qatar",
+      "Chad", "Chile", "China", "Cyprus", "Colombia", "Comoros", "Congo", "North Korea", "South Korea", "Ivory Coast",
+      "Costa Rica", "Croatia", "Cuba", "Denmark", "Dominica", "Ecuador", "Egypt", "El Salvador", "United Arab Emirates",
+      "Eritrea", "Slovakia", "Slovenia", "Spain", "United States", "Estonia", "Eswatini", "Ethiopia", "Philippines",
+      "Finland", "France", "Gabon", "Gambia", "Georgia", "Ghana", "Grenada", "Greece", "Guatemala", "Guinea",
+      "Guinea-Bissau", "Equatorial Guinea", "Guyana", "Haiti", "Honduras", "Hungary", "India", "Indonesia", "Iraq", "Iran",
+      "Ireland", "Iceland", "Marshall Islands", "Solomon Islands", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
+      "Kazakhstan", "Kenya", "Kyrgyzstan", "Kiribati", "Kuwait", "Laos", "Lesotho", "Latvia", "Lebanon", "Liberia",
+      "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malaysia", "Malawi", "Maldives", "Mali",
+      "Malta", "Morocco", "Mauritius", "Mauritania", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+      "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Niger", "Nigeria", "Norway", "New Zealand", "Oman",
+      "Netherlands", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal",
+      "United Kingdom", "Czech Republic", "Dominican Republic", "Rwanda", "Romania", "Russia", "Samoa", "Saint Kitts and Nevis",
+      "San Marino", "Saint Vincent and the Grenadines", "Saint Lucia", "Sao Tome and Principe", "Senegal", "Serbia", "Seychelles",
+      "Sierra Leone", "Singapore", "Syria", "Somalia", "Sri Lanka", "South Africa", "Sudan", "South Sudan", "Sweden",
+      "Switzerland", "Suriname", "Thailand", "Tanzania", "Tajikistan", "East Timor", "Togo", "Tonga", "Trinidad and Tobago",
+      "Tunisia", "Turkmenistan", "Turkey", "Tuvalu", "Ukraine", "Uganda", "Uruguay", "Uzbekistan", "Vanuatu",
+      "Vatican", "Venezuela", "Vietnam", "Yemen", "Djibouti", "Zambia", "Zimbabwe"
     ]
-  },
-  {
-    category: "Pintores",
-    answers: [
+  }
+},
+{
+  category: "Pintores",
+  answers: {
+    es: [
       "Leonardo da Vinci", "Michelangelo Buonarroti", "Raphael Sanzio", "Tiziano Vecellio", "Sandro Botticelli", "Albrecht Dürer", "Caravaggio (Michelangelo Merisi)", "Rembrandt van Rijn", "Johannes Vermeer", "Diego Velázquez",
       "Francisco de Goya", "Édouard Manet", "Claude Monet", "Edgar Degas", "Pierre-Auguste Renoir", "Paul Cézanne", "Vincent van Gogh", "Paul Gauguin", "Henri Matisse", "Pablo Picasso",
       "Georges Braque", "Salvador Dalí", "René Magritte", "Joan Miró", "Marc Chagall", "Wassily Kandinsky", "Piet Mondrian", "Jackson Pollock", "Mark Rothko", "Andy Warhol",
@@ -142,11 +263,56 @@ module.exports = [{
       "Martin Kippenberger", "Sean Scully", "Mary Heilmann", "Amy Sillman", "Kerry James Marshall", "Fernando Zóbel", "Rufino Tamayo", "Joaquín Sorolla", "Miguel Covarrubias", "Cándido López",
       "Juan Gris", "Giorgio Morandi", "Oskar Schlemmer", "Otto Dix", "Franz von Stuck", "John William Waterhouse", "Edward Burne-Jones", "Frederic Leighton", "Lawrence Alma-Tadema", "Jean-Léon Gérôme",
       "Henri de Toulouse-Lautrec", "Eugène Atget", "Anders Zorn", "Lars Lerin", "Odd Nerdrum", "Magdalena Abakanowicz", "Bruno Liljefors", "Vilhelm Hammershøi"
+    ],
+    en: [
+      "Leonardo da Vinci", "Michelangelo Buonarroti", "Raphael Sanzio", "Titian Vecellio", "Sandro Botticelli", "Albrecht Dürer", "Caravaggio (Michelangelo Merisi)", "Rembrandt van Rijn", "Johannes Vermeer", "Diego Velázquez",
+      "Francisco de Goya", "Édouard Manet", "Claude Monet", "Edgar Degas", "Pierre-Auguste Renoir", "Paul Cézanne", "Vincent van Gogh", "Paul Gauguin", "Henri Matisse", "Pablo Picasso",
+      "Georges Braque", "Salvador Dalí", "René Magritte", "Joan Miró", "Marc Chagall", "Wassily Kandinsky", "Piet Mondrian", "Jackson Pollock", "Mark Rothko", "Andy Warhol",
+      "Roy Lichtenstein", "Frida Kahlo", "Diego Rivera", "Georgia O'Keeffe", "Edward Hopper", "Grant Wood", "Gustav Klimt", "Egon Schiele", "Amedeo Modigliani", "Francis Bacon",
+      "Lucian Freud", "David Hockney", "Jean-Michel Basquiat", "Keith Haring", "Cy Twombly", "Anselm Kiefer", "Jeff Koons", "Yayoi Kusama", "Zdzisław Beksiński", "Paul Klee",
+      "Fernand Léger", "Robert Delaunay", "Sonia Delaunay", "Kazimir Malevich", "El Lissitzky", "David Alfaro Siqueiros", "José Clemente Orozco", "Thomas Cole", "Frederic Edwin Church", "Asher B. Durand",
+      "Winslow Homer", "John Singer Sargent", "James McNeill Whistler", "Gustave Courbet", "Jean-François Millet", "Honoré Daumier", "Camille Pissarro", "Alfred Sisley", "Berthe Morisot", "Mary Cassatt",
+      "Childe Hassam", "Maurice Utrillo", "Raoul Dufy", "André Derain", "Georges Seurat", "Paul Signac", "Henri Rousseau", "Maurice de Vlaminck", "André Lhote", "Giorgio de Chirico",
+      "Max Ernst", "Francis Picabia", "Roberto Matta", "Lucio Fontana", "Antonio Berni", "Joaquín Torres García", "Emilio Pettoruti", "Osvaldo Borda", "Fernando Botero", "Armando Reverón",
+      "Carmen Herrera", "Jesús Rafael Soto", "Carlos Cruz-Diez", "Antonio López García", "Joan Mitchell", "Helen Frankenthaler", "Grace Hartigan", "Willem de Kooning", "Franz Kline", "Robert Motherwell",
+      "Clyfford Still", "Philip Guston", "Richard Diebenkorn", "David Salle", "Julian Schnabel", "Eric Fischl", "Jasper Johns", "Robert Rauschenberg", "Ellsworth Kelly", "Agnes Martin",
+      "Sol LeWitt", "Donald Sultan", "R.B. Kitaj", "Alice Neel", "Fairfield Porter", "Wayne Thiebaud", "Robert Indiana", "Tom Wesselmann", "Victor Vasarely", "Bridget Riley",
+      "Julian Opie", "Damien Hirst", "Takashi Murakami", "Yoshitomo Nara", "Kohei Nawa", "Shinique Smith", "Mickalene Thomas", "Cecily Brown", "Njideka Akunyili Crosby", "Lynette Yiadom-Boakye",
+      "Elizabeth Peyton", "Tracey Emin", "Marlene Dumas", "Gerhard Richter", "Sigmar Polke", "Markus Lüpertz", "Georg Baselitz", "Neo Rauch", "Jörg Immendorff", "Rainer Fetting",
+      "Martin Kippenberger", "Sean Scully", "Mary Heilmann", "Amy Sillman", "Kerry James Marshall", "Fernando Zóbel", "Rufino Tamayo", "Joaquín Sorolla", "Miguel Covarrubias", "Cándido López",
+      "Juan Gris", "Giorgio Morandi", "Oskar Schlemmer", "Otto Dix", "Franz von Stuck", "John William Waterhouse", "Edward Burne-Jones", "Frederic Leighton", "Lawrence Alma-Tadema", "Jean-Léon Gérôme",
+      "Henri de Toulouse-Lautrec", "Eugène Atget", "Anders Zorn", "Lars Lerin", "Odd Nerdrum", "Magdalena Abakanowicz", "Bruno Liljefors", "Vilhelm Hammershøi"
     ]
-  }, 
-  {
-    category: "Futbolistas",
-    answers: [
+  }
+},
+{
+  category: "Futbolistas",
+  answers: {
+    es: [
+      "Lionel Messi", "Cristiano Ronaldo", "Pelé", "Diego Maradona", "Neymar", "Kylian Mbappé", "Zinedine Zidane", "Ronaldinho", "Johan Cruyff", "Franz Beckenbauer",
+      "Ronaldo Nazário", "Andrés Iniesta", "Xavi Hernández", "Thierry Henry", "David Beckham", "Roberto Baggio", "Paolo Maldini", "Franco Baresi", "Lev Yashin", "Manuel Neuer",
+      "Gianluigi Buffon", "Iker Casillas", "Sergio Ramos", "Carles Puyol", "Gerard Piqué", "Virgil van Dijk", "Alessandro Nesta", "Fabio Cannavaro", "Philipp Lahm", "Marcelo",
+      "Dani Alves", "Javier Zanetti", "Andrea Pirlo", "Luka Modrić", "Toni Kroos", "Kevin De Bruyne", "Steven Gerrard", "Frank Lampard", "Paul Scholes", "Ryan Giggs",
+      "Wayne Rooney", "Didier Drogba", "Samuel Eto'o", "George Weah", "Romário", "Hristo Stoichkov", "Gerd Müller", "Miroslav Klose", "Gary Lineker", "Alan Shearer",
+      "Fernando Torres", "Raúl González", "Karim Benzema", "Robert Lewandowski", "Harry Kane", "Sergio Agüero", "Luis Suárez", "Edinson Cavani", "Zlatan Ibrahimović", "Radamel Falcao",
+      "James Rodríguez", "Arjen Robben", "Franck Ribéry", "Eden Hazard", "Mohamed Salah", "Sadio Mané", "N'Golo Kanté", "Paul Pogba", "Antoine Griezmann", "Kaká",
+      "Rivaldo", "Ronald Koeman", "Clarence Seedorf", "Edgar Davids", "Patrick Vieira", "Claude Makélélé", "Roy Keane", "Michael Ballack", "Bastian Schweinsteiger", "Xabi Alonso",
+      "Sergio Busquets", "David Silva", "Juan Mata", "Mesut Özil", "Cesc Fàbregas", "Robin van Persie", "Luis Figo", "Rui Costa", "Deco", "Pavel Nedvěd",
+      "Alessandro Del Piero", "Francesco Totti", "Gabriel Batistuta", "Hernán Crespo", "Juan Román Riquelme", "Carlos Tevez", "Javier Mascherano", "Ángel Di María", "Gonzalo Higuaín", "Paolo Rossi",
+      "Roberto Carlos", "Cafu", "Dunga", "Bebeto", "Philippe Coutinho", "Vinícius Júnior", "Casemiro", "Thiago Silva", "Marquinhos", "Alisson Becker",
+      "Ederson", "Gabriel Jesus", "Richarlison", "Firmino", "Fernandinho", "Douglas Costa", "Willian", "Oscar", "Hulk", "Alexandre Pato",
+      "Juninho Pernambucano", "Zico", "Sócrates", "Falcão", "Taffarel", "Dida", "Júlio César", "Lúcio", "Gilberto Silva", "Kléberson",
+      "Mauro Silva", "Bebeto", "Rivaldo", "Ronaldinho Gaúcho", "Denílson", "Robinho", "Alex", "Julio Baptista", "Adriano", "Kaká",
+      "Juan Román Riquelme", "Juan Sebastián Verón", "Claudio Caniggia", "Gabriel Omar Batistuta", "Diego Simeone", "Javier Zanetti", "Esteban Cambiasso", "Walter Samuel", "Hernán Crespo", "Sergio Agüero",
+      "Carlos Valderrama", "René Higuita", "Faustino Asprilla", "Radamel Falcao", "James Rodríguez", "Juan Cuadrado", "David Ospina", "Yerry Mina", "James Rodríguez", "Iván Córdoba",
+      "Andrés Escobar", "Freddy Rincón", "Carlos Valderrama", "Óscar Córdoba", "Faryd Mondragón", "Mario Yepes", "Juan Pablo Ángel", "Hugo Rodallega", "Falcao", "James Rodríguez",
+      "Iker Muniain", "Aritz Aduriz", "Xabi Prieto", "Asier Illarramendi", "Ander Herrera", "Javi Martínez", "Mikel Arteta", "Xabi Alonso", "David Villa", "Fernando Torres",
+      "Juan Mata", "Santi Cazorla", "Cesc Fàbregas", "Pepe Reina", "Gerard Piqué", "Carles Puyol", "Sergio Busquets", "Andrés Iniesta", "Xavi Hernández", "Víctor Valdés",
+      "Iker Casillas", "Sergio Ramos", "Raúl González", "Fernando Hierro", "Fernando Morientes", "Michel Salgado", "Claude Makélélé", "Iván Helguera", "Míchel", "Emilio Butragueño",
+      "Hugo Sánchez", "Rafael Márquez", "Cuauhtémoc Blanco", "Jared Borgetti", "Luis Hernández", "Jorge Campos", "Claudio Suárez", "Ramón Ramírez", "Pável Pardo", "Gerardo Torrado",
+      "Andrés Guardado", "Javier Hernández", "Carlos Vela", "Hirving Lozano", "Raúl Jiménez", "Héctor Herrera", "Miguel Layún", "Diego Lainez", "Edson Álvarez", "Néstor Araujo"
+    ],
+    en: [
       "Lionel Messi", "Cristiano Ronaldo", "Pelé", "Diego Maradona", "Neymar", "Kylian Mbappé", "Zinedine Zidane", "Ronaldinho", "Johan Cruyff", "Franz Beckenbauer",
       "Ronaldo Nazário", "Andrés Iniesta", "Xavi Hernández", "Thierry Henry", "David Beckham", "Roberto Baggio", "Paolo Maldini", "Franco Baresi", "Lev Yashin", "Manuel Neuer",
       "Gianluigi Buffon", "Iker Casillas", "Sergio Ramos", "Carles Puyol", "Gerard Piqué", "Virgil van Dijk", "Alessandro Nesta", "Fabio Cannavaro", "Philipp Lahm", "Marcelo",
@@ -170,10 +336,12 @@ module.exports = [{
       "Hugo Sánchez", "Rafael Márquez", "Cuauhtémoc Blanco", "Jared Borgetti", "Luis Hernández", "Jorge Campos", "Claudio Suárez", "Ramón Ramírez", "Pável Pardo", "Gerardo Torrado",
       "Andrés Guardado", "Javier Hernández", "Carlos Vela", "Hirving Lozano", "Raúl Jiménez", "Héctor Herrera", "Miguel Layún", "Diego Lainez", "Edson Álvarez", "Néstor Araujo"
     ]
-  },
-  {
-    category: "Banderas",
-    answers: [
+  }
+},
+{
+  category: "Banderas",
+  answers: {
+    es: [
       "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia",
       "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín",
       "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi",
@@ -198,11 +366,39 @@ module.exports = [{
       "Martinica", "Mayotte", "Montserrat", "Nueva Caledonia", "Niue", "Polinesia Francesa", "Puerto Rico", "Reunión", "San Bartolomé", "San Martín",
       "San Pedro y Miquelón", "Tokelau", "Wallis y Futuna", "Sahara Occidental", "Abjasia", "Artsaj", "Kosovo", "Osetia del Sur", "Palestina", "Somalilandia",
       "Taiwán", "Transnistria", "República Árabe Saharaui Democrática", "Orden de Malta", "Escocia", "Gales", "Inglaterra", "Irlanda del Norte", "Tíbet", "Curazao"
+    ],
+    en: [
+      "Afghanistan", "Albania", "Germany", "Andorra", "Angola", "Antigua and Barbuda", "Saudi Arabia", "Algeria", "Argentina", "Armenia",
+      "Australia", "Austria", "Azerbaijan", "Bahamas", "Bangladesh", "Barbados", "Bahrain", "Belgium", "Belize", "Benin",
+      "Belarus", "Myanmar", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+      "Bhutan", "Cape Verde", "Cambodia", "Cameroon", "Canada", "Qatar", "Chad", "Chile", "China", "Cyprus",
+      "Colombia", "Comoros", "North Korea", "South Korea", "Ivory Coast", "Costa Rica", "Croatia", "Cuba", "Denmark", "Dominica",
+      "Ecuador", "Egypt", "El Salvador", "United Arab Emirates", "Eritrea", "Slovakia", "Slovenia", "Spain", "United States", "Estonia",
+      "Eswatini", "Ethiopia", "Philippines", "Finland", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Ghana",
+      "Grenada", "Greece", "Guatemala", "Guinea", "Equatorial Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary",
+      "India", "Indonesia", "Iraq", "Iran", "Ireland", "Iceland", "Marshall Islands", "Solomon Islands", "Israel", "Italy",
+      "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kyrgyzstan", "Kiribati", "Kuwait", "Laos", "Lesotho",
+      "Latvia", "Lebanon", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "North Macedonia", "Madagascar", "Malaysia",
+      "Malawi", "Maldives", "Mali", "Malta", "Morocco", "Mauritius", "Mauritania", "Mexico", "Micronesia", "Moldova",
+      "Monaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Niger", "Nigeria",
+      "Norway", "New Zealand", "Oman", "Netherlands", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru",
+      "Poland", "Portugal", "United Kingdom", "Central African Republic", "Czech Republic", "Democratic Republic of the Congo", "Dominican Republic", "Republic of the Congo", "Rwanda", "Romania",
+      "Russia", "Samoa", "Saint Kitts and Nevis", "San Marino", "Saint Vincent and the Grenadines", "Saint Lucia", "São Tomé and Príncipe", "Senegal", "Serbia", "Seychelles",
+      "Sierra Leone", "Singapore", "Syria", "Somalia", "Sri Lanka", "South Africa", "Sudan", "South Sudan", "Sweden", "Switzerland",
+      "Suriname", "Thailand", "Taiwan", "Tanzania", "Tajikistan", "East Timor", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia",
+      "Turkmenistan", "Turkey", "Tuvalu", "Ukraine", "Uganda", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican", "Venezuela",
+      "Vietnam", "Yemen", "Djibouti", "Zambia", "Zimbabwe", "Anguilla", "Bermuda", "Cayman Islands", "Gibraltar", "Greenland",
+      "Guadeloupe", "Guam", "French Guiana", "Hong Kong", "Isle of Man", "Cook Islands", "Faroe Islands", "British Virgin Islands", "U.S. Virgin Islands", "Macao",
+      "Martinique", "Mayotte", "Montserrat", "New Caledonia", "Niue", "French Polynesia", "Puerto Rico", "Reunion", "Saint Barthélemy", "Saint Martin",
+      "Saint Pierre and Miquelon", "Tokelau", "Wallis and Futuna", "Western Sahara", "Abkhazia", "Artsakh", "Kosovo", "South Ossetia", "Palestine", "Somaliland",
+      "Taiwan", "Transnistria", "Sahrawi Arab Democratic Republic", "Order of Malta", "Scotland", "Wales", "England", "Northern Ireland", "Tibet", "Curaçao"
     ]
-  },
-  {
-    category: "Filósofos",
-    answers: [
+  }
+},
+{
+  category: "Filósofos",
+  answers: {
+    es: [
       "Sócrates", "Platón", "Aristóteles", "Heráclito", "Parménides", "Demócrito", "Epicuro", "Zenón de Citio", "Pitágoras", "Empédocles",
       "Anaximandro", "Anaxímenes", "Tales de Mileto", "Protágoras", "Gorgias", "Séneca", "Marco Aurelio", "Epicteto", "Cicerón", "Plotino",
       "San Agustín", "Santo Tomás de Aquino", "Guillermo de Ockham", "Duns Escoto", "Avicena", "Averroes", "Maimónides", "Al-Farabi", "Nicolás de Cusa", "Giordano Bruno",
@@ -211,10 +407,10 @@ module.exports = [{
       "Ludwig Wittgenstein", "Bertrand Russell", "Gottlob Frege", "Alfred North Whitehead", "Karl Popper", "Thomas Kuhn", "Paul Feyerabend", "Willard Van Orman Quine", "Saul Kripke", "Donald Davidson",
       "John Rawls", "Robert Nozick", "Jürgen Habermas", "Michel Foucault", "Gilles Deleuze", "Jacques Derrida", "Jean-François Lyotard", "Richard Rorty", "Noam Chomsky", "Martha Nussbaum",
       "Judith Butler", "Slavoj Žižek", "Byung-Chul Han", "Cornel West", "Alasdair MacIntyre", "Charles Taylor", "Hannah Arendt", "Leo Strauss", "Eric Voegelin", "Hans-Georg Gadamer",
-      "Paul Ricoeur", "Emmanuel Levinas", "Jacques Lacan", "Roland Barthes", "Claude Lévi-Strauss", "Michel Serres", "Bruno Latour", "Isabelle Stengers", "Lucretius", "Boethius",
+      "Paul Ricoeur", "Emmanuel Levinas", "Jacques Lacan", "Roland Barthes", "Claude Lévi-Strauss", "Michel Serres", "Bruno Latour", "Isabelle Stengers", "Lucrecio", "Boecio",
       "Erasmo de Róterdam", "Thomas Hobbes", "Jean-Jacques Rousseau", "Voltaire", "Denis Diderot", "Montesquieu", "Jean le Rond d'Alembert", "Marqués de Condorcet", "Adam Smith", "Jeremy Bentham",
       "John Stuart Mill", "Henry Sidgwick", "William James", "Charles Sanders Peirce", "John Dewey", "José Ortega y Gasset", "Miguel de Unamuno", "Xavier Zubiri", "Julian Marías", "Fernando Savater",
-      "Confucio", "Lao-Tse", "Mencius", "Zhuangzi", "Mozi", "Xunzi", "Han Fei", "Wang Yangming", "Dogen", "Nishida Kitaro",
+      "Confucio", "Lao-Tse", "Mencio", "Zhuangzi", "Mozi", "Xunzi", "Han Fei", "Wang Yangming", "Dogen", "Nishida Kitaro",
       "Nagarjuna", "Buda Gautama", "Shankara", "Ramanuja", "Madhva", "Chanakya", "Swami Vivekananda", "Sri Aurobindo", "Jiddu Krishnamurti", "Osho",
       "Al-Ghazali", "Ibn Arabi", "Rumi", "Fakhr al-Din al-Razi", "Ibn Khaldun", "Mulla Sadra", "Allama Iqbal", "Muhammad Abduh", "Ali Shariati", "Frantz Fanon",
       "Kwame Nkrumah", "Leopold Senghor", "Aimé Césaire", "W.E.B. Du Bois", "Fanny del Río", "Sor Juana Inés de la Cruz", "Bartolomé de las Casas", "Simón Bolívar", "José Martí", "José Carlos Mariátegui",
@@ -223,10 +419,32 @@ module.exports = [{
       "Gayatri Spivak", "Donna Haraway", "Iris Murdoch", "Martha Nussbaum", "Elizabeth Anscombe", "Philippa Foot", "G.E.M. Anscombe", "Luce Irigaray", "Julia Kristeva", "Nancy Fraser",
       "Angela Davis", "bell hooks", "Patricia Hill Collins", "Chantal Mouffe", "Wendy Brown", "Sandra Harding", "Donna-Dale Marcano", "María Lugones", "Gloria Anzaldúa", "Chela Sandoval",
       "Byung-Chul Han", "Peter Sloterdijk", "Giorgio Agamben", "Antonio Negri", "Franco Berardi", "Quentin Meillassoux", "Alain Badiou", "Jacques Rancière", "Jean-Luc Nancy", "Bernard Stiegler"
+    ],
+    en: [
+      "Socrates", "Plato", "Aristotle", "Heraclitus", "Parmenides", "Democritus", "Epicurus", "Zeno of Citium", "Pythagoras", "Empedocles",
+      "Anaximander", "Anaximenes", "Thales of Miletus", "Protagoras", "Gorgias", "Seneca", "Marcus Aurelius", "Epictetus", "Cicero", "Plotinus",
+      "Augustine of Hippo", "Thomas Aquinas", "William of Ockham", "John Duns Scotus", "Avicenna", "Averroes", "Maimonides", "Al-Farabi", "Nicholas of Cusa", "Giordano Bruno",
+      "René Descartes", "Baruch Spinoza", "Gottfried Leibniz", "John Locke", "David Hume", "George Berkeley", "Immanuel Kant", "Johann Gottlieb Fichte", "Friedrich Schelling", "Georg Wilhelm Friedrich Hegel",
+      "Arthur Schopenhauer", "Friedrich Nietzsche", "Karl Marx", "Søren Kierkegaard", "Edmund Husserl", "Martin Heidegger", "Jean-Paul Sartre", "Simone de Beauvoir", "Albert Camus", "Maurice Merleau-Ponty",
+      "Ludwig Wittgenstein", "Bertrand Russell", "Gottlob Frege", "Alfred North Whitehead", "Karl Popper", "Thomas Kuhn", "Paul Feyerabend", "Willard Van Orman Quine", "Saul Kripke", "Donald Davidson",
+      "John Rawls", "Robert Nozick", "Jürgen Habermas", "Michel Foucault", "Gilles Deleuze", "Jacques Derrida", "Jean-François Lyotard", "Richard Rorty", "Noam Chomsky", "Martha Nussbaum",
+      "Judith Butler", "Slavoj Žižek", "Byung-Chul Han", "Cornel West", "Alasdair MacIntyre", "Charles Taylor", "Hannah Arendt", "Leo Strauss", "Eric Voegelin", "Hans-Georg Gadamer",
+      "Paul Ricoeur", "Emmanuel Levinas", "Jacques Lacan", "Roland Barthes", "Claude Lévi-Strauss", "Michel Serres", "Bruno Latour", "Isabelle Stengers", "Lucretius", "Boethius",
+      "Erasmus of Rotterdam", "Thomas Hobbes", "Jean-Jacques Rousseau", "Voltaire", "Denis Diderot", "Montesquieu", "Jean le Rond d'Alembert", "Marquis de Condorcet", "Adam Smith", "Jeremy Bentham",
+      "John Stuart Mill", "Henry Sidgwick", "William James", "Charles Sanders Peirce", "John Dewey", "José Ortega y Gasset", "Miguel de Unamuno", "Xavier Zubiri", "Julian Marías", "Fernando Savater",
+      "Confucius", "Lao-Tzu", "Mencius", "Zhuangzi", "Mozi", "Xunzi", "Han Fei", "Wang Yangming", "Dogen", "Nishida Kitaro",
+      "Nagarjuna", "Buddha Gautama", "Shankara", "Ramanuja", "Madhva", "Chanakya", "Swami Vivekananda", "Sri Aurobindo", "Jiddu Krishnamurti", "Osho",
+      "Al-Ghazali", "Ibn Arabi", "Rumi", "Fakhr al-Din al-Razi", "Ibn Khaldun", "Mulla Sadra", "Allama Iqbal", "Muhammad Abduh", "Ali Shariati", "Frantz Fanon",
+      "Kwame Nkrumah", "Leopold Senghor", "Aimé Césaire", "W.E.B. Du Bois", "Fanny del Río", "Sor Juana Inés de la Cruz", "Bartolomé de las Casas", "Simón Bolívar", "José Martí", "José Carlos Mariátegui",
+      "Octavio Paz", "Leopoldo Zea", "Francisco Miró Quesada", "Arturo Andrés Roig", "Enrique Dussel", "Pablo Guadarrama", "Estela Canto", "Diana Maffía", "María Zambrano", "Rosa Luxemburg",
+      "Simone Weil", "Edith Stein", "Hildegard of Bingen", "Hannah Arendt", "Ayn Rand", "Mary Wollstonecraft", "Harriet Taylor Mill", "Lou Andreas-Salomé", "Simone de Beauvoir", "Judith Butler",
+      "Gayatri Spivak", "Donna Haraway", "Iris Murdoch", "Martha Nussbaum", "Elizabeth Anscombe", "Philippa Foot", "G.E.M. Anscombe", "Luce Irigaray", "Julia Kristeva", "Nancy Fraser",
+      "Angela Davis", "bell hooks", "Patricia Hill Collins", "Chantal Mouffe", "Wendy Brown", "Sandra Harding", "Donna-Dale Marcano", "María Lugones", "Gloria Anzaldúa", "Chela Sandoval",
+      "Byung-Chul Han", "Peter Sloterdijk", "Giorgio Agamben", "Antonio Negri", "Franco Berardi", "Quentin Meillassoux", "Alain Badiou", "Jacques Rancière", "Jean-Luc Nancy", "Bernard Stiegler"
     ]
   }
+}
 ];
-    
 
-  
-  
+
+

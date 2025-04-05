@@ -21,11 +21,10 @@ app.listen(PORT, () => {
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
 // Example: http://localhost:3001/wikidata/question/Lugares/10
-app.get("/wikidata/question/:category/:number", async (req, res) => {
-    const category= req.params.category;
-    const n = req.params.number;
+app.get("/wikidata/question/:category/:number/:lang", async (req, res) => {
+    const { category, n, lang } = req.params;
     try {
-        const questions = await service.getQuestions(category, n);
+        const questions = await service.getQuestions(category, n, lang);
         service.deleteQuestions(questions);
         res.json(questions);
     } catch (error) {
@@ -82,19 +81,25 @@ app.get("/wikidata/clear", async (req, res) => {
 // Example: http://localhost:3001/game/start
 app.post('/game/start', async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId, lang = "es" } = req.body;
+        console.log("Starting game with body:", req.body);
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
         }
 
-        await Game.create({
+        const connectionState = mongoose.connection.readyState;
+        console.log("MongoDB connection state:", connectionState);
+
+        const newGame = await Game.create({
             userId,
             correct: 0,
             wrong: 0,
             duration: 0,
+            lang: lang,
             createdAt: new Date()
         });
 
+        console.log("Game started successfully:", newGame);
         return res.json({ message: "Game started successfully" });
 
     } catch (error) {

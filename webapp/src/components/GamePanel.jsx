@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { useTranslation } from 'react-i18next';
 
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
@@ -31,11 +32,14 @@ const GamePanel = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [userId, setUserId] = useState(null);
+  const { i18n, t } = useTranslation();
   
 
   const getQuestions = async () => {
     try {
-      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
+      const lang = i18n.language;
+      console.log("idioma: ", lang);
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/${CATEGORY}/${TOTAL_QUESTIONS}/${lang}`);
       const data = response.data;
       if (data && data.length == TOTAL_QUESTIONS) {
         console.log("Preguntas recibidas: ", data.length);
@@ -78,10 +82,10 @@ const GamePanel = () => {
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
-      setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
+      setSnackbar({ open: true, message: t('game.correctAnswer'), severity: 'success' });
       setCorrectCount(prev => prev + 1);
     } else {
-      setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
+      setSnackbar({ open: true, message: t('game.incorrectAnswer'), severity: 'error' });
       setIncorrectCount(prev => prev + 1);
     }
 
@@ -146,7 +150,9 @@ const GamePanel = () => {
   const startGame = async () => {
     try {
         const userId = getUserId();
-        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+        const lang = i18n.language;
+        console.log("idioma start: ", lang);
+        const response = await axios.post(`${apiEndpoint}/game/start`, { userId, lang });
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
@@ -203,7 +209,7 @@ useEffect(() => {
           alignItems="center"
         >
           <CircularProgress style={{ marginBottom: '16px' }} />
-          <Typography variant="h6">Cargando preguntas...</Typography>
+          <Typography variant="h6">{t('game.loadingQuestions')}</Typography>
         </Grid>
       </ThemeProvider>
     );
@@ -213,7 +219,7 @@ useEffect(() => {
   if (gameEnded) {
     endGame();
     const performanceMessage =
-      correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
+      correctCount >= TOTAL_QUESTIONS / 2 ? t('game.goodJob') : t('game.tryAgain');
     return (
       <ThemeProvider theme={theme}>
         <Grid
@@ -228,16 +234,16 @@ useEffect(() => {
         >
           <Paper style={{ padding: '32px', textAlign: 'center' }}>
             <Typography variant="h4" gutterBottom>
-              Resumen del Juego
+              {t('game.summaryTitle')}
             </Typography>
             <Typography variant="h6">
-              Preguntas contestadas: {TOTAL_QUESTIONS}
+              {t('game.questionsAnswered')} {TOTAL_QUESTIONS}
             </Typography>
             <Typography variant="h6" color="green">
-              Respuestas correctas: {correctCount}
+              {t('game.correctAnswers')} {correctCount}
             </Typography>
             <Typography variant="h6" color="red">
-              Respuestas incorrectas: {incorrectCount}
+              {t('game.incorrectAnswers')} {incorrectCount}
             </Typography>
             <Typography variant="h5" style={{ marginTop: '16px' }}>
               {performanceMessage}
@@ -248,7 +254,7 @@ useEffect(() => {
               onClick={resetGame}
               style={{ marginTop: '24px' }}
             >
-              Jugar de Nuevo
+              {t('game.playAgain')}
             </Button>
           </Paper>
         </Grid>
@@ -303,7 +309,7 @@ useEffect(() => {
                   }}
                 >
                   <CircularProgress style={{ marginBottom: '8px' }} />
-                  <Typography variant="caption">Cargando pregunta...</Typography>
+                  <Typography variant="caption">{t('game.loadingQuestions')}</Typography>
                 </Box>
               )}
               <Box
