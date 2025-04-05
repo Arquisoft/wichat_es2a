@@ -12,7 +12,7 @@ import defaultTheme from "./config/default-Theme.json";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const theme = createTheme(defaultTheme);
 
