@@ -223,8 +223,10 @@ jobs:
           cd wichat_es2a
           rm -rf ./*
           wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/Test-Workflows/docker-compose.yml -O docker-compose.yml
-          wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/Test-Workflows/.env -O .env
-          docker logout ghcr.io
-          docker logout ghcr
-          docker image prune -f
-          docker compose --profile prod up -d --pull always
+          touch .env
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+          echo "EMPATHY_API_KEY=${{ secrets.EMPATHY_API_KEY }}" >> .env
+          sudo docker logout ghcr.io
+          sudo docker logout ghcr
+          sudo docker image prune -f
+          sudo docker compose --profile prod up -d --pull always
