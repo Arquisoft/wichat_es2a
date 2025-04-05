@@ -19,6 +19,7 @@
   "homepage": "https://github.com/arquisoft/wichat_es2a#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongoose": "^8.9.3",
     "userservice": "file:"

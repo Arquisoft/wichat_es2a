@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -6,7 +7,20 @@ const service = require("./services/wikidataService");
 const cors = require('cors');
 const { Game } = require("../src/model/wikidataModel");
 
-app.use(cors());
+// Get host and webapp port from environment variables or use defaults
+const deployHost = process.env.DEPLOY_HOST || 'localhost';
+const webappPort = process.env.WEBAPP_PORT || '3000';
+const corsOrigin = `http://${deployHost}:${webappPort}`;
+
+console.log(`CORS origin set to: ${corsOrigin}`);
+
+app.use(cors({
+  origin: corsOrigin,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";

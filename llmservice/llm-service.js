@@ -1,3 +1,4 @@
+require('dotenv').config();
 const axios = require('axios');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,15 +10,26 @@ const app = express();
 app.disable('x-powered-by');
 const port = 8003;
 
-// CORS configuration
-app.use(cors());
+// Middleware to parse JSON in request body
+app.use(express.json());
+
+// Get host and webapp port from environment variables or use defaults
+const deployHost = process.env.DEPLOY_HOST || 'localhost';
+const webappPort = process.env.WEBAPP_PORT || '3000';
+const corsOrigin = `http://${deployHost}:${webappPort}`;
+
+console.log(`CORS origin set to: ${corsOrigin}`);
+
+app.use(cors({
+  origin: corsOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/llmdb';
 mongoose.connect(mongoUri);
-
-// Middleware to parse JSON in request body
-app.use(express.json());
 
 // Define configurations for different LLM APIs
 const llmConfigs = {
