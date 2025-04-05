@@ -1,10 +1,21 @@
 // src/components/Home.jsx
-import React from 'react';
-import { Container, Grid, Typography, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Grid, Typography, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { Link } from 'react-router-dom';
 import image from '../media/logoWiChat.svg';
 
 const Home = () => {
+
+  // Estado para la categoría del juego
+  const [category, setCategory] = useState('');
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+
+
+
+
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: 4, padding: { xs: 2, sm: 4 } }}>
       <Grid container spacing={4}>
@@ -17,12 +28,37 @@ const Home = () => {
             El legendario concurso de conocimientos ahora en formato digital. ¡Pon a prueba tus habilidades y compite con otros jugadores!
           </Typography>
 
+
+          {/* Selector de categorías */}
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+            <InputLabel id="category-select-label">Seleccionar categoría</InputLabel>
+            <Select
+              labelId="category-select-label"
+              value={category}
+              label="Seleccionar categoría"
+              onChange={handleCategoryChange}
+            >
+              <MenuItem value="Lugares">Lugares</MenuItem>
+              <MenuItem value="Arte">Arte</MenuItem>
+              <MenuItem value="Actores">Actores</MenuItem>
+              <MenuItem value="Cantantes">Cantantes</MenuItem>
+              <MenuItem value="Pintores">Pintores</MenuItem>
+              <MenuItem value="Futbolistas">Futbolistas</MenuItem>
+              <MenuItem value="Banderas">Banderas</MenuItem>
+              <MenuItem value="Filosofos">Filosofos</MenuItem>
+
+              {/* Añadir más categorías según sea necesario */}
+            </Select>
+          </FormControl>
+
+
           <Box>
             <Button
               variant="contained"
               color="primary"
               component={Link}
-              to="/game"
+              // to="/game"
+              to={`/game?category=${category}`}
               sx={{
                 padding: '12px 24px',
                 fontSize: '16px',
