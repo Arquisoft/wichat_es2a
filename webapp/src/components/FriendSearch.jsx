@@ -12,7 +12,7 @@ function FriendSearch({ onAddFriend }) {
     };
 
     return (
-        <Box sx={{ width: '30%', fontFamily: theme.typography.fontFamily, fontSize: theme.typography.fontSize }}>
+        <Box sx={{ width: '100%', fontFamily: theme.typography.fontFamily, fontSize: theme.typography.fontSize, display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ color: theme.palette.secondary.main }}>
                 Añadir Amigo
             </Typography>
@@ -23,11 +23,13 @@ function FriendSearch({ onAddFriend }) {
                 onChange={(e) => setFriendUsername(e.target.value)}
                 fullWidth
                 margin="normal"
+                sx={{ flexGrow: 1 }}
             />
             <Button
                 variant="contained"
                 color="primary"
                 onClick={handleAddFriend}
+                sx={{ mt: 2 }}
             >
                 Añadir
             </Button>

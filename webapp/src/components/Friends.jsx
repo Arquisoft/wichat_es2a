@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FriendList from './FriendList';
 import FriendSearch from './FriendSearch';
-import { Box } from '@mui/material';
+import { Box, Snackbar, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 function Friends() {
@@ -51,9 +51,21 @@ function Friends() {
     };
 
     return (
-        <Box sx={{ display: 'flex', fontFamily: theme.typography.fontFamily, fontSize: theme.typography.fontSize, padding: 2 }}>
-            <FriendList friends={friends} />
-            <FriendSearch onAddFriend={handleAddFriend} />
+        <Box
+            sx={{
+                display: 'flex',
+                fontFamily: theme.typography.fontFamily,
+                fontSize: theme.typography.fontSize,
+                padding: theme.spacing(2),
+                width: '100%',
+            }}
+        >
+            <Box sx={{ flex: 1, pr: theme.spacing(2) }}>
+                <FriendList friends={friends} />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+                <FriendSearch onAddFriend={handleAddFriend} />
+            </Box>
             <Snackbar
                 open={!!successMessage}
                 autoHideDuration={6000}
