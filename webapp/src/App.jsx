@@ -15,6 +15,7 @@ import GameHistoryUI from './components/GameHistoryUI';
 import Contact from './components/Contact';
 import Profile from './components/Profile';
 import Countdown from './components/Countdown'; // Importar el componente Countdown
+import Friends from './components/Friends'; // Importar el componente Friends
 
 const theme = createTheme(defaultTheme);
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/friends" element={<Friends userId={localStorage.getItem('user')} />} />
             </Route>
 
             {/* Redirección por defecto */}
