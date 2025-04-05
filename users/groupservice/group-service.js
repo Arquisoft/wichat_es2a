@@ -1,20 +1,21 @@
-// group-service.js
 const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const axios = require('axios');
-const Group = require('./group-model')
-const User = require('./user-model');
-
 const app = express();
-const port = 8004;
-
-// Middleware to parse JSON in request body
+const mongoose = require('mongoose');
+const axios = require('axios');
+const cors = require('cors');
+const Group = require('./group-model')
+const User = require('../userservice/user-model');
+app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
+
 mongoose.connect(mongoUri);
+
+const port = 8004;
+app.listen(port, () => {
+    console.log(`Server listening in port http://localhost:${port}`);
+});
 
 // Function to validate required fields in the request body
 function validateRequiredFields(req, requiredFields) {
@@ -27,29 +28,27 @@ function validateRequiredFields(req, requiredFields) {
 
 app.post('/createGroup', async (req, res) => {
   try {
-      validateRequiredFields(req, ['groupName', 'username']);
+      validateRequiredFields(req, ['groupName', 'userId']);
 
-      const { groupName, username } = req.body;
+      const { groupName, userId } = req.body;
 
-      const user = await User.findOne({ username });
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
-
-      const existingGroup = await Group.findOne({ name: groupName });
+      const existingGroup = await Group.findOne({ groupName });
       if (existingGroup) {
           return res.status(400).json({ error: 'Group name already taken' });
       }
 
       const newGroup = new Group({
-          name: groupName,
-          users: [{ user: user._id, role: 'admin' }]
+          groupName,
+          memberCount: 1,
+          createdAt: new Date(),
+          users: [{ user: userId, role: 'admin' }]
       });
 
       await newGroup.save();
 
       res.json(newGroup);
   } catch (error) {
+      console.error("Error creating group:", error);
       res.status(400).json({ error: error.message });
   }
 });
@@ -65,7 +64,7 @@ app.post('/addUserToGroup', async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
     }
 
-    const group = await Group.findOne({ name: groupName });
+    const group = await Group.findOne({ groupName });
     if (!group) {
         return res.status(404).json({ error: 'Group not found' });
     }
@@ -74,6 +73,7 @@ app.post('/addUserToGroup', async (req, res) => {
         return res.status(400).json({ error: 'User is already in the group' });
     }
 
+    group.memberCount += 1;
     group.users.push({ user: user._id, role: 'member' });
     await group.save();
 
@@ -91,7 +91,7 @@ app.get('/getGroupUsers', async (req, res) => {
             return res.status(400).json({ error: 'Group name is required' });
         }
 
-        const group = await Group.findOne({ name: groupName }).populate('users.user', 'username');
+        const group = await Group.findOne({ groupName }).populate('users.user', 'username');
         if (!group) {
             return res.status(404).json({ error: 'Group not found' });
         }
@@ -99,10 +99,10 @@ app.get('/getGroupUsers', async (req, res) => {
         const users = group.users.map(member => ({
             username: member.user.username,
             role: member.role,
-            gameHistoryLink: `/game/statistics?userId=${member.user._id}` // Enlace para consultar el historial de partidas
+            gameHistoryLink: `/game/statistics?userId=${member.user._id}`
         }));
 
-        res.json({ groupName: group.name, users });
+        res.json({ groupName: group.groupName, users });
     } catch (error) {
         console.error("Error fetching group users:", error);
         res.status(400).json({ error: error.message });
@@ -117,7 +117,7 @@ app.get('/listGroupUsers', async (req, res) => {
             return res.status(400).json({ error: 'Group name is required' });
         }
 
-        const group = await Group.findOne({ name: groupName }).populate('users.user', 'username');
+        const group = await Group.findOne({ groupName }).populate('users.user', 'username');
         if (!group) {
             return res.status(404).json({ error: 'Group not found' });
         }
@@ -127,7 +127,7 @@ app.get('/listGroupUsers', async (req, res) => {
             role: member.role
         }));
 
-        res.json({ groupName: group.name, users });
+        res.json({ groupName: group.groupName, users });
     } catch (error) {
         console.error("Error fetching group users:", error);
         res.status(400).json({ error: error.message });
@@ -150,14 +150,33 @@ app.get('/getUserGameHistory', async (req, res) => {
     }
 });
 
-const server = app.listen(port, () => {
-  console.log(`Group Service listening at http://localhost:${port}`);
+app.get('/listGroups', async (req, res) => {
+    try {
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
+
+        const groups = await Group.find({
+            'users.user': userId
+        });
+
+        if (!groups || groups.length === 0) {
+            return res.json([]);
+        }
+
+        const statistics = groups.map(group => ({
+            groupName: group.groupName,
+            memberCount: group.memberCount,
+            createdAt: group.createdAt,
+            role: group.users.find(u => u.user.toString() === userId)?.role || 'member'
+        }));
+
+        res.json(statistics);
+    } catch (error) {
+        console.error("Error al obtener los grupos:", error);
+        res.json([]); // En caso de error, devolver array vacío
+    }
 });
 
-// Listen for the 'close' event on the Express.js server
-server.on('close', () => {
-    // Close the Mongoose connection
-    mongoose.connection.close();
-  });
-
-module.exports = server

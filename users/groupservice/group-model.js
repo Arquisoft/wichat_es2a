@@ -6,9 +6,9 @@ const groupSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    description: {
-        type: String,
-        trim: true
+    memberCount: {
+        type: Number,
+        default: 0
     },
     createdAt: {
         type: Date,

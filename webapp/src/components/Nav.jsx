@@ -14,7 +14,8 @@ import { useNavigate, Link } from 'react-router-dom';
 const pages = [
     { code: 'home', link: '/home', name: 'Home' },
     { code: 'contact', link: '/contact', name: 'Contacto' },
-    { code: 'history', link: '/history', name: 'Historial' } // Added Historial button
+    { code: 'history', link: '/history', name: 'Historial' },
+    { code: 'groups', link: '/groups', name: 'Grupos' }
 ];
 
 const MenuDrawer = ({ open, onClose }) => (
