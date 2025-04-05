@@ -226,6 +226,7 @@ jobs:
           touch .env
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
           echo "EMPATHY_API_KEY=${{ secrets.EMPATHY_API_KEY }}" >> .env
+          echo "DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}" >> .env
           sudo docker logout ghcr.io
           sudo docker logout ghcr
           sudo docker image prune -f
