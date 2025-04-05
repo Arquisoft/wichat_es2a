@@ -1,19 +1,32 @@
 // src/components/Home.jsx
 import React, { useState } from 'react';
-import { Container, Grid, Typography, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Container, Grid, Typography, Button, Box, Select, MenuItem, InputLabel, FormControl, FormHelperText } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import image from '../media/logoWiChat.svg';
 
 const Home = () => {
 
   // Estado para la categoría del juego
   const [category, setCategory] = useState('');
+  const [error, setError] = useState(false); // Para gestionar errores en la selección de categoría
+  const navigate = useNavigate(); // Hook para la navegación programática
+
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    setError(false); // Limpiamos el error cuando el usuario selecciona una categoría
   };
 
-
+  const handleStartGame = () => {
+    console.log('Boton Comenzar pulsado');
+    if (!category) {
+      setError(true); // Mostrar error si no se ha seleccionado una categoría
+    } else {
+      console.log('Iniciando juego con categoría:', category); // Para depuración
+      navigate(`/game?category=${category}`); // Navegar a la ruta /game con la categoría seleccionada
+    }
+  };
 
 
   return (
@@ -30,13 +43,14 @@ const Home = () => {
 
 
           {/* Selector de categorías */}
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+          <FormControl fullWidth error={error} sx={{ marginBottom: 2 }}>
             <InputLabel id="category-select-label">Seleccionar categoría</InputLabel>
             <Select
               labelId="category-select-label"
               value={category}
               label="Seleccionar categoría"
               onChange={handleCategoryChange}
+              displayEmpty
             >
               <MenuItem value="Lugares">Lugares</MenuItem>
               <MenuItem value="Arte">Arte</MenuItem>
@@ -46,9 +60,12 @@ const Home = () => {
               <MenuItem value="Futbolistas">Futbolistas</MenuItem>
               <MenuItem value="Banderas">Banderas</MenuItem>
               <MenuItem value="Filosofos">Filosofos</MenuItem>
-
               {/* Añadir más categorías según sea necesario */}
             </Select>
+
+            {/* Mensaje de error si no se selecciona una categoría */}
+            {error && <FormHelperText>Por favor, selecciona una categoría.</FormHelperText>}
+
           </FormControl>
 
 
@@ -56,9 +73,10 @@ const Home = () => {
             <Button
               variant="contained"
               color="primary"
-              component={Link}
+              // component={Link}
               // to="/game"
-              to={`/game?category=${category}`}
+              // to={`/game?category=${category}`}
+              onClick={handleStartGame} // Validar la categoria antes de redirigir
               sx={{
                 padding: '12px 24px',
                 fontSize: '16px',
