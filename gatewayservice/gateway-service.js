@@ -10,24 +10,7 @@ const YAML = require('yaml')
 const app = express();
 const port = 8000;
 
-const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
-const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
-const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
-const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
-
-// Get host and webapp port from environment variables or use defaults
-const deployHost = process.env.DEPLOY_HOST || 'localhost';
-const webappPort = process.env.WEBAPP_PORT || '3000';
-const corsOrigin = `http://${deployHost}:${webappPort}`;
-
-console.log(`CORS origin set to: ${corsOrigin}`);
-
-app.use(cors({
-  origin: corsOrigin,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 //Prometheus configuration
