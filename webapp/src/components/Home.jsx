@@ -13,18 +13,39 @@ const Home = () => {
   const navigate = useNavigate(); // Hook para la navegación programática
 
 
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-    setError(false); // Limpiamos el error cuando el usuario selecciona una categoría
+  // Objeto para mapear categorías con emojis
+  // Este objeto se utiliza para mostrar un emoji junto a cada categoría en el menú desplegable
+  // Cada clave del objeto representa una categoría y su valor es el emoji correspondiente
+  // Se pueden añadir más categorias y emojis según sea necesario
+  const categoryEmojis = {
+    "Futbolistas": "⚽",
+    "Arte": "🎨",
+    "Pintores": "🖌️",
+    "Cantantes": "🎤",
+    "Filosofos": "🧠",
+    "Actores": "🎬",
+    "Lugares": "🌍",
+    "Banderas": "🏳️‍🌈",
   };
 
+
+  // Función para manejar el cambio de categoría
+  // Esta función se ejecuta cada vez que el usuario selecciona una categoría en el menú desplegable
+  // Se actualiza el estado de la categoría y se limpia el error si se selecciona una categoría válida
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+    setError(false);
+  };
+
+  // Función para manejar el inicio del juego
+  // Esta función se ejecuta cuando el usuario hace clic en el botón "Comenzar a jugar"
+  // Verifica si se ha seleccionado una categoría y navega a la ruta del juego con la categoría seleccionada
   const handleStartGame = () => {
     console.log('Boton Comenzar pulsado');
     if (!category) {
-      setError(true); // Mostrar error si no se ha seleccionado una categoría
+      setError(true);
     } else {
-      console.log('Iniciando juego con categoría:', category); // Para depuración
-      navigate(`/game?category=${category}`); // Navegar a la ruta /game con la categoría seleccionada
+      navigate(`/game?category=${category}`);
     }
   };
 
@@ -52,15 +73,13 @@ const Home = () => {
               onChange={handleCategoryChange}
               displayEmpty
             >
-              <MenuItem value="Lugares">Lugares</MenuItem>
-              <MenuItem value="Arte">Arte</MenuItem>
-              <MenuItem value="Actores">Actores</MenuItem>
-              <MenuItem value="Cantantes">Cantantes</MenuItem>
-              <MenuItem value="Pintores">Pintores</MenuItem>
-              <MenuItem value="Futbolistas">Futbolistas</MenuItem>
-              <MenuItem value="Banderas">Banderas</MenuItem>
-              <MenuItem value="Filosofos">Filosofos</MenuItem>
-              {/* Añadir más categorías según sea necesario */}
+
+              {Object.keys(categoryEmojis).map((categoria, index) => (
+                <MenuItem key={index} value={categoria}>
+                  {categoria} {categoryEmojis[categoria]}
+                </MenuItem>
+              ))}
+
             </Select>
 
             {/* Mensaje de error si no se selecciona una categoría */}
