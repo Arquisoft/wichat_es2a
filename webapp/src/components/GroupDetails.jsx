@@ -6,7 +6,7 @@ import {
 import { Person, AdminPanelSettings, Groups } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const GroupDetails = () => {
     const { groupName } = useParams();

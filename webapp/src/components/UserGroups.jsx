@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Group, Add, PersonAdd, AdminPanelSettings, Person, Groups } from '@mui/icons-material';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const UserGroups = () => {
     const [groups, setGroups] = useState([]);
