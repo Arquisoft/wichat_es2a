@@ -100,7 +100,7 @@ app.get('/listGroupUsers', async (req, res) => {
                     const userId = member.user.toString(); 
                     console.log('Fetching username for userId:', userId); 
 
-                    const response = await axios.get(`${apiendpoint}/getUsername`, {
+                    const response = await axios.get(`${apiEndpoint}/getUsername`, {
                         params: { userId },
                     });
 
