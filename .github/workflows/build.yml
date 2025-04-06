@@ -204,6 +204,30 @@ jobs:
         workdir: wikidata
         platforms: linux/amd64,linux/arm64
         tags: "latest,${{ github.sha }}"
+  
+  docker-push-apiservice:
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push'
+    name: Push apiservice Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/apiservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: apiservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
 
   deploy-to-oracle:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
