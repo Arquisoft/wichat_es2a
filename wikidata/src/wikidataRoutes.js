@@ -9,7 +9,18 @@ app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";
 
-repository.init(mongoose, mongoUri);
+const mongooseOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // Aumentar el tiempo de espera para la selección del servidor
+    socketTimeoutMS: 45000 // Aumentar el tiempo de espera para los sockets
+};
+
+mongoose.connect(mongoUri, mongooseOptions).then(() => {
+    console.log("Conexión a MongoDB establecida correctamente.");
+}).catch((error) => {
+    console.error("Error al conectar a MongoDB:", error);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
@@ -23,8 +34,8 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
     const category= req.params.category;
     const n = req.params.number;
     try {
+        console.log("actualizado");
         const questions = await service.getQuestions(category, n);
-        service.deleteQuestions(questions);
         res.json(questions);
     } catch (error) {
         console.error("Error getting the questions:", error);
@@ -144,36 +155,64 @@ app.post('/game/end', async (req, res) => {
 // This route will return the statistics of the games played by the user.
 // Example: http://localhost:3001/game/statistics?userId=123
 app.get('/game/statistics', async (req, res) => {
-     try {
-         const { userId } = req.query;
- 
-         if (!userId) {
-             return res.status(400).json({ error: "userId is required" });
-         }
- 
-         const games = await Game.find({ userId, isCompleted: true });
- 
-         if (!games || games.length === 0) {
-         }else{
-            const statistics = games.map(game => ({
-                correct: game.correct,
-                wrong: game.wrong,
-                duration: game.duration,
-                createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                })
-            }));
-    
-            res.json(statistics);
-         }
-     } catch (error) {
-         console.error("Error fetching game statistics:", error);
-         res.status(500).json({ error: "Server error" });
-     }
- });
+    try {
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
+
+        const games = await Game.find({ userId, isCompleted: true });
+
+        if (!games || games.length === 0) {
+            return res.json([]);
+        }
+
+        const statistics = games.map(game => ({
+            correct: game.correct,
+            wrong: game.wrong,
+            duration: game.duration,
+            createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            })
+        }));
+
+        res.json(statistics);
+    } catch (error) {
+        console.error("Error al obtener las estadísticas del juego:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+ // Configuring the route to get all questions from the database.
+// This route will return all the questions from the database.
+// Example: http://localhost:3001/questions
+ app.get('/questions', async (req, res) => {
+    try {
+        const questions = await repository.getAllQuestions();
+        res.json(questions);
+    } catch (error) {
+        console.error("Error getting all questions:", error);
+        res.status(500).json({ error: "Error getting all questions" });
+    }
+});
+
+// Configuring the route to get all questions from a specific category.
+// This route will return all the questions from the specified category.
+// Example: http://localhost:3001/questions/Lugares
+app.get('/questions/:category', async (req, res) => {
+    try {
+        const category = req.params.category;
+        const questions = await repository.getAllQuestionsFromCategory(category);
+        res.json(questions);
+    } catch (error) {
+        console.error("Error getting questions from category:", error);
+        res.status(500).json({ error: "Error getting questions from category" });
+    }
+});
 

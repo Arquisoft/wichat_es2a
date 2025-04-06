@@ -91,6 +91,7 @@ const Login = () => {
 
           {/* Formulario para login */}
           <TextField
+            data-testid="username-field"
             margin="normal"
             fullWidth
             label="Username"
@@ -98,6 +99,7 @@ const Login = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
+            data-testid="password-field"
             margin="normal"
             fullWidth
             label="Password"

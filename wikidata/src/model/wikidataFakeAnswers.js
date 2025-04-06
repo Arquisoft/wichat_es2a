@@ -201,7 +201,7 @@ module.exports = [{
     ]
   },
   {
-    category: "Filósofos",
+    category: "Filosofos",
     answers: [
       "Sócrates", "Platón", "Aristóteles", "Heráclito", "Parménides", "Demócrito", "Epicuro", "Zenón de Citio", "Pitágoras", "Empédocles",
       "Anaximandro", "Anaxímenes", "Tales de Mileto", "Protágoras", "Gorgias", "Séneca", "Marco Aurelio", "Epicteto", "Cicerón", "Plotino",
