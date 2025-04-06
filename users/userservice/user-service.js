@@ -101,6 +101,46 @@ app.get('/user/:username', async (req, res) => {
   }
 });
 
+app.get('/getUserId', async (req, res) => {
+  try {
+      const { username } = req.query;
+
+      if (!username) {
+          return res.status(400).json({ error: 'Username is required' });
+      }
+      console.log("Username:", username);
+      const user = await User.findOne({ username });
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json({ userId: user._id });
+  } catch (error) {
+      console.error("Error fetching user ID:", error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/getUsername', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        console.log("User ID:", userId);
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        const user = await User.findById(userId, 'username'); // Fetch only the username field
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ username: user.username });
+    } catch (error) {
+        console.error("Error fetching username:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
 });
