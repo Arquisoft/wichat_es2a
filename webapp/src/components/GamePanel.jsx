@@ -8,14 +8,22 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import Countdown from './Countdown';
 import loading from '../media/loading.gif';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
-const CATEGORY = "Futbolistas";
+
 
 const GamePanel = () => {
+
+  // Obtenemos la categoría pasada en la URL
+  const location = useLocation(); // Obtienes la ubicación de la URL
+  const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
+  const category = queryParams.get('category'); // Obtenemos el parámetro "category"
+
+
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
     question: '',
@@ -39,7 +47,7 @@ const GamePanel = () => {
 
   const getQuestions = async () => {
     try {
-      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
       const data = response.data;
       if (data && data.length == TOTAL_QUESTIONS) {
         console.log("Preguntas recibidas: ", data.length);
