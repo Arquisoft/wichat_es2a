@@ -3,8 +3,9 @@ import profilePic from '../media/fotousuario.png';
 import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-function FriendList({ friends }) {
+function FriendList({ friends, user }) {
     const theme = useTheme();
+    const username = user ? user.username : '';
 
     return (
         <Box sx={{ width: '100%', marginRight: 2, fontFamily: theme.typography.fontFamily, fontSize: theme.typography.fontSize }}>

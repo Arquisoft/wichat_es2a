@@ -49,38 +49,46 @@ app.post('/adduser', async (req, res) => {
         res.status(400).json({ error: error.message }); 
     }});
 
-app.post('/addFriend', async(req,res) => {
-  try{
-    validateRequiredFields(req, ['username','friendUsername']);
-    const { username, friendUsername } = req.body;
-
-    if(username == friendUsername){
-      return res.status(400).json({error:"No puedes agregarte a ti mismo como amigo"});
-    }
-
-    const user = await User.findOne({ username: username});
-    const friend = await User.findOne({username: friendUsername});
-
-    if (!friend) {
-      return res.status(404).json({ error: "El usuario no fue encontrado" });
-    }
-
-    if (user.friends.includes(friend._id)) {
-      return res.status(400).json({ error: "Ya tienes a este usuario como amigo." });
-    }
-
-    user.friends.push(friend._id);
-    friend.friends.push(user._id);
-
-    await user.save();
-    await friend.save();
-
-    res.status(200).json({ message: `Ahora ${username} y ${friendUsername} son amigos.` });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    app.post('/addFriend', async (req, res) => {
+      try {
+        // Verificar que los campos requeridos estén presentes
+        validateRequiredFields(req, ['username', 'friendUsername']);
+        const { username, friendUsername } = req.body;
+    
+        // Verificar que el usuario no intente agregarse a sí mismo como amigo
+        if (username === friendUsername) {
+          return res.status(400).json({ error: "No puedes agregarte a ti mismo como amigo" });
+        }
+    
+        // Buscar al usuario y al amigo
+        const user = await User.findOne({ username });
+        const friend = await User.findOne({ username: friendUsername });
+    
+        // Verificar que ambos usuarios existan
+        if (!user || !friend) {
+          return res.status(404).json({ error: "Usuario o amigo no encontrado" });
+        }
+    
+        // Verificar que no sean ya amigos
+        if (user.friends.includes(friend._id)) {
+          return res.status(400).json({ error: "Ya tienes a este usuario como amigo." });
+        }
+    
+        // Agregar la amistad en ambas direcciones
+        user.friends.push(friend._id);
+        friend.friends.push(user._id);
+    
+        // Guardar los cambios
+        await user.save();
+        await friend.save();
+    
+        // Responder con el mensaje de éxito
+        res.status(200).json({ message: `Ahora ${username} y ${friendUsername} son amigos.` });
+    
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
 
 app.get('/listUsers', async (req, res) => {
     try {
@@ -91,17 +99,24 @@ app.get('/listUsers', async (req, res) => {
     }
   });
 
-app.get('/user/:username', async (req, res) => {
-  try {
-      const user = await User.findOne({ username: req.params.username }).populate('friends', 'username');
+  app.get('/user/:username', async (req, res) => {
+    try {
+      // Busca al usuario por su 'username' y rellena la lista de amigos con solo el campo 'username'
+      const user = await User.findOne({ username: req.params.username })
+        .populate('friends', 'username');  // Poblar el campo 'friends' con solo los nombres de usuario
+  
+      // Si el usuario no se encuentra
       if (!user) {
-          return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: "User not found" });
       }
+  
+      // Devuelve el usuario con la lista de amigos poblada
       res.status(200).json(user);
-  } catch (error) {
+    } catch (error) {
+      // Si hay un error, responde con un error 500
       res.status(500).json({ error: error.message });
-  }
-});
+    }
+  });
 
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);

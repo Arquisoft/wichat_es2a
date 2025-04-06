@@ -9,7 +9,9 @@ function Friends() {
     const [friends, setFriends] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const username = localStorage.getItem('username');
+    
+    const user = JSON.parse(localStorage.getItem('user'));
+    const username = user ? user.username : null;
 
     useEffect(() => {
         if (username) {
@@ -61,7 +63,7 @@ function Friends() {
             }}
         >
             <Box sx={{ flex: 1, pr: theme.spacing(2) }}>
-                <FriendList friends={friends} />
+                <FriendList friends={friends} user={user}/>
             </Box>
             <Box sx={{ flex: 1 }}>
                 <FriendSearch onAddFriend={handleAddFriend} />
