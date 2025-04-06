@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import profilePic from '../media/fotousuario.png';
-import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint2 = 'http://localhost:8001';
 
 function FriendList({ friends, user }) {
     const theme = useTheme();
     const username = user ? user.username : '';
     const [gameHistories, setGameHistories] = useState({}); // Estado para almacenar el historial de amigos
+
+    const handleRemoveFriend = async (friendUsername) => {
+        try {
+            const response = await axios.post(`${apiEndpoint2}/removeFriend`, {
+                username: user.username,
+                friendUsername: friendUsername
+            });
+            alert(response.data.message); // Muestra un mensaje de éxito
+            // Aquí podríamos actualizar la lista de amigos después de eliminar uno
+            // Podríamos hacer un fetch de la lista de amigos actualizada, o eliminarlo del estado local.
+        } catch (error) {
+            console.error('Error al eliminar amigo:', error);
+            alert(error.response ? error.response.data.error : 'Hubo un problema al eliminar el amigo.');
+        }
+    };
 
     useEffect(() => {
         const fetchGameHistories = async () => {
@@ -70,6 +87,14 @@ function FriendList({ friends, user }) {
                             primary={friend.username} 
                             secondary={`Última partida: ${getLastGameDate(friend._id)} | Total de partidas: ${getTotalGamesPlayed(friend._id)}`} 
                         />
+                        <IconButton 
+                            edge="end" 
+                            color="secondary" 
+                            onClick={() => handleRemoveFriend(friend.username)}
+                            aria-label="Eliminar amigo"
+                        >
+                            <DeleteIcon />
+                        </IconButton>
                     </ListItem>
                 ))}
             </List>

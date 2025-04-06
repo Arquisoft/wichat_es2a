@@ -141,6 +141,48 @@ app.get('/searchUsers', async (req, res) => {
   }
 });
 
+// Eliminar un amigo
+app.post('/removeFriend', async (req, res) => {
+  try {
+    // Verificar que los campos requeridos estén presentes
+    validateRequiredFields(req, ['username', 'friendUsername']);
+    const { username, friendUsername } = req.body;
+
+    // Verificar que el usuario no intente eliminarse a sí mismo
+    if (username === friendUsername) {
+      return res.status(400).json({ error: "No puedes eliminarte a ti mismo de la lista de amigos" });
+    }
+
+    // Buscar al usuario y al amigo
+    const user = await User.findOne({ username });
+    const friend = await User.findOne({ username: friendUsername });
+
+    // Verificar que ambos usuarios existan
+    if (!user || !friend) {
+      return res.status(404).json({ error: "Usuario o amigo no encontrado" });
+    }
+
+    // Verificar que sean amigos
+    if (!user.friends.includes(friend._id)) {
+      return res.status(400).json({ error: "No son amigos" });
+    }
+
+    // Eliminar la amistad en ambas direcciones
+    user.friends = user.friends.filter(friendId => !friendId.equals(friend._id));
+    friend.friends = friend.friends.filter(friendId => !friendId.equals(user._id));
+
+    // Guardar los cambios
+    await user.save();
+    await friend.save();
+
+    // Responder con un mensaje de éxito
+    res.status(200).json({ message: `${friendUsername} ha sido eliminado de tus amigos.` });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
 });
