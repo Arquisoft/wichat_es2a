@@ -132,7 +132,7 @@ services:
       context: ./webapp
       args:
         API_URI: ${API_URI:-http://localhost:8000}
-        REACT_APP_GATEWAY_URL: http://${DEPLOY_HOST:-localhost}:8000
+        GATEWAY_URL: http://${DEPLOY_HOST:-localhost}:8000
       platforms:
         - linux/amd64
         - linux/arm64
