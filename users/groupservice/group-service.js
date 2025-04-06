@@ -105,22 +105,6 @@ app.get('/listGroupUsers', async (req, res) => {
     }
 });
 
-app.get('/getUserGameHistory', async (req, res) => {
-    try {
-        const { userId } = req.query;
-
-        if (!userId) {
-            return res.status(400).json({ error: 'User ID is required' });
-        }
-
-        const response = await axios.get(`http://localhost:3001/game/statistics`, { params: { userId } });
-        res.json(response.data);
-    } catch (error) {
-        console.error("Error fetching user game history:", error);
-        res.status(400).json({ error: error.message });
-    }
-});
-
 app.get('/listGroups', async (req, res) => {
     try {
         const { userId } = req.query;
@@ -148,6 +132,27 @@ app.get('/listGroups', async (req, res) => {
     } catch (error) {
         console.error("Error al obtener los grupos:", error);
         res.json([]); // En caso de error, devolver array vacío
+    }
+});
+
+app.get('/getUserId', async (req, res) => {
+    try {
+        const { username } = req.query;
+
+        if (!username) {
+            return res.status(400).json({ error: 'Username is required' });
+        }
+        console.log("Username:", username);
+        const user = await User.findOne({ username });
+        console.log("User:", user);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ userId: user._id });
+    } catch (error) {
+        console.error("Error fetching user ID:", error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

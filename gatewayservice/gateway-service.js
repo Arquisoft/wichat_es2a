@@ -215,6 +215,14 @@ app.get('/group/listGroupUsers', async (req, res) => {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
   }
 });
+app.get('/getUserId', async (req, res) => {
+  try {
+    const response = await axios.get(`${groupServiceUrl}/getUserId`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+  }
+});
 // Start the gateway service
 const server = app.listen(port, () => {
   console.log(`Gateway Service listening at http://localhost:${port}`);

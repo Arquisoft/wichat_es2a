@@ -31,17 +31,8 @@ const GroupDetails = () => {
         fetchGroupUsers();
     }, [groupName]);
 
-    const handleUserClick = async (username) => {
-        try {
-            const response = await axios.get(`http://localhost:8004/getUserId`, {
-                params: { username }
-            });
-            if (response.data.userId) {
-                navigate(`/gamehistory/${response.data.userId}`);
-            }
-        } catch (err) {
-            console.error('Error al obtener el ID del usuario:', err);
-        }
+    const handleUserClick = (userId) => {
+        navigate(`/gamehistory/${userId}`);
     };
 
     if (loading) {

@@ -38,7 +38,7 @@ function App() {
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
-              <Route path="/gamehistory/:userId" element={<GameHistoryUI />} />
+              <Route path="/gamehistory/:username" element={<GameHistoryUIGroup />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />
