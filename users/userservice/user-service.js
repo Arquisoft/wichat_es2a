@@ -124,6 +124,23 @@ app.get('/listUsers', async (req, res) => {
     }
   });
 
+// Endpoint para obtener la lista de usuarios que coinciden con el texto de búsqueda
+app.get('/listUsers', async (req, res) => {
+  try {
+      const { query } = req.query;
+      if (!query) {
+          return res.status(400).json({ error: "Se requiere un término de búsqueda" });
+      }
+
+      // Buscar usuarios cuyo 'username' coincida parcialmente con el query
+      const users = await User.find({ username: { $regex: query, $options: 'i' } }).limit(10);
+
+      res.status(200).json(users);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
 });
