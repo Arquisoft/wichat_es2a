@@ -409,6 +409,7 @@ useEffect(() => {
                       textAlign: 'center',
                       ...getButtonStyle(respuesta)
                     }}
+                    data-testid={`respuesta-${index}`}
                   >
                     {respuesta}
                   </Button>

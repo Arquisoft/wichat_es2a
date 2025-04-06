@@ -12,7 +12,8 @@ import {
     CircularProgress,
     Box,
 } from '@mui/material';
-import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';import { jwtDecode } from 'jwt-decode';
+import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';
+import { jwtDecode } from 'jwt-decode';
 import { useTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
 
