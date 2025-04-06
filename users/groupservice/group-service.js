@@ -15,7 +15,7 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
 mongoose.connect(mongoUri);
 
 const port = 8004;
-app.listen(port, () => {
+const server=app.listen(port, () => {
     console.log(`Server listening in port http://localhost:${port}`);
 });
 
@@ -144,7 +144,6 @@ app.get('/getUserId', async (req, res) => {
         }
         console.log("Username:", username);
         const user = await User.findOne({ username });
-        console.log("User:", user);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -156,5 +155,5 @@ app.get('/getUserId', async (req, res) => {
     }
 });
 
-module.exports = app;
+module.exports = server;
 
