@@ -16,6 +16,7 @@ import Contact from './components/Contact';
 import Profile from './components/Profile';
 import UserGroups from './components/UserGroups';
 import GroupDetails from './components/GroupDetails';
+import GameHistoryUIGroup from './components/GameHistoryUIGroup';
 
 const theme = createTheme(defaultTheme);
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
+              <Route path="/gamehistory/:userId" element={<GameHistoryUI />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />

@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Paper, Typography, Box, CircularProgress, List, ListItem,
-    ListItemText, ListItemIcon, Collapse
+    Typography, Box, CircularProgress, List, ListItem,
+    ListItemText, ListItemIcon, Paper
 } from '@mui/material';
-import { Person, AdminPanelSettings, ExpandMore, ExpandLess, Groups, CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import { Person, AdminPanelSettings, Groups } from '@mui/icons-material';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
 const GroupDetails = () => {
     const { groupName } = useParams();
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [gameHistory, setGameHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchGroupUsers = async () => {
             try {
-                const response = await axios.get(`http://localhost:8004/getGroupUsers`, {
+                const response = await axios.get(`${apiEndpoint}/group/listGroupUsers`, {
                     params: { groupName }
                 });
                 setUsers(response.data.users);
@@ -32,27 +31,16 @@ const GroupDetails = () => {
         fetchGroupUsers();
     }, [groupName]);
 
-    const fetchUserGameHistory = async (username) => {
+    const handleUserClick = async (username) => {
         try {
-            setGameHistory([]);
-            const userResponse = await axios.get(`http://localhost:8001/user/${username}`);
-            const userId = userResponse.data._id;
-            const response = await axios.get(`http://localhost:8004/getUserGameHistory`, {
-                params: { userId }
+            const response = await axios.get(`http://localhost:8004/getUserId`, {
+                params: { username }
             });
-            setGameHistory(response.data);
+            if (response.data.userId) {
+                navigate(`/gamehistory/${response.data.userId}`);
+            }
         } catch (err) {
-            console.error('Error fetching game history:', err);
-        }
-    };
-
-    const handleUserClick = (user) => {
-        if (selectedUser === user.username) {
-            setSelectedUser(null);
-            setGameHistory([]);
-        } else {
-            setSelectedUser(user.username);
-            fetchUserGameHistory(user.username);
+            console.error('Error al obtener el ID del usuario:', err);
         }
     };
 
@@ -74,81 +62,66 @@ const GroupDetails = () => {
     }
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Typography variant="h4" sx={{ mb: 3 }}>
-                <Groups sx={{ mr: 1, verticalAlign: 'middle' }} />
-                Grupo: {groupName}
-            </Typography>
+        <Box sx={{ 
+            p: 3,
+            backgroundColor: '#fff',
+            minHeight: '100vh'
+        }}>
+            <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                mb: 4,
+                backgroundColor: '#e3f2fd',
+                p: 4,
+                borderRadius: 3,
+                boxShadow: 3
+            }}>
+                <Groups sx={{ fontSize: 45, color: 'primary.main', mr: 2 }} />
+                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    Grupo: {groupName}
+                </Typography>
+            </Box>
 
-            <List component={Paper} sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <List component={Paper} sx={{ 
+                width: '100%', 
+                bgcolor: '#e3f2fd',
+                borderRadius: 2,
+                boxShadow: 2
+            }}>
                 {users.map((user) => (
-                    <React.Fragment key={user.username}>
-                        <ListItem 
-                            button 
-                            onClick={() => handleUserClick(user)}
+                    <ListItem 
+                        key={user.username}
+                        onClick={() => handleUserClick(user.username)}
+                        sx={{
+                            p: 2,
+                            cursor: 'pointer',
+                            '&:hover': { 
+                                bgcolor: 'action.hover',
+                                transform: 'translateY(-2px)',
+                                transition: 'all 0.2s ease-in-out'
+                            }
+                        }}
+                    >
+                        <ListItemIcon>
+                            {user.role === 'admin' ? 
+                                <AdminPanelSettings sx={{ fontSize: 35, color: 'primary.main' }} /> : 
+                                <Person sx={{ fontSize: 35, color: 'primary.main' }} />
+                            }
+                        </ListItemIcon>
+                        <ListItemText 
+                            primary={user.username}
+                            secondary={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                             sx={{
-                                '&:hover': { bgcolor: 'action.hover' }
+                                '& .MuiListItemText-primary': {
+                                    fontSize: '1.5rem',
+                                    fontWeight: 500
+                                },
+                                '& .MuiListItemText-secondary': {
+                                    fontSize: '1.1rem'
+                                }
                             }}
-                        >
-                            <ListItemIcon>
-                                {user.role === 'admin' ? <AdminPanelSettings color="primary" /> : <Person />}
-                            </ListItemIcon>
-                            <ListItemText 
-                                primary={user.username}
-                                secondary={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                            />
-                            {selectedUser === user.username ? <ExpandLess /> : <ExpandMore />}
-                        </ListItem>
-                        
-                        <Collapse in={selectedUser === user.username} timeout="auto" unmountOnExit>
-                            <Box sx={{ p: 2 }}>
-                                {gameHistory.length > 0 ? (
-                                    <TableContainer component={Paper} sx={{ mt: 2 }}>
-                                        <Table size="small">
-                                            <TableHead>
-                                                <TableRow sx={{ backgroundColor: 'primary.main' }}>
-                                                    <TableCell align="center" sx={{ color: 'white' }}>
-                                                        <CheckCircle sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                                        Correctas
-                                                    </TableCell>
-                                                    <TableCell align="center" sx={{ color: 'white' }}>
-                                                        <Cancel sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                                        Incorrectas
-                                                    </TableCell>
-                                                    <TableCell align="center" sx={{ color: 'white' }}>
-                                                        <AccessTime sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                                        Duración
-                                                    </TableCell>
-                                                    <TableCell align="center" sx={{ color: 'white' }}>
-                                                        <Event sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                                        Fecha
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {gameHistory.map((game, index) => (
-                                                    <TableRow key={index} sx={{ 
-                                                        backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#bbdefb'
-                                                    }}>
-                                                        <TableCell align="center">{game.correct}</TableCell>
-                                                        <TableCell align="center">{game.wrong}</TableCell>
-                                                        <TableCell align="center">{game.duration}s</TableCell>
-                                                        <TableCell align="center">
-                                                            {new Date(game.createdAt).toLocaleString('es-ES')}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                ) : (
-                                    <Typography color="textSecondary" sx={{ mt: 2, textAlign: 'center' }}>
-                                        No hay partidas registradas para este usuario
-                                    </Typography>
-                                )}
-                            </Box>
-                        </Collapse>
-                    </React.Fragment>
+                        />
+                    </ListItem>
                 ))}
             </List>
         </Box>
