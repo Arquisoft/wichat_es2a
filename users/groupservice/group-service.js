@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
+const apiEndpoint = process.env.GATEWAY_URL || 'http://localhost:8000';
 
 mongoose.connect(mongoUri);
 
@@ -99,7 +100,7 @@ app.get('/listGroupUsers', async (req, res) => {
                     const userId = member.user.toString(); 
                     console.log('Fetching username for userId:', userId); 
 
-                    const response = await axios.get('http://localhost:8000/getUsername', {
+                    const response = await axios.get(`${apiendpoint}/getUsername`, {
                         params: { userId },
                     });
 
