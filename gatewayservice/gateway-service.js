@@ -10,6 +10,11 @@ const YAML = require('yaml')
 const app = express();
 const port = 8000;
 
+const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
+const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
+const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
+const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
+
 app.use(cors());
 app.use(express.json());
 
