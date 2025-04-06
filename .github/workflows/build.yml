@@ -77,7 +77,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
           workdir: webapp
-          buildargs: API_URI
+          buildargs: GATEWAY_URL
           tags: "latest,${{ github.sha }}"
           platforms: linux/amd64,linux/arm64
 
