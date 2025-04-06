@@ -17,6 +17,7 @@ import Profile from './components/Profile';
 import UserGroups from './components/UserGroups';
 import GroupDetails from './components/GroupDetails';
 import GameHistoryUIGroup from './components/GameHistoryUIGroup';
+import Countdown from './components/Countdown'; // Importar el componente Countdown
 
 const theme = createTheme(defaultTheme);
 
@@ -50,6 +51,7 @@ function App() {
         </Box>
       </Router>
     </ThemeProvider>
+  
   );
 }
 
