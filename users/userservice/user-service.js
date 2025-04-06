@@ -1,13 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const User = require('./user-model')
+const User = require('./user-model');
+const cors = require('cors');
 
 const app = express();
 const port = 8001;
 
 // Middleware to parse JSON in request body
 app.use(express.json());
+
+// Configurar CORS: Permite solicitudes desde localhost:3000 (frontend)
+app.use(cors({
+  origin: 'http://localhost:3000',
+}));
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';

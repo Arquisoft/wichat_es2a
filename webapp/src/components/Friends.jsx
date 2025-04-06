@@ -4,6 +4,8 @@ import FriendSearch from './FriendSearch';
 import { Box, Snackbar, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8001';
+
 function Friends() {
     const theme = useTheme();
     const [friends, setFriends] = useState([]);
@@ -14,22 +16,22 @@ function Friends() {
     const username = user ? user.username : null;
 
     useEffect(() => {
-        if (username) {
-            fetch(`/users/userservice/user/${username}`)
+        if (user) {
+            fetch(`${apiEndpoint}/user/${user.username}`)
                 .then((response) => response.json())
                 .then((data) => setFriends(data.friends))
                 .catch((error) => console.error('Error fetching friends:', error));
         }
-    }, [username]);
+    }, [user]);
 
     const handleAddFriend = (friendUsername) => {
-        if (username) {
-            fetch('/users/userservice/addFriend', {
+        if (user) {
+            fetch(`${apiEndpoint}/addFriend`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, friendUsername }),
+                body: JSON.stringify({ username: user.username, friendUsername }),
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -41,7 +43,7 @@ function Friends() {
                 })
                 .then(() => {
                     setSuccessMessage(`¡${friendUsername} fue añadido a tus amigos!`);
-                    fetch(`/users/userservice/user/${username}`)
+                    fetch(`/users/userservice/user/${user.username}`)
                         .then((response) => response.json())
                         .then((data) => setFriends(data.friends))
                         .catch((error) => console.error('Error fetching updated friends:', error));
