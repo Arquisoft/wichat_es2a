@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import profilePic from '../media/fotousuario.png';
-import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,20 +12,35 @@ function FriendList({ friends, user }) {
     const theme = useTheme();
     const username = user ? user.username : '';
     const [gameHistories, setGameHistories] = useState({}); // Estado para almacenar el historial de amigos
+    const [openDialog, setOpenDialog] = useState(false); // Controla si el diálogo está abierto
+    const [friendToRemove, setFriendToRemove] = useState(null); // El amigo a eliminar
 
-    const handleRemoveFriend = async (friendUsername) => {
+    // Función para abrir el diálogo de confirmación
+    const handleOpenDialog = (friend) => {
+        setFriendToRemove(friend); // Establecer el amigo a eliminar
+        setOpenDialog(true); // Abre el diálogo
+    };
+
+    // Función para cerrar el diálogo de confirmación
+    const handleCloseDialog = () => {
+        setOpenDialog(false); // Cierra el diálogo
+    };
+
+    const handleRemoveFriend = async () => {
+
+        if (!friendToRemove) return;
+
         try {
             const response = await axios.post(`${apiEndpoint2}/removeFriend`, {
                 username: user.username,
-                friendUsername: friendUsername
+                friendUsername: friendToRemove.username
             });
-            alert(response.data.message); // Muestra un mensaje de éxito
-            // Aquí podríamos actualizar la lista de amigos después de eliminar uno
-            // Podríamos hacer un fetch de la lista de amigos actualizada, o eliminarlo del estado local.
+            console.log(response.data.message);
         } catch (error) {
             console.error('Error al eliminar amigo:', error);
-            alert(error.response ? error.response.data.error : 'Hubo un problema al eliminar el amigo.');
         }
+
+        setOpenDialog(false); // Cierra el diálogo después de eliminar
     };
 
     useEffect(() => {
@@ -90,7 +105,7 @@ function FriendList({ friends, user }) {
                         <IconButton 
                             edge="end" 
                             color="secondary" 
-                            onClick={() => handleRemoveFriend(friend.username)}
+                            onClick={() => handleOpenDialog(friend)}
                             aria-label="Eliminar amigo"
                         >
                             <DeleteIcon />
@@ -98,6 +113,23 @@ function FriendList({ friends, user }) {
                     </ListItem>
                 ))}
             </List>
+            {/* Diálogo de confirmación */}
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Confirmación</DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">
+                        ¿Estás seguro de que deseas eliminar a {friendToRemove?.username} de tus amigos?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleRemoveFriend} color="secondary">
+                        Eliminar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }
