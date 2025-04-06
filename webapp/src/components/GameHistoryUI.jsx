@@ -83,7 +83,7 @@ const GameHistoryUI = () => {
     if (!Array.isArray(gameHistory) || gameHistory.length === 0) {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-                <Typography variant="h5" gutterBottom>Historial de Partidas</Typography>
+                <Typography variant="h4" gutterBottom>Historial de Partidas</Typography>
                 <Typography color="textSecondary">No hay partidas registradas aún.</Typography>
             </Box>
         );
