@@ -41,6 +41,12 @@ function FriendList({ friends, user }) {
         return 'Nunca';
     };
 
+    // Función para obtener el número total de partidas jugadas por un amigo
+    const getTotalGamesPlayed = (friendId) => {
+        const friendHistory = gameHistories[friendId];
+        return friendHistory ? friendHistory.length : 0;
+    };
+
     return (
         <Box sx={{ width: '100%', marginRight: 2, fontFamily: theme.typography.fontFamily, fontSize: theme.typography.fontSize }}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ color: theme.palette.primary.main }}>
@@ -62,7 +68,7 @@ function FriendList({ friends, user }) {
                         </ListItemAvatar>
                         <ListItemText 
                             primary={friend.username} 
-                            secondary={`Última vez en línea: ${getLastGameDate(friend._id)}`} 
+                            secondary={`Última partida: ${getLastGameDate(friend._id)} | Total de partidas: ${getTotalGamesPlayed(friend._id)}`} 
                         />
                     </ListItem>
                 ))}
