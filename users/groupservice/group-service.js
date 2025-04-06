@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors');
 const Group = require('./group-model');
-const userSchema = require('../userservice/user-model').schema;
-const User = mongoose.model('User', userSchema);
 
 app.use(cors());
 app.use(express.json());
@@ -88,15 +86,40 @@ app.get('/listGroupUsers', async (req, res) => {
             return res.status(400).json({ error: 'Group name is required' });
         }
 
-        const group = await Group.findOne({ groupName }).populate('users.user', 'username');
+        const group = await Group.findOne({ groupName });
         if (!group) {
             return res.status(404).json({ error: 'Group not found' });
         }
 
-        const users = group.users.map(member => ({
-            username: member.user.username,
-            role: member.role
-        }));
+        console.log('Group users:', group.users);
+
+        const users = await Promise.all(
+            group.users.map(async (member) => {
+                try {
+                    const userId = member.user.toString(); 
+                    console.log('Fetching username for userId:', userId); 
+
+                    const response = await axios.get('http://localhost:8000/getUsername', {
+                        params: { userId },
+                    });
+
+                    console.log('Username response:', response.data); 
+
+                    return {
+                        userId: member.user,
+                        username: response.data.username,
+                        role: member.role,
+                    };
+                } catch (error) {
+                    console.error(`Error fetching username for userId ${member.user}:`, error);
+                    return {
+                        userId: member.user,
+                        username: 'Unknown',
+                        role: member.role,
+                    };
+                }
+            })
+        );
 
         res.json({ groupName: group.groupName, users });
     } catch (error) {
@@ -132,26 +155,6 @@ app.get('/listGroups', async (req, res) => {
     } catch (error) {
         console.error("Error al obtener los grupos:", error);
         res.json([]); // En caso de error, devolver array vacío
-    }
-});
-
-app.get('/getUserId', async (req, res) => {
-    try {
-        const { username } = req.query;
-
-        if (!username) {
-            return res.status(400).json({ error: 'Username is required' });
-        }
-        console.log("Username:", username);
-        const user = await User.findOne({ username });
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        res.json({ userId: user._id });
-    } catch (error) {
-        console.error("Error fetching user ID:", error);
-        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

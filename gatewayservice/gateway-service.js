@@ -217,7 +217,15 @@ app.get('/group/listGroupUsers', async (req, res) => {
 });
 app.get('/getUserId', async (req, res) => {
   try {
-    const response = await axios.get(`${groupServiceUrl}/getUserId`, { params: req.query });
+    const response = await axios.get(`${userServiceUrl}/getUserId`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+  }
+});
+app.get('/getUsername', async (req, res) => {
+  try {
+    const response = await axios.get(`${userServiceUrl}/getUsername`, { params: req.query });
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
