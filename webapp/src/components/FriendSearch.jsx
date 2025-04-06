@@ -11,7 +11,7 @@ function FriendSearch({ onAddFriend }) {
     // Realizar la búsqueda de usuarios en el backend
     const searchUsers = async (query) => {
         try {
-            const response = await axios.get(`http://localhost:8001/listUsers?query=${query}`);
+            const response = await axios.get(`http://localhost:8001/searchUsers?query=${query}`);
             setUserResults(response.data);  // Actualizar los resultados de la búsqueda
         } catch (error) {
             console.error('Error al buscar usuarios:', error);

@@ -125,7 +125,7 @@ app.get('/listUsers', async (req, res) => {
   });
 
 // Endpoint para obtener la lista de usuarios que coinciden con el texto de búsqueda
-app.get('/listUsers', async (req, res) => {
+app.get('/searchUsers', async (req, res) => {
   try {
       const { query } = req.query;
       if (!query) {
