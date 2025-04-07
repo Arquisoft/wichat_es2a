@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - Test-Workflows
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
@@ -27,8 +26,6 @@ on:
 
 jobs:
   unit-tests:
-    # if: github.event_name != 'workflow_dispatch' || inputs.runTests == 'true'
-    if: inputs.runTests == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -55,8 +52,6 @@ jobs:
         EMPATHY_API_KEY: ${{ secrets.EMPATHY_API_KEY }}
         
   docker-push-webapp:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push webapp Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -82,8 +77,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
   docker-push-authservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push auth service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -106,8 +99,6 @@ jobs:
           tags: "latest,${{ github.sha }}"
           
   docker-push-userservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push user service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -130,8 +121,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
 
   docker-push-llmservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push llm service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -154,8 +143,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
 
   docker-push-gatewayservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push gateway service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -182,8 +169,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
 
   docker-push-wikidata:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push wikidata service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -206,8 +191,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
   
   docker-push-apiservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push apiservice Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -230,8 +213,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
     
   docker-push-groupservice:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Push group service Docker Image to GitHub Packages
     runs-on: ubuntu-latest
     permissions:
@@ -254,8 +235,6 @@ jobs:
         tags: "latest,${{ github.sha }}"
 
   deploy-to-oracle:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    if: github.event_name == 'push'
     name: Deploy to Oracle Machine
     runs-on: ubuntu-latest
     needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-apiservice,docker-push-groupservice]
@@ -270,13 +249,13 @@ jobs:
           mkdir -p wichat_es2a
           cd wichat_es2a
           rm -rf ./*
-          wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/Test-Workflows/docker-compose.yml -O docker-compose.yml
+          wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
           rm -f .env
           touch .env
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
           echo "EMPATHY_API_KEY=${{ secrets.EMPATHY_API_KEY }}" >> .env
           echo "DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}" >> .env
                     sudo docker logout ghcr.io
-          sudo docker logout ghcr
-          sudo docker image prune -f
-          sudo docker compose --profile prod up -d --pull always
+          docker logout ghcr
+          docker image prune -f
+          docker compose --profile prod up -d --pull always

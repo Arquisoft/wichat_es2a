@@ -257,6 +257,6 @@ jobs:
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/llmservice:latest|ghcr.io/arquisoft/wichat_es2a/llmservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest|ghcr.io/arquisoft/wichat_es2a/gatewayservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
            sed -i 's|ghcr.io/arquisoft/wichat_es2a/wikidata:latest|ghcr.io/arquisoft/wichat_es2a/wikidata:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
-           sudo docker compose --profile prod down
-           sudo docker compose --profile prod pull
-           sudo docker compose --profile prod up -d
+           docker compose --profile prod down
+           docker compose --profile prod pull
+           docker compose --profile prod up -d
