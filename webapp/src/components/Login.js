@@ -18,9 +18,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);  // Estado para manejar la carga
   const navigate = useNavigate(); // Hook de navegación
 
-  // Variables de entorno para la API y la clave de la API
-  const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
-  const apiKey = process.env.REACT_APP_LLM_API_KEY || 'None';
+  // Variable de entorno para la API
+  const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
   // Función para autenticar al usuario
   const loginUser = async () => {

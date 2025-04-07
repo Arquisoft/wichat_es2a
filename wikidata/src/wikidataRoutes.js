@@ -3,10 +3,8 @@ const app = express();
 const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
-const cors = require('cors');
 const { Game } = require("../src/model/wikidataModel");
 
-app.use(cors());
 app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/wikidatadb";

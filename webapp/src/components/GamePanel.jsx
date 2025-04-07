@@ -11,7 +11,7 @@ import loading from '../media/loading.gif';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
 

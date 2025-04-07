@@ -16,11 +16,7 @@ const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
 const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
 const groupServiceUrl = process.env.GROUP_SERVICE_URL || 'http://localhost:8004';
 
-// Configure CORS to allow requests from webapp
-app.use(cors({
-  origin: process.env.WEBAPP_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 //Prometheus configuration

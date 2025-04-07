@@ -1,7 +1,6 @@
 const axios = require('axios');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const Conversation = require('./conversation-model');
 require('dotenv').config();
 
@@ -9,15 +8,12 @@ const app = express();
 app.disable('x-powered-by');
 const port = 8003;
 
-// CORS configuration
-app.use(cors());
+// Middleware to parse JSON in request body
+app.use(express.json());
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/llmdb';
 mongoose.connect(mongoUri);
-
-// Middleware to parse JSON in request body
-app.use(express.json());
 
 // Define configurations for different LLM APIs
 const llmConfigs = {

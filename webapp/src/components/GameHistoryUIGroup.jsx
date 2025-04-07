@@ -17,7 +17,7 @@ import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const GameHistoryUIGroup = () => {
     const { username } = useParams();
