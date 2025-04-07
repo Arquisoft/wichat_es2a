@@ -183,6 +183,140 @@ app.post('/removeFriend', async (req, res) => {
   }
 });
 
+// Ruta para aceptar una solicitud de amistad
+app.post('/acceptFriendRequest', async (req, res) => {
+  try {
+      const { username, friendUsername } = req.body;
+
+      const user = await User.findOne({ username });
+      const friend = await User.findOne({ username: friendUsername });
+
+      if (!user || !friend) {
+          return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      // Verificar que la solicitud esté presente en la lista de solicitudes
+      const requestIndex = user.friendRequests.indexOf(friend._id);
+      if (requestIndex === -1) {
+          return res.status(400).json({ error: "No hay solicitud pendiente de este usuario" });
+      }
+
+      // Mover el usuario de solicitudes a amigos en ambas direcciones
+      user.friendRequests.splice(requestIndex, 1);
+      friend.friendRequests.splice(friend.friendRequests.indexOf(user._id), 1);
+
+      user.friends.push(friend._id);
+      friend.friends.push(user._id);
+
+      await user.save();
+      await friend.save();
+
+      res.status(200).json({ message: `¡Ahora son amigos! ${username} y ${friendUsername}` });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+// Ruta para rechazar una solicitud de amistad
+app.post('/rejectFriendRequest', async (req, res) => {
+  try {
+      const { username, friendUsername } = req.body;
+
+      const user = await User.findOne({ username });
+      const friend = await User.findOne({ username: friendUsername });
+
+      if (!user || !friend) {
+          return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      // Verificar que la solicitud esté presente en la lista de solicitudes
+      const requestIndex = user.friendRequests.indexOf(friend._id);
+      if (requestIndex === -1) {
+          return res.status(400).json({ error: "No hay solicitud pendiente de este usuario" });
+      }
+
+      // Eliminar la solicitud de ambas listas
+      user.friendRequests.splice(requestIndex, 1);
+      friend.friendRequests.splice(friend.friendRequests.indexOf(user._id), 1);
+
+      await user.save();
+      await friend.save();
+
+      res.status(200).json({ message: `Solicitud de amistad rechazada de ${friendUsername}` });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint para obtener las solicitudes de amistad de un usuario
+app.get('/listRequests', async (req, res) => {
+  const { username } = req.query;  // Usamos query params para recibir el 'username'
+
+  if (!username) {
+      return res.status(400).json({ error: 'Se requiere el nombre de usuario' });
+  }
+
+  try {
+      // Buscar al usuario por su nombre de usuario
+      const user = await User.findOne({ username });
+
+      if (!user) {
+          return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      // Devolvemos las solicitudes de amistad pendientes
+      res.status(200).json({ requests: user.friendRequests });
+  } catch (error) {
+      console.error('Error al obtener las solicitudes de amistad:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Ruta para enviar una solicitud de amistad
+app.post('/sendFriendRequest', async (req, res) => {
+  try {
+      // Verificar que los campos requeridos estén presentes
+      validateRequiredFields(req, ['username', 'friendUsername']);
+      const { username, friendUsername } = req.body;
+
+      // Verificar que el usuario no intente enviarse una solicitud de amistad a sí mismo
+      if (username === friendUsername) {
+          return res.status(400).json({ error: "No puedes enviarte una solicitud de amistad a ti mismo" });
+      }
+
+      // Buscar al usuario y al amigo
+      const user = await User.findOne({ username });
+      const friend = await User.findOne({ username: friendUsername });
+
+      // Verificar que ambos usuarios existan
+      if (!user || !friend) {
+          return res.status(404).json({ error: "Usuario o amigo no encontrado" });
+      }
+
+      // Verificar que no sean ya amigos
+      if (user.friends.includes(friend._id)) {
+          return res.status(400).json({ error: "Ya son amigos" });
+      }
+
+      // Verificar que no haya una solicitud de amistad pendiente
+      if (friend.friendRequests.includes(user._id)) {
+          return res.status(400).json({ error: "Ya has enviado una solicitud de amistad a este usuario" });
+      }
+
+      // Añadir el usuario a la lista de solicitudes de amistad del amigo
+      friend.friendRequests.push(user._id);
+
+      // Guardar los cambios
+      await friend.save();
+
+      // Responder con el mensaje de éxito
+      res.status(200).json({ message: `Solicitud de amistad enviada a ${friendUsername}` });
+
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
 });
