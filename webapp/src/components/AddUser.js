@@ -5,7 +5,7 @@ import { Container, Grid, Typography, TextField, Button, Snackbar, Alert } from 
 import { useNavigate, Link } from 'react-router-dom';
 import image from '../media/login.svg';
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const AddUser = () => {
   const [username, setUsername] = useState('');

@@ -6,10 +6,8 @@ WORKDIR /app
 #Install the dependencies
 RUN npm install
 
-ARG API_URI="http://localhost:8000"
-ARG LLM_API_KEY
-ENV REACT_APP_API_ENDPOINT=$API_URI
-ENV REACT_APP_LLM_API_KEY=$LLM_API_KEY
+ARG GATEWAY_URL="http://localhost:8000"
+ENV REACT_APP_GATEWAY_URL=$GATEWAY_URL
 
 #Create an optimized version of the webapp
 RUN npm run build

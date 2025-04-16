@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, Button, Snackbar, Alert, CircularProgress, LinearProgress } from '@mui/material';
+import { Box, Grid, Paper, Typography, Button, CircularProgress, LinearProgress } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import Countdown from './Countdown';
+import loading from '../media/loading.gif';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
-const CATEGORY = "Lugares";
+
 
 const GamePanel = () => {
+
+  // Obtenemos la categoría pasada en la URL
+  const location = useLocation(); // Obtienes la ubicación de la URL
+  const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
+  const category = queryParams.get('category'); // Obtenemos el parámetro "category"
+
+
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
     question: '',
@@ -19,31 +33,38 @@ const GamePanel = () => {
   });
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  const [countdownKey, setCountdownKey] = useState(0);
+
+  
 
   const getQuestions = async () => {
     try {
-      const response = await fetch("http://localhost:3001/wikidata/question?category="+CATEGORY+"&n="+TOTAL_QUESTIONS);
-      const data = await response.json();
-      if (data && data.length > 0) {
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
+      const data = response.data;
+      if (data && data.length == TOTAL_QUESTIONS) {
+        console.log("Preguntas recibidas: ", data.length);
         setQuestions(data);
       } else {
         console.error("No se recibieron preguntas válidas.");
+        getQuestions();
       }
     } catch (error) {
       console.error("Error al recibir preguntas: ", error);
     }
   };
+  
 
-  const chooseQuestion = () => {
+  const chooseQuestion = async () => {
     if (questions.length === 0) {
-      getQuestions();
+      await getQuestions();
       return;
     }
     const randomIndex = Math.floor(Math.random() * questions.length);
@@ -66,24 +87,38 @@ const GamePanel = () => {
     });
   };
 
+  const resetCountdownTime = () => {
+    setCountdownKey(prev => prev + 1);
+  }
+
+
+  // Esta función se pasa al Countdown y se ejecutará cuando termine el tiempo
+  const handleCountdownFinish = () => {
+    nextQuestion();
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
+      setGameEnded(true);
+    } else {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setSelectedAnswer(null);
+      chooseQuestion();
+      resetCountdownTime();
+    }
+  }
+
+
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     if (answer === questionData.correctAnswer) {
-      setSnackbar({ open: true, message: 'Respuesta correcta', severity: 'success' });
       setCorrectCount(prev => prev + 1);
     } else {
-      setSnackbar({ open: true, message: 'Respuesta incorrecta', severity: 'error' });
       setIncorrectCount(prev => prev + 1);
     }
 
     setTimeout(() => {
-      if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
-        setGameEnded(true);
-      } else {
-        setCurrentQuestionIndex(prev => prev + 1);
-        setSelectedAnswer(null);
-        chooseQuestion();
-      }
+      nextQuestion();
     }, 2000);
   };
 
@@ -109,6 +144,54 @@ const GamePanel = () => {
     setInitialLoading(true);
     getQuestions();
   };
+  const getUserId = () => {
+    try {
+        const userDataStr = window.localStorage.getItem('user');
+        if (!userDataStr) {
+            return null;
+        }
+        
+        const userData = JSON.parse(userDataStr);
+        const parsedToken = userData?.token;
+        
+        if (parsedToken) {
+            const decoded = jwtDecode(userData.token);
+            const decodedUserId = decoded?.userId;
+            if (decodedUserId) {
+                return decodedUserId;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("Error al recuperar userId:", error);
+        return null;
+    }
+};
+
+  const startGame = async () => {
+    try {
+        const userId = getUserId();
+        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+    } catch (error) {
+        console.error('Error al iniciar el juego:', error);
+    }
+};
+
+const endGame = async () => {
+    try {
+        const userId = getUserId();
+        if (userId) {
+            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+        }
+    } catch (error) {
+        console.error('Error al finalizar el juego:', error);
+    }
+};
+
+useEffect(() => {
+    startGame();
+}, []);
 
   useEffect(() => {
     getQuestions();
@@ -140,12 +223,12 @@ const GamePanel = () => {
       <ThemeProvider theme={theme}>
         <Grid
           container
-          style={{ height: '100vh' }}
+          style={{ height: '90vh' }}
           direction="column"
           justifyContent="center"
           alignItems="center"
         >
-          <CircularProgress style={{ marginBottom: '16px' }} />
+          <img src={loading} alt="Loading" />
           <Typography variant="h6">Cargando preguntas...</Typography>
         </Grid>
       </ThemeProvider>
@@ -154,6 +237,7 @@ const GamePanel = () => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
@@ -200,7 +284,7 @@ const GamePanel = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container style={{ height: '100vh', overflow: 'hidden' }}>
+      <Grid container style={{ height: '90vh', overflow: 'hidden' }}>
         <Grid item xs={12} style={{ height: '20px' }} />
         <Grid
           item
@@ -216,17 +300,55 @@ const GamePanel = () => {
             position: 'relative',
           }}
         >
-          <Paper elevation={3} style={{ padding: '16px', height: '100%' }}>
+
+      
+
+
+          <Box 
+            style={{ 
+              display: 'flex', 
+              flexDirection:'column', 
+              justifyContent: 'space-between', 
+              alignItems: 'center' 
+              }}>
+          
+          <Box
+            style={{ 
+              display: 'flex', 
+              flexDirection:'row', 
+              justifyContent: 'space-around', 
+              width: '100%'
+              }}>
+
+            {/* Texto con el indice de la pregunta */}
+            <Typography variant="h4" align="center">
+                  {`Pregunta ${currentQuestionIndex + 1} de ${TOTAL_QUESTIONS}`}
+            </Typography>
+
+            {/* Cuenta atras del tiempo para responder esa pregunta */}
+            <Countdown 
+              key={countdownKey} 
+              questionTime={10} 
+              onCountdownFinish={handleCountdownFinish}
+            />
+          </Box>
+          
+
+
+          
+          <Paper elevation={3} style={{ padding: '2%', height: '100%' }}>
+
             <Typography variant="h4" align="center" gutterBottom>
               {questionData.question}
             </Typography>
+
             {/* Contenedor de la imagen con spinner y mensaje overlay mientras carga */}
             <Box
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: '20px',
+                marginTop: '3%',
                 position: 'relative',
               }}
             >
@@ -256,11 +378,12 @@ const GamePanel = () => {
                 onError={() => setImageLoaded(true)}
                 style={{
                   width: '100%',
-                  maxWidth: '400px',
-                  maxHeight: '400px',
-                  objectFit: 'contain',
+                  maxWidth: '70vw',
+                  maxHeight: '40vh',  
+                  height: '50%',   
+                  objectFit: 'contain', 
                   opacity: imageLoaded ? 1 : 0.7,
-                }}
+                }}                
               />
             </Box>
             <Grid
@@ -286,6 +409,7 @@ const GamePanel = () => {
                       textAlign: 'center',
                       ...getButtonStyle(respuesta)
                     }}
+                    data-testid={`respuesta-${index}`}
                   >
                     {respuesta}
                   </Button>
@@ -293,6 +417,11 @@ const GamePanel = () => {
               ))}
             </Grid>
           </Paper>
+
+          </Box>
+
+
+
         </Grid>
         {showChat && (
           <Grid
@@ -336,20 +465,6 @@ const GamePanel = () => {
           </Button>
         )}
       </Grid>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </ThemeProvider>
   );
 };

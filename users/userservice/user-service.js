@@ -1,4 +1,3 @@
-// user-service.js
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -13,8 +12,6 @@ app.use(express.json());
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
 mongoose.connect(mongoUri);
-
-
 
 // Function to validate required fields in the request body
 function validateRequiredFields(req, requiredFields) {
@@ -102,6 +99,46 @@ app.get('/user/:username', async (req, res) => {
   } catch (error) {
       res.status(500).json({ error: error.message });
   }
+});
+
+app.get('/getUserId', async (req, res) => {
+  try {
+      const { username } = req.query;
+
+      if (!username) {
+          return res.status(400).json({ error: 'Username is required' });
+      }
+      console.log("Username:", username);
+      const user = await User.findOne({ username });
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json({ userId: user._id });
+  } catch (error) {
+      console.error("Error fetching user ID:", error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/getUsername', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        console.log("User ID:", userId);
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        const user = await User.findById(userId, 'username'); // Fetch only the username field
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ username: user.username });
+    } catch (error) {
+        console.error("Error fetching username:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 const server = app.listen(port, () => {

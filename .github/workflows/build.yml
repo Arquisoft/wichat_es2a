@@ -5,6 +5,25 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: '¿Desplegar en producción?'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      runTests:
+        description: 'Ejecutar tests'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -18,14 +37,234 @@ jobs:
     - run: npm --prefix llmservice ci
     - run: npm --prefix gatewayservice ci
     - run: npm --prefix webapp ci
+    - run: npm --prefix wikidata ci
     - run: npm --prefix users/authservice test -- --coverage
     - run: npm --prefix users/userservice test -- --coverage
     - run: npm --prefix llmservice test -- --coverage
     - run: npm --prefix gatewayservice test -- --coverage
     - run: npm --prefix webapp test -- --coverage
+    - run: npm --prefix wikidata test -- --coverage
     - name: Analyze with SonarQube
       uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMPATHY_API_KEY: ${{ secrets.EMPATHY_API_KEY }}
+        
+  docker-push-webapp:
+    name: Push webapp Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      env:
+        GATEWAY_URL: http://${{ secrets.DEPLOY_HOST }}:8000
+      with:
+          name: arquisoft/wichat_es2a/webapp
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          workdir: webapp
+          buildargs: GATEWAY_URL
+          tags: "latest,${{ github.sha }}"
+          platforms: linux/amd64,linux/arm64
+
+  docker-push-authservice:
+    name: Push auth service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+          name: arquisoft/wichat_es2a/authservice
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          workdir: users/authservice
+          platforms: linux/amd64,linux/arm64
+          tags: "latest,${{ github.sha }}"
+          
+  docker-push-userservice:
+    name: Push user service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/userservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: users/userservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+
+  docker-push-llmservice:
+    name: Push llm service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/llmservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: llmservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+
+  docker-push-gatewayservice:
+    name: Push gateway service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Update OpenAPI configuration
+      run: |
+        DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}
+        sed -i "s/SOMEIP/${DEPLOY_HOST}/g" gatewayservice/openapi.yaml
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/gatewayservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: gatewayservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+
+  docker-push-wikidata:
+    name: Push wikidata service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/wikidata
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: wikidata
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+  
+  docker-push-apiservice:
+    name: Push apiservice Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/apiservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: apiservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+    
+  docker-push-groupservice:
+    name: Push group service Docker Image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: []
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/groupservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: users/groupservice
+        platforms: linux/amd64,linux/arm64
+        tags: "latest,${{ github.sha }}"
+
+  deploy-to-oracle:
+    name: Deploy to Oracle Machine
+    runs-on: ubuntu-latest
+    needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-apiservice,docker-push-groupservice]
+    if: github.event_name == 'push'
+    steps:
+    - name: Deploy over SSH
+      uses: fifsky/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        user: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        command: |
+          mkdir -p wichat_es2a
+          cd wichat_es2a
+          rm -rf ./*
+          wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
+          rm -f .env
+          touch .env
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+          echo "EMPATHY_API_KEY=${{ secrets.EMPATHY_API_KEY }}" >> .env
+          echo "DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}" >> .env
+                    sudo docker logout ghcr.io
+          docker logout ghcr
+          docker image prune -f
+          docker compose --profile prod up -d --pull always
