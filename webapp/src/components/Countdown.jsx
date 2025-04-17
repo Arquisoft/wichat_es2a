@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // Añadimos la hoja de estilos para la animación del circulo
 import './Countdown.css';
 
-const Countdown = ( {questionTime, onCountdownFinish}) => {
+const Countdown = ( {timerLevel, onCountdownFinish}) => {
 
     
     // Tiempo por pregunta: 30 segundos
@@ -12,8 +12,28 @@ const Countdown = ( {questionTime, onCountdownFinish}) => {
     // Se escoge al crear el componente
 
     // Si no se pasa el tiempo de pregunta, se usa el valor por defecto
-    const defaultQuestionTime = 30;
-    questionTime = questionTime || defaultQuestionTime;
+    // const defaultQuestionTime = 30;
+    // questionTime = questionTime || defaultQuestionTime;
+
+
+    // Ahora no se le pasa el tiempo
+    // Se le pasa el nivel y ya calcula el compontente el tiempo
+    let questionTime = 0;
+    switch (timerLevel) {
+        case 'facil':
+            questionTime = 120;
+            break;
+        case 'medio':
+            questionTime = 30;
+            break;
+        case 'dificil':
+            questionTime = 10;
+            break;
+        default:
+            questionTime = 30; // Valor por defecto
+    }
+
+
 
     // Constantes graficas
 
