@@ -42,6 +42,8 @@ const GamePanel = () => {
   const [userId, setUserId] = useState(null);
 
   const [countdownKey, setCountdownKey] = useState(0);
+  const [isAnswered, setIsAnswered] = useState(false);
+
 
   
 
@@ -94,8 +96,12 @@ const GamePanel = () => {
 
   // Esta función se pasa al Countdown y se ejecutará cuando termine el tiempo
   const handleCountdownFinish = () => {
-    nextQuestion();
+    if (!isAnswered) {
+      nextQuestion();
+    }
   };
+  
+
 
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
@@ -103,24 +109,29 @@ const GamePanel = () => {
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
+      setIsAnswered(false);
       chooseQuestion();
       resetCountdownTime();
     }
-  }
+  };
+  
 
 
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
+    setIsAnswered(true);
+  
     if (answer === questionData.correctAnswer) {
       setCorrectCount(prev => prev + 1);
     } else {
       setIncorrectCount(prev => prev + 1);
     }
-
+  
     setTimeout(() => {
       nextQuestion();
     }, 2000);
   };
+  
 
   const getButtonStyle = (respuesta) => {
     if (!selectedAnswer) return {};
