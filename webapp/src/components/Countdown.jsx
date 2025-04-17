@@ -4,18 +4,6 @@ import './Countdown.css';
 
 const Countdown = ( {timerLevel, onCountdownFinish}) => {
 
-    
-    // Tiempo por pregunta: 30 segundos
-    //const questionTime = 30;
-
-    // Ahora el tiempo de pregunta esta parametrizado
-    // Se escoge al crear el componente
-
-    // Si no se pasa el tiempo de pregunta, se usa el valor por defecto
-    // const defaultQuestionTime = 30;
-    // questionTime = questionTime || defaultQuestionTime;
-
-
     // Ahora no se le pasa el tiempo
     // Se le pasa el nivel y ya calcula el compontente el tiempo
     let questionTime = 0;
@@ -32,7 +20,6 @@ const Countdown = ( {timerLevel, onCountdownFinish}) => {
         default:
             questionTime = 30; // Valor por defecto
     }
-
 
 
     // Constantes graficas
