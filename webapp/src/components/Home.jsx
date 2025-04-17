@@ -9,8 +9,12 @@ const Home = () => {
 
   // Estado para la categoría del juego
   const [category, setCategory] = useState('');
-  const [error, setError] = useState(false); // Para gestionar errores en la selección de categoría
+  const [categoryError, setError] = useState(false); // Para gestionar errores en la selección de categoría
   const navigate = useNavigate(); // Hook para la navegación programática
+
+  // Estado para los niveles del juego
+  const [level, setLevel] = useState('');
+  const [levelError, setLevelError] = useState(false);
 
 
   // Objeto para mapear categorías con emojis
@@ -37,15 +41,30 @@ const Home = () => {
     setError(false);
   };
 
+
+  // Objeto para mapear niveles con emojis
+  const gameLevels = {
+    "facil": "🟢 Fácil",
+    "medio": "🟡 Medio",
+    "dificil": "🔴 Difícil"
+  };
+
+  // Manejador del cambio de nivel
+  const handleLevelChange = (event) => {
+    setLevel(event.target.value);
+    setLevelError(false);
+  };
+
   // Función para manejar el inicio del juego
   // Esta función se ejecuta cuando el usuario hace clic en el botón "Comenzar a jugar"
-  // Verifica si se ha seleccionado una categoría y navega a la ruta del juego con la categoría seleccionada
+  // Verifica si se ha seleccionado una categoría y un nivel y navega a la ruta del juego con la categoría seleccionada
   const handleStartGame = () => {
     console.log('Boton Comenzar pulsado');
-    if (!category) {
-      setError(true);
+    if (!category || !level) {
+      setError(!category);
+      setLevelError(!level);
     } else {
-      navigate(`/game?category=${category}`);
+      navigate(`/game?category=${category}&level=${level}`);
     }
   };
 
@@ -64,7 +83,7 @@ const Home = () => {
 
 
           {/* Selector de categorías */}
-          <FormControl fullWidth error={error} sx={{ marginBottom: 2 }}>
+          <FormControl fullWidth error={categoryError} sx={{ marginBottom: 2 }}>
             <InputLabel id="category-select-label">Seleccionar categoría</InputLabel>
             <Select
               labelId="category-select-label"
@@ -83,9 +102,33 @@ const Home = () => {
             </Select>
 
             {/* Mensaje de error si no se selecciona una categoría */}
-            {error && <FormHelperText>Por favor, selecciona una categoría.</FormHelperText>}
+            {categoryError && <FormHelperText>Por favor, selecciona una categoría.</FormHelperText>}
 
           </FormControl>
+
+
+          {/* Selector de niveles */}
+          <FormControl fullWidth error={levelError} sx={{ marginBottom: 2 }}>
+
+            <InputLabel id="level-select-label">Seleccionar nivel</InputLabel>
+            <Select
+              labelId="level-select-label"
+              value={level}
+              label="Seleccionar nivel"
+              onChange={handleLevelChange}
+              displayEmpty
+            >
+              {Object.entries(gameLevels).map(([key, label]) => (
+                <MenuItem key={key} value={key}>
+                  {label}
+                </MenuItem>
+              ))}
+
+            </Select>
+            {levelError && <FormHelperText>Por favor, selecciona un nivel.</FormHelperText>}
+
+          </FormControl>
+
 
 
           <Box>
