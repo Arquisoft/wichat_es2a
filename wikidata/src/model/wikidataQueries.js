@@ -162,14 +162,15 @@ module.exports = [
                 {
                     SELECT ?item ?itemLabel ?image WHERE {
                     ?item wdt:P31 wd:Q5;                      # Es humano
-                            wdt:P106 wd:Q2066131;              # Tiene ocupación
+                            wdt:P106 wd:Q2066131;              # Deportista
                             wdt:P27 wd:Q29;                    # Nacionalidad española
                             wdt:P18 ?image.                    # Tiene imagen
+                            ?item wikibase:sitelinks ?sitelinks.  # Cuántas Wikipedias lo enlazan
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
                     } LIMIT 200
                 }
                 }
-                ORDER BY RAND()
+                ORDER BY DESC(?sitelinks)               # Ordenar por fama
                 LIMIT 10
                 `,
             statement: "¿Quién es este deportista español?"
