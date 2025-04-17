@@ -24,6 +24,8 @@ const Home = () => {
     "Cantantes": "🎤",
     "Filosofos": "🧠",
     "Actores": "🎬",
+    "Científicos": "🔬",
+    "DeportistasEspañoles": "🏅",
     "Lugares": "🌍",
     "Banderas": "🏳️‍🌈",
   };

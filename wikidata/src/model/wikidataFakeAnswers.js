@@ -147,29 +147,29 @@ module.exports = [{
   {
     category: "Futbolistas",
     answers: [
-      "Lionel Messi", "Cristiano Ronaldo", "Pelé", "Diego Maradona", "Neymar", "Kylian Mbappé", "Zinedine Zidane", "Ronaldinho", "Johan Cruyff", "Franz Beckenbauer",
-      "Ronaldo Nazário", "Andrés Iniesta", "Xavi Hernández", "Thierry Henry", "David Beckham", "Roberto Baggio", "Paolo Maldini", "Franco Baresi", "Lev Yashin", "Manuel Neuer",
-      "Gianluigi Buffon", "Iker Casillas", "Sergio Ramos", "Carles Puyol", "Gerard Piqué", "Virgil van Dijk", "Alessandro Nesta", "Fabio Cannavaro", "Philipp Lahm", "Marcelo",
-      "Dani Alves", "Javier Zanetti", "Andrea Pirlo", "Luka Modrić", "Toni Kroos", "Kevin De Bruyne", "Steven Gerrard", "Frank Lampard", "Paul Scholes", "Ryan Giggs",
-      "Wayne Rooney", "Didier Drogba", "Samuel Eto'o", "George Weah", "Romário", "Hristo Stoichkov", "Gerd Müller", "Miroslav Klose", "Gary Lineker", "Alan Shearer",
-      "Fernando Torres", "Raúl González", "Karim Benzema", "Robert Lewandowski", "Harry Kane", "Sergio Agüero", "Luis Suárez", "Edinson Cavani", "Zlatan Ibrahimović", "Radamel Falcao",
-      "James Rodríguez", "Arjen Robben", "Franck Ribéry", "Eden Hazard", "Mohamed Salah", "Sadio Mané", "N'Golo Kanté", "Paul Pogba", "Antoine Griezmann", "Kaká",
-      "Rivaldo", "Ronald Koeman", "Clarence Seedorf", "Edgar Davids", "Patrick Vieira", "Claude Makélélé", "Roy Keane", "Michael Ballack", "Bastian Schweinsteiger", "Xabi Alonso",
-      "Sergio Busquets", "David Silva", "Juan Mata", "Mesut Özil", "Cesc Fàbregas", "Robin van Persie", "Luis Figo", "Rui Costa", "Deco", "Pavel Nedvěd",
-      "Alessandro Del Piero", "Francesco Totti", "Gabriel Batistuta", "Hernán Crespo", "Juan Román Riquelme", "Carlos Tevez", "Javier Mascherano", "Ángel Di María", "Gonzalo Higuaín", "Paolo Rossi",
-      "Roberto Carlos", "Cafu", "Dunga", "Bebeto", "Philippe Coutinho", "Vinícius Júnior", "Casemiro", "Thiago Silva", "Marquinhos", "Alisson Becker",
-      "Ederson", "Gabriel Jesus", "Richarlison", "Firmino", "Fernandinho", "Douglas Costa", "Willian", "Oscar", "Hulk", "Alexandre Pato",
-      "Juninho Pernambucano", "Zico", "Sócrates", "Falcão", "Taffarel", "Dida", "Júlio César", "Lúcio", "Gilberto Silva", "Kléberson",
-      "Mauro Silva", "Bebeto", "Rivaldo", "Ronaldinho Gaúcho", "Denílson", "Robinho", "Alex", "Julio Baptista", "Adriano", "Kaká",
-      "Juan Román Riquelme", "Juan Sebastián Verón", "Claudio Caniggia", "Gabriel Omar Batistuta", "Diego Simeone", "Javier Zanetti", "Esteban Cambiasso", "Walter Samuel", "Hernán Crespo", "Sergio Agüero",
-      "Carlos Valderrama", "René Higuita", "Faustino Asprilla", "Radamel Falcao", "James Rodríguez", "Juan Cuadrado", "David Ospina", "Yerry Mina", "James Rodríguez", "Iván Córdoba",
-      "Andrés Escobar", "Freddy Rincón", "Carlos Valderrama", "Óscar Córdoba", "Faryd Mondragón", "Mario Yepes", "Juan Pablo Ángel", "Hugo Rodallega", "Falcao", "James Rodríguez",
-      "Iker Muniain", "Aritz Aduriz", "Xabi Prieto", "Asier Illarramendi", "Ander Herrera", "Javi Martínez", "Mikel Arteta", "Xabi Alonso", "David Villa", "Fernando Torres",
-      "Juan Mata", "Santi Cazorla", "Cesc Fàbregas", "Pepe Reina", "Gerard Piqué", "Carles Puyol", "Sergio Busquets", "Andrés Iniesta", "Xavi Hernández", "Víctor Valdés",
-      "Iker Casillas", "Sergio Ramos", "Raúl González", "Fernando Hierro", "Fernando Morientes", "Michel Salgado", "Claude Makélélé", "Iván Helguera", "Míchel", "Emilio Butragueño",
-      "Hugo Sánchez", "Rafael Márquez", "Cuauhtémoc Blanco", "Jared Borgetti", "Luis Hernández", "Jorge Campos", "Claudio Suárez", "Ramón Ramírez", "Pável Pardo", "Gerardo Torrado",
-      "Andrés Guardado", "Javier Hernández", "Carlos Vela", "Hirving Lozano", "Raúl Jiménez", "Héctor Herrera", "Miguel Layún", "Diego Lainez", "Edson Álvarez", "Néstor Araujo"
-    ]
+        "Lionel Messi", "Cristiano Ronaldo", "Neymar", "Kylian Mbappé", "Zinedine Zidane", "Ronaldinho", "Ronaldo Nazário", "Andrés Iniesta", "Xavi Hernández", "David Beckham",
+        "Thierry Henry", "George Best", "Pelé", "Diego Maradona", "Garrincha", "Johan Cruyff", "Michel Platini", "Marco van Basten", "Gianluigi Buffon", "Franco Baresi",
+        "Roberto Baggio", "Alfredo Di Stéfano", "Ronald Koeman", "Lothar Matthäus", "Zico", "Rivaldo", "Kaká", "Cesc Fàbregas", "Fernando Torres", "Raúl González",
+        "Samuel Eto'o", "Didier Drogba", "Wayne Rooney", "Roberto Carlos", "David Villa", "Gareth Bale", "Luis Suárez", "Sergio Agüero", "Edinson Cavani",
+        "Paolo Maldini", "Franz Beckenbauer", "Manuel Neuer", "Iker Casillas", "Sergio Ramos", "Carles Puyol", "Gerard Piqué", "Virgil van Dijk", "Alessandro Nesta",
+        "Fabio Cannavaro", "Philipp Lahm", "Marcelo", "Dani Alves", "Andrea Pirlo", "Luka Modrić", "Toni Kroos", "Kevin De Bruyne", "Steven Gerrard", "Frank Lampard",
+        "Paul Scholes", "Ryan Giggs", "George Weah", "Romário", "Hristo Stoichkov", "Gerd Müller", "Miroslav Klose", "Gary Lineker", "Alan Shearer", "Karim Benzema",
+        "Robert Lewandowski", "Harry Kane", "Zlatan Ibrahimović", "Radamel Falcao", "James Rodríguez", "Arjen Robben", "Franck Ribéry", "Eden Hazard", "Mohamed Salah", "Sadio Mané",
+        "N'Golo Kanté", "Antoine Griezmann", "Clarence Seedorf", "Patrick Vieira", "Claude Makélélé", "Roy Keane", "Michael Ballack", "Bastian Schweinsteiger", "Xabi Alonso",
+        "Sergio Busquets", "David Silva", "Juan Mata", "Mesut Özil", "Robin van Persie", "Luis Figo", "Rui Costa", "Deco", "Pavel Nedvěd", "Alessandro Del Piero",
+        "Francesco Totti", "Gabriel Batistuta", "Hernán Crespo", "Juan Román Riquelme", "Carlos Tevez", "Javier Mascherano", "Ángel Di María", "Gonzalo Higuaín", "Thiago Silva",
+        "Vinícius Júnior", "Casemiro", "Marquinhos", "Alisson Becker", "Ederson", "Gabriel Jesus", "Richarlison", "Firmino", "Fernandinho", "Douglas Costa",
+        "Willian", "Oscar", "Hulk", "Alexandre Pato", "Juninho Pernambucano", "Sócrates", "Falcão", "Taffarel", "Dida", "Júlio César",
+        "Lúcio", "Gilberto Silva", "Kléberson", "Mauro Silva", "Adriano", "Julio Baptista", "Robinho", "Alex", "Denílson", "Fernando Morientes",
+        "Fernando Hierro", "Míchel", "Emilio Butragueño", "Santi Cazorla", "Pepe Reina", "Víctor Valdés", "Javi Martínez", "Ander Herrera", "Mikel Arteta", "Asier Illarramendi",
+        "Andrés Guardado", "Carlos Vela", "Javier Hernández", "Raúl Jiménez", "Héctor Herrera", "Miguel Layún", "Hirving Lozano", "Edson Álvarez",
+        "João Félix", "Jude Bellingham", "Pedri", "Gavi", "Erling Haaland", "Federico Valverde", "Declan Rice", "Achraf Hakimi", "Trent Alexander-Arnold", "Riyad Mahrez",
+        "Alexia Putellas", "Jennifer Hermoso", "Irene Paredes", "Aitana Bonmatí", "Marta Torrejón", "Mariona Caldentey", "Patri Guijarro", "Ona Batlle", "Claudia Pina", "Lucía García",
+        "Athenea del Castillo", "Laia Codina", "Ivana Andrés", "Sandra Paños", "Cata Coll", "Teresa Abelleira", "Salma Paralluelo", "Nerea Eizagirre", "Olga Carmona", "Vicky Losada",
+        "Amanda Sampedro", "Nahikari García", "Esther González", "Irene Guerrero", "Leila Ouahabi",
+        "Marta Vieira da Silva", "Megan Rapinoe", "Alex Morgan", "Sam Kerr", "Christine Sinclair", "Wendie Renard", "Amandine Henry", "Lieke Martens",
+        "Vivianne Miedema", "Lucy Bronze", "Fran Kirby", "Ada Hegerberg", "Asisat Oshoala", "Formiga", "Hope Solo", "Christen Press", "Julie Ertz", "Tobin Heath", "Rose Lavelle"
+      ]
   },
   {
     category: "Banderas",
@@ -223,6 +223,79 @@ module.exports = [{
       "Gayatri Spivak", "Donna Haraway", "Iris Murdoch", "Martha Nussbaum", "Elizabeth Anscombe", "Philippa Foot", "G.E.M. Anscombe", "Luce Irigaray", "Julia Kristeva", "Nancy Fraser",
       "Angela Davis", "bell hooks", "Patricia Hill Collins", "Chantal Mouffe", "Wendy Brown", "Sandra Harding", "Donna-Dale Marcano", "María Lugones", "Gloria Anzaldúa", "Chela Sandoval",
       "Byung-Chul Han", "Peter Sloterdijk", "Giorgio Agamben", "Antonio Negri", "Franco Berardi", "Quentin Meillassoux", "Alain Badiou", "Jacques Rancière", "Jean-Luc Nancy", "Bernard Stiegler"
+    ]
+  },
+  {
+    category: "DeportistasEspañoles",
+    answers: [
+        // Tenis
+        "Rafael Nadal", "Carlos Alcaraz", "Garbiñe Muguruza", "Paula Badosa", "Feliciano López", "Fernando Verdasco", "David Ferrer",
+      
+        // Fútbol (masculino)
+        "Luis Suárez Miramontes", "Emilio Butragueño", "Fernando Hierro", "José Antonio Camacho",  
+        "Michel", "Iker Casillas", "Xavi Hernández", "Andrés Iniesta", "Julio Salinas",
+        "Sergio Ramos", "Carles Puyol", "David Villa", "Fernando Torres", "Cesc Fàbregas", 
+        "Gerard Piqué", "David Silva", "Raúl González Blanco", "Fernando Morientes", "Rodri Hernández",
+      
+        // Fútbol (femenino)
+        "Alexia Putellas", "Aitana Bonmatí", "Irene Paredes", "Mariona Caldentey", "Jennifer Hermoso", "Patri Guijarro",
+        "Ona Batlle", "Claudia Pina", "Lucía García", "Athenea del Castillo", "Teresa Abelleira", "Salma Paralluelo",
+        "Olga Carmona", "Ivana Andrés", "Sandra Paños", "Cata Coll", "Laia Codina", "Amanda Sampedro", "Vicky Losada",
+        "Marta Torrejón", "Leila Ouahabi", "Esther González", "Irene Guerrero", "Nahikari García",
+      
+        // Baloncesto
+        "Pau Gasol", "Marc Gasol", "Juan Carlos Navarro", "Ricky Rubio", "Sergio Llull", "José Manuel Calderón", "Felipe Reyes",
+        "Rudy Fernández", "Víctor Claver", "Álex Mumbrú", "Fernando San Emeterio", "Willy Hernangómez", "Juancho Hernangómez",
+        "Sergio Rodríguez", "Xavi Rabaseda", "Pierre Oriola", "Alberto Abalde", "Darío Brizuela", "Usman Garuba", "Joel Parra",
+      
+        // Baloncesto femenino
+        "Laia Palau", "Alba Torrens", "Anna Cruz", "Marta Xargay", "Cristina Ouviña", "Laura Gil", "Tamara Abalde",
+        "Silvia Domínguez", "Queralt Casas", "Leonor Rodríguez", "Paula Ginzo", "María Conde",
+      
+        // Ciclismo
+        "Miguel Induráin", "Alberto Contador", "Alejandro Valverde", "Carlos Sastre", "Óscar Pereiro", "Samuel Sánchez",
+        "Purito Rodríguez", "Juan Ayuso", "Carlos Rodríguez", "Luis León Sánchez", "Mikel Landa", "Ion Izagirre", "Enric Mas",
+        "Iván García Cortina", "Jesús Herrada", "Marc Soler", "Mavi García", "Sheyla Gutiérrez", "Eider Merino", "Ane Santesteban",
+        "Sandra Alonso", "Iurani Blanco", "Gloria Rodríguez", "Sara Martín", "Cristina Martínez", "Mireia Benito",
+      
+        // Automovilismo y motociclismo
+        "Fernando Alonso", "Carlos Sainz Jr.", "Carlos Sainz", "Pedro de la Rosa", "Jaime Alguersuari", "Marc Gené",
+        "Marc Márquez", "Álex Márquez", "Jorge Lorenzo", "Dani Pedrosa", "Toni Elías", "Pol Espargaró", "Aleix Espargaró",
+        "Joan Mir", "Álvaro Bautista", "Maverick Viñales", "Sete Gibernau", "Laia Sanz", "Isidre Esteve", "Nani Roma",
+      
+        // Natación y deportes acuáticos
+        "Mireia Belmonte", "Ona Carbonell", "Teresa Perales",
+      
+        // Patinaje y gimnasia
+        "Javier Fernández", "Queralt Castellet", "Gervasio Deferr", "Ray Zapata",
+      
+        // Piragüismo, triatlón y artes marciales
+        "David Cal", "Saúl Craviotto", "Javier Gómez Noya", "Mario Mola", "Maialen Chourraut", "Joel González", "Eva Calvo",
+        "Niko Shera",
+      
+        // Atletismo y halterofilia
+        "Ana Peleteiro", "Ruth Beitia", "Orlando Ortega", "Bruno Hortelano",
+      
+        // Otros
+        "Jon Rahm", // Golf
+        "Sandra Sánchez", // Karate
+        "Fátima Gálvez", // Tiro olímpico
+        "Alberto Ginés", // Escalada
+        "Adriana Cerezo" // Taekwondo
+      ]
+  },
+  {
+    category: "Científicos",
+    answers: [
+      "Albert Einstein", "Isaac Newton", "Galileo Galilei", "Marie Curie", "Charles Darwin", "Nikola Tesla",
+      "Stephen Hawking", "Richard Feynman", "Niels Bohr", "James Clerk Maxwell",
+      "Michael Faraday", "Louis Pasteur", "Gregor Mendel", "Rosalind Franklin", "Ada Lovelace",
+      "James Watson", "Francis Crick", "Barbara McClintock", "Carl Sagan", "Neil deGrasse Tyson",
+      "Jane Goodall", "David Attenborough", "Richard Dawkins", "Stephen Jay Gould", "Brian Greene",
+      "Leonardo da Vinci", "Archimedes", "Euclid", "Ptolemy", "Copérnico",
+      "Tycho Brahe", "Johannes Kepler", "René Descartes", "Blaise Pascal", "Gottfried Wilhelm Leibniz",
+      "David Hilbert", "Georg Cantor", "Kurt Gödel", "Alan Turing", "John von Neumann",
+      "Noam Chomsky", "John McCarthy", "Marvin Minsky", "Herbert Simon", "Alan Kay"
     ]
   }
 ];
