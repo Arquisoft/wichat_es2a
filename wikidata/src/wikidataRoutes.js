@@ -134,7 +134,7 @@ app.post('/game/end', async (req, res) => {
         game.duration = durationInSeconds;
         game.correct = correct;
         game.wrong = wrong;
-        game.isCompleted = (correct + wrong === 10);
+        game.isCompleted = true;
 
         await game.save();
 
@@ -168,19 +168,17 @@ app.get('/game/statistics', async (req, res) => {
             return res.json([]);
         }
 
-        const statistics = games.map(game => ({
-            correct: game.correct,
-            wrong: game.wrong,
-            duration: game.duration,
-            createdAt: new Date(game.createdAt).toLocaleString('es-ES', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            })
-        }));
+        const statistics = games.map(game => {
+            const createdAt = new Date(game.createdAt);
+            const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()} ${String(createdAt.getHours()).padStart(2, '0')}:${String(createdAt.getMinutes()).padStart(2, '0')}:${String(createdAt.getSeconds()).padStart(2, '0')}`;
+
+            return {
+                correct: game.correct,
+                wrong: game.wrong,
+                duration: game.duration,
+                createdAt: formattedDate
+            };
+        });
 
         res.json(statistics);
     } catch (error) {
