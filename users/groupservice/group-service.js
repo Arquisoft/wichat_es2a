@@ -28,30 +28,34 @@ function validateRequiredFields(req, requiredFields) {
 }
 
 app.post('/createGroup', async (req, res) => {
-  try {
-      validateRequiredFields(req, ['groupName', 'userId']);
+    try {
+        validateRequiredFields(req, ['groupName', 'userId']);
 
-      const { groupName, userId } = req.body;
+        const { groupName, userId } = req.body;
 
-      const existingGroup = await Group.findOne({ groupName });
-      if (existingGroup) {
-          return res.status(400).json({ error: 'Ya existe un grupo con ese nombre' });
-      }
+        if (groupName.length > 20) {
+            return res.status(400).json({ error: 'El nombre del grupo no puede superar los 20 caracteres.' });
+        }
 
-      const newGroup = new Group({
-          groupName,
-          memberCount: 1,
-          createdAt: new Date(),
-          users: [{ user: userId, role: 'admin' }]
-      });
+        const existingGroup = await Group.findOne({ groupName });
+        if (existingGroup) {
+            return res.status(400).json({ error: 'Ya existe un grupo con ese nombre' });
+        }
 
-      await newGroup.save();
+        const newGroup = new Group({
+            groupName,
+            memberCount: 1,
+            createdAt: new Date(),
+            users: [{ user: userId, role: 'admin' }]
+        });
 
-      res.json(newGroup);
-  } catch (error) {
-      console.error("Error creating group:", error);
-      res.status(400).json({ error: error.message });
-  }
+        await newGroup.save();
+
+        res.json(newGroup);
+    } catch (error) {
+        console.error("Error creating group:", error);
+        res.status(400).json({ error: error.message });
+    }
 });
 
 app.post('/addUserToGroup', async (req, res) => {
