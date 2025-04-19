@@ -1,7 +1,13 @@
 // src/components/AddUser.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Grid, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
+import {
+  Container, Grid, Typography, TextField, Button, Snackbar, Alert, IconButton, InputAdornment 
+} from '@mui/material';
+
+import {
+  Visibility, VisibilityOff
+} from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom';
 import image from '../media/login.svg';
 
@@ -13,6 +19,8 @@ const AddUser = () => {
   const [confirmPassword, setConfirmPassword] = useState(''); // confirmacion de contraseña
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // mostrar confirmar contraseña
   const navigate = useNavigate();
 
   const addUser = async () => {
@@ -69,9 +77,21 @@ const AddUser = () => {
             margin="normal"
             fullWidth
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
 
           <TextField
@@ -79,9 +99,21 @@ const AddUser = () => {
             margin="normal"
             fullWidth
             label="Confirm Password"
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    edge="end"
+                  >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
 
           {/* Botón para agregar un usuario */}
