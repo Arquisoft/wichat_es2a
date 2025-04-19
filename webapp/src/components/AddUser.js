@@ -29,6 +29,7 @@ const AddUser = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // mostrar confirmar contraseña
+  // Para el avatar
   const [hairColor, setHairColor] = useState('3a1a00');
   const [eyeStyle, setEyeStyle] = useState('cheery');
   const [hairType, setHairType] = useState('shortHair');
@@ -39,18 +40,27 @@ const AddUser = () => {
 
   const navigate = useNavigate();
 
+  // Según vayamos cambiando el avatar, se va mostrando
   useEffect(() => {
     const newAvatarUrl = `https://api.dicebear.com/9.x/big-smile/svg?hairColor=${hairColor}&eyes=${eyeStyle}&hair=${hairType}&mouth=${mouth}&skinColor=${skin}`;
     setAvatarUrl(newAvatarUrl);
-    console.log('url: ' + newAvatarUrl);
   }, [hairColor, eyeStyle, hairType, mouth, skin]);
 
   const addUser = async () => {
     try {
-      const finalAvatarUrl = `https://api.dicebear.com/9.x/big-smile/svg?seed=${username}&hairColor=${hairColor}&eyes=${eyeStyle}&hair=${hairType}&mouth=${mouth}&skinColor=${skin}`;
-      setAvatarUrl(finalAvatarUrl); // solo si quieres actualizar el estado visual (opcional)
+      await axios.post(`${apiEndpoint}/adduser`, {
+        username,
+        password,
+        confirmPassword,
+        avatarOptions: {
+          hair: hairType,
+          eyes: eyeStyle,
+          mouth: mouth,
+          hairColor: hairColor,
+          skinColor: skin
+        }
+      });
 
-      await axios.post(`${apiEndpoint}/adduser`, { username, password, confirmPassword });
       setOpenSnackbar(true);
       // Redirigimos a la página de login
       navigate('/login');

@@ -227,6 +227,15 @@ app.get('/getUsername', async (req, res) => {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
   }
 });
+app.get('/users/:id', async (req, res) => {
+  try{
+    const userId = req.params.id;
+    const response = await axios.get(`${userServiceUrl}/users/${userId}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching user by id' });
+  }
+});
 // Start the gateway service
 const server = app.listen(port, () => {
   console.log(`Gateway Service listening at http://localhost:${port}`);
