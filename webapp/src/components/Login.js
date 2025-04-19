@@ -2,7 +2,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';   // Importamos el hook useNavigate
-import { Container, Grid, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
+import {
+  Container, Grid, Typography, TextField,
+  Button, Snackbar, Alert, IconButton, InputAdornment
+} from '@mui/material';
+import {
+  Visibility, VisibilityOff
+} from '@mui/icons-material';
 import image from '../media/login.svg';
 
 
@@ -16,6 +22,7 @@ const Login = () => {
   const [createdAt, setCreatedAt] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);  // Estado para manejar la carga
+  const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
   const navigate = useNavigate(); // Hook de navegación
 
   // Variable de entorno para la API
@@ -98,15 +105,29 @@ const Login = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+
           <TextField
             data-testid="password-field"
             margin="normal"
             fullWidth
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value.toString())}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
+          
           <Button variant="contained" color="primary" onClick={loginUser} disabled={loading}>
             {loading ? "Loggin in..." : "Login"}
           </Button>
