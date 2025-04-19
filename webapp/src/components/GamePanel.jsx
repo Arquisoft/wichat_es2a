@@ -22,6 +22,7 @@ const GamePanel = () => {
   const location = useLocation(); // Obtienes la ubicación de la URL
   const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
   const category = queryParams.get('category'); // Obtenemos el parámetro "category"
+  const level = queryParams.get('level'); // Obtenemos el parámetro "level"
 
 
   const [showChat, setShowChat] = useState(false);
@@ -339,7 +340,7 @@ useEffect(() => {
             {/* Cuenta atras del tiempo para responder esa pregunta */}
             <Countdown 
               key={countdownKey} 
-              questionTime={10} 
+              timerLevel={level} 
               onCountdownFinish={handleCountdownFinish}
             />
           </Box>
