@@ -25,12 +25,17 @@ function validateRequiredFields(req, requiredFields) {
 app.post('/adduser', async (req, res) => {
     try {
         // Check if required fields are present in the request body
-        validateRequiredFields(req, ['username', 'password']);
+        validateRequiredFields(req, ['username', 'password', 'confirmPassword']);
 
         // Verificar si el nombre de usuario ya existe
         const existingUser = await User.findOne({ username:req.body.username });
         if (existingUser) {
             return res.status(400).json({ error: "El nombre de usuario ya existe." });
+        }
+
+        // confirmar si la contraseña es igual a la confirm
+        if(req.body.password !== req.body.confirmPassword){
+          return res.status(400).json({ error: "Las contraseñas no coinciden." });
         }
         
         // Encrypt the password before saving it

@@ -10,13 +10,14 @@ const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000'
 const AddUser = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // confirmacion de contraseña
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
 
   const addUser = async () => {
     try {
-      await axios.post(`${apiEndpoint}/adduser`, { username, password });
+      await axios.post(`${apiEndpoint}/adduser`, { username, password, confirmPassword });
       setOpenSnackbar(true);
       // Redirigimos a la página de login
       navigate('/login');
@@ -49,7 +50,7 @@ const AddUser = () => {
           <Typography component="h1" variant="h5">
             Create your account
           </Typography>
-          <Typography variant="body2" sx={{marginTop: 2}}>
+          <Typography variant="body2" sx={{ marginTop: 2 }}>
             Have an account? <Link to="/login" style={{ color: '#1976D2', textDecoration: 'none' }}>Log in now</Link>
           </Typography>
 
@@ -73,6 +74,16 @@ const AddUser = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          <TextField
+            name="confirmPassword"
+            margin="normal"
+            fullWidth
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+
           {/* Botón para agregar un usuario */}
           <Button variant="contained" color="primary" onClick={addUser}>
             Sign up
@@ -87,25 +98,26 @@ const AddUser = () => {
         </Grid>
 
         {/* Columna de la derecha: Imagen */}
-        <Grid 
+        <Grid
           item
           xs={12}
           md={8}
           sx={{
-            display: {xs: 'none', md: 'flex'},
+            display: { xs: 'none', md: 'flex' },
             justifyContent: 'center',
             alignItems: 'center',
             height: '100%',
           }}>
-            <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-              <img 
-                src={image} 
-                alt="Login" 
-                style={{ 
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover' }} />
-            </div>
+          <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+            <img
+              src={image}
+              alt="Login"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }} />
+          </div>
         </Grid>
       </Grid>
     </Container>
