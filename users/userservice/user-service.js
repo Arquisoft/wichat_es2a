@@ -27,10 +27,28 @@ app.post('/adduser', async (req, res) => {
         // Check if required fields are present in the request body
         validateRequiredFields(req, ['username', 'password', 'confirmPassword']);
 
+        const { username, password, confirmPassword } = req.body;
+
+        // Validación de longitud del username
+        if(username.length < 3 || username.length > 20){
+          return res.status(400).json({ error: "El nombre de usuariio debe tener entre 3 y 20 caracteres."});
+        }
+
         // Verificar si el nombre de usuario ya existe
         const existingUser = await User.findOne({ username:req.body.username });
         if (existingUser) {
             return res.status(400).json({ error: "El nombre de usuario ya existe." });
+        }
+
+        // Validación de longitud de password
+        if(password.length < 6 || password.length > 50){
+          return res.status(400).json({ error: "La contraseña debe tener entre 6 y 50 caracteres."});
+        }
+
+        // Validación de complejidad del password (una letra mayuscula, una minuscula, un numero y un caracter especial)
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/;
+        if(! passwordRegex.test(password)){
+          return res.status(400).json({ error: "La contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un caracter especial"})
         }
 
         // confirmar si la contraseña es igual a la confirm
