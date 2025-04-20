@@ -196,7 +196,7 @@ const AddUser = () => {
 
           {/* Controles de personalización */}
           <Box sx={{ width: '100%', textAlign: 'center' }}>
-            <Typography variant="body1" sx={{ mb: 2, fontWeight: 500 }}>
+            <Typography variant="body1" sx={{ mb: 2, fontWeight: 500 }} >
               Customize your Avatar
             </Typography>
 
@@ -204,6 +204,7 @@ const AddUser = () => {
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
               {/* Piel */}
               <IconButton
+                name="piel"
                 onClick={() => setActiveCategory('skin')}
                 color={activeCategory === 'skin' ? 'primary' : 'default'}
               >
@@ -212,6 +213,7 @@ const AddUser = () => {
 
               {/* Pelo */}
               <IconButton
+                name="pelo"
                 onClick={() => setActiveCategory('hair')}
                 color={activeCategory === 'hair' ? 'primary' : 'default'}
               >
@@ -220,6 +222,7 @@ const AddUser = () => {
 
               {/* Ojos */}
               <IconButton
+                name="ojos"
                 onClick={() => setActiveCategory('eyes')}
                 color={activeCategory === 'eyes' ? 'primary' : 'default'}
               >
@@ -228,6 +231,7 @@ const AddUser = () => {
 
               {/* Boca */}
               <IconButton
+                name="boca"
                 onClick={() => setActiveCategory('mouth')}
                 color={activeCategory === 'mouth' ? 'primary' : 'default'}
               >
