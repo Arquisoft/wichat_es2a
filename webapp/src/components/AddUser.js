@@ -204,7 +204,7 @@ const AddUser = () => {
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
               {/* Piel */}
               <IconButton
-                name="piel"
+                aria-label="piel"
                 onClick={() => setActiveCategory('skin')}
                 color={activeCategory === 'skin' ? 'primary' : 'default'}
               >
@@ -213,7 +213,7 @@ const AddUser = () => {
 
               {/* Pelo */}
               <IconButton
-                name="pelo"
+                aria-label="pelo"
                 onClick={() => setActiveCategory('hair')}
                 color={activeCategory === 'hair' ? 'primary' : 'default'}
               >
@@ -222,7 +222,7 @@ const AddUser = () => {
 
               {/* Ojos */}
               <IconButton
-                name="ojos"
+                aria-label="ojos"
                 onClick={() => setActiveCategory('eyes')}
                 color={activeCategory === 'eyes' ? 'primary' : 'default'}
               >
@@ -231,7 +231,7 @@ const AddUser = () => {
 
               {/* Boca */}
               <IconButton
-                name="boca"
+                aria-label="boca"
                 onClick={() => setActiveCategory('mouth')}
                 color={activeCategory === 'mouth' ? 'primary' : 'default'}
               >
