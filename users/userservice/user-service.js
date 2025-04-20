@@ -31,7 +31,7 @@ app.post('/adduser', async (req, res) => {
 
     // Validación de longitud del username
     if (username.length < 3 || username.length > 20) {
-      return res.status(400).json({ error: "El nombre de usuariio debe tener entre 3 y 20 caracteres." });
+      return res.status(400).json({ error: "El nombre de usuario debe tener entre 3 y 20 caracteres." });
     }
 
     // Verificar si el nombre de usuario ya existe
