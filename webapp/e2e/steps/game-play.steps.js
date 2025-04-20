@@ -28,6 +28,7 @@ defineFeature(feature, test => {
         let username;
         let password;
         let category;
+        let dificulty;
 
         given('Registered user login', async () => {
 
@@ -36,8 +37,9 @@ defineFeature(feature, test => {
             password = "admin"
 
             // Definimos la categoría a seleccionar
-            category = "Futbolistas"
-
+            category = "Lugares"
+            dificulty = "medio"
+            
             // Introduces los datos de usuario y contraseña
             await expect(page).toFill('[data-testid="username-field"] input', username);
             await expect(page).toFill('[data-testid="password-field"] input', password);
@@ -52,7 +54,13 @@ defineFeature(feature, test => {
             await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
             // Escoge la categoría "Futbolistas" del menú desplegable
-            await page.click('li[data-value="Futbolistas"]');
+            await page.click('li[data-value="'+category+'"]');
+
+            // Abre el Select para escoger la dificultad
+            await expect(page).toClick('[aria-labelledby="level-select-label"]');
+
+            // Escoge la dificultad "Medio" del menú desplegable
+            await page.click('li[data-value="'+dificulty+'"]');
 
             // Finalmente, hacer clic en el botón para comenzar el juego.
             await expect(page).toClick('button', { text: 'Comenzar a jugar' });
