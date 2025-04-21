@@ -3,6 +3,8 @@ import { Box, Typography, TextField, Button, List, ListItem, ListItemText } from
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 
+const apiEndpoint = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+
 function FriendSearch({ onAddFriend }) {
     const theme = useTheme();
     const [friendUsername, setFriendUsername] = useState('');
@@ -11,7 +13,7 @@ function FriendSearch({ onAddFriend }) {
     // Realizar la búsqueda de usuarios en el backend
     const searchUsers = async (query) => {
         try {
-            const response = await axios.get(`http://localhost:8001/searchUsers?query=${query}`);
+            const response = await axios.get(`${apiEndpoint}/searchUsers?query=${query}`);
             setUserResults(response.data);  // Actualizar los resultados de la búsqueda
         } catch (error) {
             console.error('Error al buscar usuarios:', error);

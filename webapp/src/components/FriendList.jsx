@@ -6,7 +6,8 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
-const apiEndpoint2 = 'http://localhost:8001';
+
+const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
 
 function FriendList({ friends, user }) {
     const theme = useTheme();
