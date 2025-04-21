@@ -8,6 +8,10 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import Countdown from './Countdown';
 import loading from '../media/loading.gif';
+import img0_4 from '../media/0-4.gif';
+import img4_7 from '../media/4-7.gif';
+import img7_10 from '../media/7-10.gif';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
@@ -254,42 +258,58 @@ useEffect(() => {
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
       <ThemeProvider theme={theme}>
-        <Grid
-          container
+      <Grid
+        container
+        style={{
+        height: '100vh',
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.palette.background.default,
+        }}
+      >
+        <Paper style={{ padding: '32px', textAlign: 'center' }}>
+        <Typography variant="h4" gutterBottom>
+          Resumen del Juego
+        </Typography>
+        <Typography variant="h6">
+          Preguntas contestadas: {TOTAL_QUESTIONS}
+        </Typography>
+        <Typography variant="h6" color="green">
+          Respuestas correctas: {correctCount}
+        </Typography>
+        <Typography variant="h6" color="red">
+          Respuestas incorrectas: {incorrectCount}
+        </Typography>
+        {correctCount < 4 ? (
+          <img src={img0_4} alt="Nivel 0-4" style={{ width: '100%', maxWidth: '400px' }} />
+          ) : correctCount >= 4 && correctCount < 7 ? (
+          <img src={img4_7} alt="Nivel 4-7" style={{ width: '100%', maxWidth: '400px' }} />
+          ) : (
+          <img src={img7_10} alt="Nivel 7-10" style={{ width: '100%', maxWidth: '400px' }} />
+          )}
+        <Typography variant="h5" style={{ marginTop: '16px' }}>
+          {performanceMessage}
+        </Typography>
+        <Box
           style={{
-            height: '100vh',
-            overflow: 'hidden',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: theme.palette.background.default,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginTop: '16px',
           }}
         >
-          <Paper style={{ padding: '32px', textAlign: 'center' }}>
-            <Typography variant="h4" gutterBottom>
-              Resumen del Juego
-            </Typography>
-            <Typography variant="h6">
-              Preguntas contestadas: {TOTAL_QUESTIONS}
-            </Typography>
-            <Typography variant="h6" color="green">
-              Respuestas correctas: {correctCount}
-            </Typography>
-            <Typography variant="h6" color="red">
-              Respuestas incorrectas: {incorrectCount}
-            </Typography>
-            <Typography variant="h5" style={{ marginTop: '16px' }}>
-              {performanceMessage}
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={resetGame}
-              style={{ marginTop: '24px' }}
-            >
-              Jugar de Nuevo
-            </Button>
-          </Paper>
-        </Grid>
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={resetGame}
+          style={{ marginTop: '24px' }}
+          >
+          Jugar de Nuevo
+          </Button>
+        </Box>
+        </Paper>
+      </Grid>
       </ThemeProvider>
     );
   }
