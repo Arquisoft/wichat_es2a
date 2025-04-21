@@ -149,10 +149,12 @@ const GamePanel = () => {
     return {};
   };
 
-  const resetGame = () => {
+  const resetGame = async () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
+    await endGame(); // Asegurarse de que endGame se complete antes de continuar
+    await startGame(); // Iniciar un nuevo juego después de finalizar el anterior
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
