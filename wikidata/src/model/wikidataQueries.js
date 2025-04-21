@@ -105,12 +105,18 @@ module.exports = [
             sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
                     {
                         SELECT ?item ?itemLabel ?image WHERE {
-                        ?item wdt:P31 wd:Q5;            # Humano
-                                wdt:P106 wd:Q937857;      # Futbolista
-                                wdt:P18 ?image.           # Imagen
-                        SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                            ?item wdt:P31 wd:Q5;                    # Humano
+                                wdt:P106 wd:Q937857;              # Futbolista
+                                wdt:P18 ?image.                   # Imagen
+
+                            # Participación en algún equipo con fecha de inicio posterior a 1980
+                            ?item p:P54 ?teamStatement.             # P54 = miembro de equipo
+                            ?teamStatement pq:P580 ?startDate.      # Fecha de inicio (P580)
+                            FILTER(YEAR(?startDate) > 1980)
+
+                            SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
                         } LIMIT 200
-                    }
+                    }        
                     }
                     ORDER BY RAND()
                     LIMIT 10
@@ -149,5 +155,42 @@ module.exports = [
                     LIMIT 10
                     `,
             statement: "¿Quién es este filósofo?"
+        },
+        {
+            category: "DeportistasEspañoles",
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                {
+                    SELECT ?item ?itemLabel ?image WHERE {
+                    ?item wdt:P31 wd:Q5;                      # Es humano
+                            wdt:P106 wd:Q2066131;              # Deportista
+                            wdt:P27 wd:Q29;                    # Nacionalidad española
+                            wdt:P18 ?image.                    # Tiene imagen
+                            ?item wikibase:sitelinks ?sitelinks.  # Cuántas Wikipedias lo enlazan
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                    } LIMIT 200
+                }
+                }
+                ORDER BY DESC(?sitelinks)               # Ordenar por fama
+                LIMIT 10
+                `,
+            statement: "¿Quién es este deportista español?"
+        },
+        {
+            category: "Científicos",
+            sparql: `SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
+                {
+                    SELECT ?item ?itemLabel ?image WHERE {
+                        ?item wdt:P31 wd:Q5;                     # Es humano
+                                wdt:P106 ?occupation;             # Tiene ocupación
+                                wdt:P18 ?image.                   # Tiene imagen
+                        ?occupation wdt:P279* wd:Q901.          # Subclase de científico
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                    } LIMIT 200
+                }
+            }
+            ORDER BY RAND()
+            LIMIT 10
+            `,
+            statement: "¿Quién es este científico?"
         }
     ];

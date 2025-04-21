@@ -12,11 +12,12 @@ import {
     CircularProgress,
     Box,
 } from '@mui/material';
-import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';import { jwtDecode } from 'jwt-decode';
+import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';
+import { jwtDecode } from 'jwt-decode';
 import { useTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const GameHistoryUI = () => {
     const getUserId = () => {
@@ -82,7 +83,7 @@ const GameHistoryUI = () => {
     if (!Array.isArray(gameHistory) || gameHistory.length === 0) {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-                <Typography variant="h5" gutterBottom>Historial de Partidas</Typography>
+                <Typography variant="h4" gutterBottom>Historial de Partidas</Typography>
                 <Typography color="textSecondary">No hay partidas registradas aún.</Typography>
             </Box>
         );

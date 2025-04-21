@@ -14,7 +14,11 @@ services:
     container_name: authservice-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/authservice:latest
     profiles: ["dev", "prod"]
-    build: ./users/authservice
+    build: 
+      context: ./users/authservice
+      platforms:
+        - linux/amd64
+        - linux/arm64
     depends_on:
       - mongodb
     ports:
@@ -23,12 +27,19 @@ services:
       - mynetwork
     environment:
       MONGODB_URI: mongodb://mongodb:27017/userdb
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+    restart: always
 
   userservice:
     container_name: userservice-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/userservice:latest
     profiles: ["dev", "prod"]
-    build: ./users/userservice
+    build: 
+      context: ./users/userservice
+      platforms:
+        - linux/amd64
+        - linux/arm64
     depends_on:
       - mongodb
     ports:
@@ -37,12 +48,39 @@ services:
       - mynetwork
     environment:
       MONGODB_URI: mongodb://mongodb:27017/userdb
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+    restart: always
+
+  groupservice:
+    container_name: groupservice-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/groupservice:latest
+    profiles: ["dev", "prod"]
+    build: 
+      context: ./users/groupservice
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    depends_on:
+      - mongodb
+    ports:
+      - "8004:8004"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/userdb
+      GATEWAY_URL: http://${DEPLOY_HOST:-localhost}:8000
+    restart: always
 
   llmservice:
     container_name: llmservice-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/llmservice:latest
     profiles: ["dev", "prod"]
-    build: ./llmservice
+    build: 
+      context: ./llmservice
+      platforms:
+        - linux/amd64
+        - linux/arm64
     depends_on:
       - mongodb
     ports:
@@ -51,12 +89,42 @@ services:
       - mynetwork
     environment:
       MONGODB_URI: mongodb://mongodb:27017/llmdb
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      EMPATHY_API_KEY: ${EMPATHY_API_KEY}
+    restart: always
+
+  wikidata:
+    container_name: wikidata-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/wikidata:latest
+    profiles: ["dev", "prod"]
+    build: 
+      context: ./wikidata
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+    networks:
+      - mynetwork
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/wikidatadb
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+    restart: always
 
   gatewayservice:
     container_name: gatewayservice-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest
     profiles: ["dev", "prod"]
-    build: ./gatewayservice
+    build: 
+      context: ./gatewayservice
+      platforms:
+        - linux/amd64
+        - linux/arm64
     depends_on:
       - mongodb
       - userservice
@@ -72,6 +140,10 @@ services:
       USER_SERVICE_URL: http://userservice:8001
       LLM_SERVICE_URL: http://llmservice:8003
       WIKIDATA_SERVICE_URL: http://wikidata:3001
+      GROUP_SERVICE_URL: http://groupservice:8004
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+    restart: always
 
   apiservice:
     container_name: apiservice-wichat_es2a
@@ -99,11 +171,15 @@ services:
     build: 
       context: ./webapp
       args:
-        LLM_API_KEY: ${LLM_API_KEY}
+        GATEWAY_URL: http://${DEPLOY_HOST:-localhost}:8000
+      platforms:
+        - linux/amd64
+        - linux/arm64
     depends_on:
       - gatewayservice
     ports:
       - "3000:3000"
+    restart: always
 
   prometheus:
     image: prom/prometheus
@@ -137,19 +213,6 @@ services:
       - "9091:9091"
     depends_on: 
       - prometheus
-
-  wikidata:
-    container_name: wikidata-wichat_es2a
-    build: ./wikidata
-    profiles: ["dev", "prod"]
-    depends_on:
-      - mongodb
-    ports:
-      - "3001:3001"
-    networks:
-      - mynetwork
-    environment:
-      MONGODB_URI: mongodb://mongodb:27017/wikidatadb
 
 volumes:
   mongodb_data:

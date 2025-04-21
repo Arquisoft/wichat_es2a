@@ -8,14 +8,23 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import Countdown from './Countdown';
 import loading from '../media/loading.gif';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
 const TOTAL_QUESTIONS = 10;
-const CATEGORY = "Futbolistas";
+
 
 const GamePanel = () => {
+
+  // Obtenemos la categoría pasada en la URL
+  const location = useLocation(); // Obtienes la ubicación de la URL
+  const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
+  const category = queryParams.get('category'); // Obtenemos el parámetro "category"
+  const level = queryParams.get('level'); // Obtenemos el parámetro "level"
+
+
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
     question: '',
@@ -34,12 +43,14 @@ const GamePanel = () => {
   const [userId, setUserId] = useState(null);
 
   const [countdownKey, setCountdownKey] = useState(0);
+  const [isAnswered, setIsAnswered] = useState(false);
+
 
   
 
   const getQuestions = async () => {
     try {
-      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+CATEGORY+`/`+TOTAL_QUESTIONS);
+      const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
       const data = response.data;
       if (data && data.length == TOTAL_QUESTIONS) {
         console.log("Preguntas recibidas: ", data.length);
@@ -86,8 +97,12 @@ const GamePanel = () => {
 
   // Esta función se pasa al Countdown y se ejecutará cuando termine el tiempo
   const handleCountdownFinish = () => {
-    nextQuestion();
+    if (!isAnswered) {
+      nextQuestion();
+    }
   };
+  
+
 
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
@@ -95,24 +110,29 @@ const GamePanel = () => {
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
+      setIsAnswered(false);
       chooseQuestion();
       resetCountdownTime();
     }
-  }
+  };
+  
 
 
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
+    setIsAnswered(true);
+  
     if (answer === questionData.correctAnswer) {
       setCorrectCount(prev => prev + 1);
     } else {
       setIncorrectCount(prev => prev + 1);
     }
-
+  
     setTimeout(() => {
       nextQuestion();
     }, 2000);
   };
+  
 
   const getButtonStyle = (respuesta) => {
     if (!selectedAnswer) return {};
@@ -320,7 +340,7 @@ useEffect(() => {
             {/* Cuenta atras del tiempo para responder esa pregunta */}
             <Countdown 
               key={countdownKey} 
-              questionTime={10} 
+              timerLevel={level} 
               onCountdownFinish={handleCountdownFinish}
             />
           </Box>
@@ -401,6 +421,7 @@ useEffect(() => {
                       textAlign: 'center',
                       ...getButtonStyle(respuesta)
                     }}
+                    data-testid={`respuesta-${index}`}
                   >
                     {respuesta}
                   </Button>

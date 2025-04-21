@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     username: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -21,6 +22,13 @@ const userSchema = new mongoose.Schema({
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
       default: [],
     },
+    avatarOptions: {
+      hair: String,
+      eyes: String,
+      mouth: String,
+      hairColor: String,
+      skinColor: String
+    }
 });
 
 const User = mongoose.model('User', userSchema);

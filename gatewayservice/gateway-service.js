@@ -14,12 +14,9 @@ const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
 const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
 const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
+const groupServiceUrl = process.env.GROUP_SERVICE_URL || 'http://localhost:8004';
 
-// Configure CORS to allow requests from webapp
-app.use(cors({
-  origin: process.env.WEBAPP_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 //Prometheus configuration
@@ -182,8 +179,63 @@ if (fs.existsSync(openapiPath)) {
 } else {
   console.log("Not configuring OpenAPI. Configuration file not present.")
 }
-
-
+app.get('/group/listGroups', async (req, res) => {
+  try {
+    const response = await axios.get(`${groupServiceUrl}/listGroups`, { params: req.query } );
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching groups' });
+  }
+});
+app.post('/group/createGroup', async (req, res) => {
+  try {
+    const response = await axios.post(`${groupServiceUrl}/createGroup`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error creating group' });
+  }
+});
+app.post('/group/addUserToGroup', async (req, res) => {
+  try {
+    const response = await axios.post(`${groupServiceUrl}/addUserToGroup`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error add user to group' });
+  }
+});
+app.get('/group/listGroupUsers', async (req, res) => {
+  try {
+    const response = await axios.get(`${groupServiceUrl}/listGroupUsers`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+  }
+});
+app.get('/getUserId', async (req, res) => {
+  try {
+    const response = await axios.get(`${userServiceUrl}/getUserId`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+  }
+});
+app.get('/getUsername', async (req, res) => {
+  try {
+    const response = await axios.get(`${userServiceUrl}/getUsername`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+  }
+});
+app.get('/users/:id', async (req, res) => {
+  try{
+    const userId = req.params.id;
+    const response = await axios.get(`${userServiceUrl}/users/${userId}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching user by id' });
+  }
+});
 // Start the gateway service
 const server = app.listen(port, () => {
   console.log(`Gateway Service listening at http://localhost:${port}`);

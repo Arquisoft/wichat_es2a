@@ -12,7 +12,7 @@ import defaultTheme from "./config/default-Theme.json";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const theme = createTheme(defaultTheme);
 
@@ -50,8 +50,32 @@ const ProfilePage = () => {
 
     const userId = getUserId();
 
+    const getAvatarUrl = (options) => {
+        if (!options) return '';
+        const base = 'https://api.dicebear.com/9.x/big-smile/svg';
+        const params = new URLSearchParams({
+            hair: options.hair,
+            eyes: options.eyes,
+            mouth: options.mouth,
+            hairColor: options.hairColor,
+            skinColor: options.skinColor
+            
+        });
+        return `${base}?${params.toString()}`;
+    }
+
     // Obtenemos las estadisticas del usuario
     useEffect(() => {
+        const fetchUserDetails = async () => {
+            try {
+                const res = await fetch(`${apiEndpoint}/users/${userId}`);
+                const data = await res.json();
+                setUser(data); // ahora user tendrá avatarOptions
+            } catch (err) {
+                console.error('Error al obtener detalles del usuario:', err);
+            }
+        };
+
         const fetchUserStats = async () => {
             if (userId) {
                 try {
@@ -66,9 +90,9 @@ const ProfilePage = () => {
             }
         };
 
-        const userData = JSON.parse(localStorage.getItem('user'));
-        if (userData) {
-            setUser(userData);
+        // const userData = JSON.parse(localStorage.getItem('user'));
+        if (userId) {
+            fetchUserDetails();
             fetchUserStats();
         } else {
             navigate('/login');
@@ -114,7 +138,10 @@ const ProfilePage = () => {
                         {/* Columna derecha: Información del usuario */}
                         <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Box sx={{ textAlign: 'center', mt: 4 }}>
-                                <Avatar sx={{ width: 120, height: 120, margin: 'auto' }} src={user.avatar} />
+                                <Avatar 
+                                    sx={{ width: 120, height: 120, margin: 'auto' }} 
+                                    src={getAvatarUrl(user.avatarOptions)} 
+                                />
                                 <Typography variant="body1" sx={{ mt: 1 }}>
                                     Aquí puedes ver y editar tu perfil.
                                 </Typography>
@@ -207,7 +234,9 @@ const ProfilePage = () => {
                     {/* Columna derecha: Información del usuario */}
                     <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Box sx={{ textAlign: 'center', mt: 4 }}>
-                            <Avatar sx={{ width: 120, height: 120, margin: 'auto' }} src={user.avatar} />
+                            <Avatar 
+                                sx={{ width: 120, height: 120, margin: 'auto' }} 
+                                src={getAvatarUrl(user.avatarOptions)} />
                             <Typography variant="body1" sx={{ mt: 1 }}>
                                 Aquí puedes ver y editar tu perfil.
                             </Typography>

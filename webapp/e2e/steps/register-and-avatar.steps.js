@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const { defineFeature, loadFeature }=require('jest-cucumber');
 const setDefaultOptions = require('expect-puppeteer').setDefaultOptions
-const feature = loadFeature('./features/register-form.feature');
+const feature = loadFeature('./features/register-and-avatar.feature');
 
 let page;
 let browser;
@@ -23,7 +23,7 @@ defineFeature(feature, test => {
       .catch(() => {});
   });
 
-  test('The user is not registered in the site', ({given,when,then}) => {
+  test('User is not registered in the site', ({given,when,then}) => {
     
     let username;
     let password;
@@ -35,11 +35,27 @@ defineFeature(feature, test => {
       
     });
 
-    when('I fill the data in the form and press submit', async () => {
+    when('I fill in the data in the form, edit my avatar, and press send.', async () => {
       await expect(page).toFill('input[name="username"]', username);
       await expect(page).toFill('input[name="password"]', password);
       await expect(page).toFill('input[name="confirmPassword"]', password);
 
+      // Piel
+      await expect(page).toClick('button[aria-label="piel"]');
+      await expect(page).toClick('button', { text: 'Bronze' });
+
+      // Pelo
+      await expect(page).toClick('button[aria-label="pelo"]');
+      await expect(page).toClick('button', { text: 'Blonde' });
+      await expect(page).toClick('button', { text: 'curlyShortHair' });
+
+      // Ojos
+      await expect(page).toClick('button[aria-label="ojos"]');
+      await expect(page).toClick('button', { text: 'starstruck' });
+
+      // Boca
+      await expect(page).toClick('button[aria-label="boca"]');
+      await expect(page).toClick('button', { text: 'unimpressed' });
       await expect(page).toClick('button', { text: 'Sign up' })
     });
 
