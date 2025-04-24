@@ -5,113 +5,129 @@ import {
   Box,
   TextField,
   Button,
-  Paper,
-  Grid
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  Grid,
+  Snackbar,
+  Alert,
+  Stack
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
+import { loadConfig, saveConfig } from '../utils/config';
 
 const theme = createTheme(defaultTheme);
 
+const defaultConfig = {
+  numQuestions: 10,
+  timerSettings: { easy: 30, medium: 20, hard: 10 }
+};
+
 const Configuration = () => {
-  const [numQuestions, setNumQuestions] = useState(10);
-  const [timerSettings, setTimerSettings] = useState({
-    easy: 30,
-    medium: 20,
-    hard: 10
-  });
-  const [saved, setSaved] = useState(false);
+  const [config, setConfig] = useState(defaultConfig);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    // Cargar configuración guardada
-    const savedConfig = window.localStorage.getItem('config');
-    if (savedConfig) {
-      const { numQuestions: nq, timerSettings: ts } = JSON.parse(savedConfig);
-      setNumQuestions(nq);
-      setTimerSettings(ts);
+    const stored = loadConfig();
+    if (stored) {
+      setConfig(stored);
     }
   }, []);
 
+  const handleChangeNum = (e) => {
+    const val = Math.max(1, parseInt(e.target.value, 10) || 1);
+    setConfig(prev => ({ ...prev, numQuestions: val }));
+  };
+
+  const handleChangeTimer = (level) => (e) => {
+    const val = Math.max(5, parseInt(e.target.value, 10) || 5);
+    setConfig(prev => ({
+      ...prev,
+      timerSettings: { ...prev.timerSettings, [level]: val }
+    }));
+  };
+
   const handleSave = () => {
-    const config = { numQuestions, timerSettings };
-    window.localStorage.setItem('config', JSON.stringify(config));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    saveConfig(config);
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenSnackbar(false);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="sm">
-        <Paper sx={{ p: 4, mt: 4 }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Configuración
-          </Typography>
-          <Grid container spacing={3} sx={{ mt: 2 }}>
-            <Grid item xs={12}>
-              <TextField
-                label="Número de preguntas"
-                type="number"
-                fullWidth
-                value={numQuestions}
-                onChange={(e) => setNumQuestions(parseInt(e.target.value, 10) || 0)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Tiempo Fácil (s)"
-                type="number"
-                fullWidth
-                value={timerSettings.easy}
-                onChange={(e) =>
-                  setTimerSettings({
-                    ...timerSettings,
-                    easy: parseInt(e.target.value, 10) || 0
-                  })
-                }
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Tiempo Medio (s)"
-                type="number"
-                fullWidth
-                value={timerSettings.medium}
-                onChange={(e) =>
-                  setTimerSettings({
-                    ...timerSettings,
-                    medium: parseInt(e.target.value, 10) || 0
-                  })
-                }
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Tiempo Difícil (s)"
-                type="number"
-                fullWidth
-                value={timerSettings.hard}
-                onChange={(e) =>
-                  setTimerSettings({
-                    ...timerSettings,
-                    hard: parseInt(e.target.value, 10) || 0
-                  })
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Box sx={{ textAlign: 'center', mt: 3 }}>
-                <Button variant="contained" color="primary" onClick={handleSave}>
-                  Guardar Configuración
-                </Button>
-              </Box>
-              {saved && (
-                <Typography variant="body2" align="center" sx={{ mt: 2, color: 'success.main' }}>
-                  Configuración guardada correctamente.
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6, mb: 4 }}>
+          <Card sx={{ width: '100%', boxShadow: 4, borderRadius: 2 }}>
+            <CardHeader
+              title="Configuración"
+              titleTypographyProps={{ variant: 'h4', align: 'center', gutterBottom: true }}
+            />
+            <Divider />
+            <CardContent>
+              <Stack spacing={3}>
+                <TextField
+                  label="Número de preguntas"
+                  type="number"
+                  fullWidth
+                  value={config.numQuestions}
+                  onChange={handleChangeNum}
+                  InputProps={{ inputProps: { min: 1 } }}
+                />
+
+                <Typography variant="h6" sx={{ textAlign: 'center', mt: 2 }}>
+                  Tiempo del Cronómetro (segundos)
                 </Typography>
-              )}
-            </Grid>
-          </Grid>
-        </Paper>
+
+                <Grid container spacing={2}>
+                  {['easy', 'medium', 'hard'].map((level) => (
+                    <Grid item xs={12} sm={4} key={level}>
+                      <TextField
+                        label={level.charAt(0).toUpperCase() + level.slice(1)}
+                        type="number"
+                        fullWidth
+                        value={config.timerSettings[level]}
+                        onChange={handleChangeTimer(level)}
+                        InputProps={{ inputProps: { min: 5 } }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={handleSave}
+                    sx={{ px: 4 }}
+                  >
+                    Guardar Cambios
+                  </Button>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            ¡Listo! Tus ajustes se han guardado 🎉
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );
