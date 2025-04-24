@@ -63,6 +63,9 @@ const UserMenu = ({ anchorEl, open, onClose, onLogout, navigate }) => (
               if(index===0){ // Perfil
                 navigate('/profile');
               } 
+              else if(index===1){ // Configuración
+                navigate('/configuration');
+              }
               else if(index===2){ // Cerrar Sesión
                 onLogout();
               }
