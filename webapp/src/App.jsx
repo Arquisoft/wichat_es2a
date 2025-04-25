@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 import GameHistoryUI from './components/GameHistoryUI';
 import Contact from './components/Contact';
 import Profile from './components/Profile';
+import MathGame from './components/MathGame';
 import Configuration from './components/Configuration';
 import UserGroups from './components/UserGroups';
 import GroupDetails from './components/GroupDetails';
@@ -45,6 +46,7 @@ function App() {
               <Route path="/gamehistory/:username" element={<GameHistoryUIGroup />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/configuration" element={<Configuration />} />
+              <Route path="/mathgame" element={<MathGame />} />
               <Route path="/friends" element={<Friends userId={localStorage.getItem('user')} />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />

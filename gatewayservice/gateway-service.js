@@ -14,6 +14,7 @@ const llmServiceUrl = process.env.LLM_SERVICE_URL || 'http://localhost:8003';
 const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
 const wikidataServiceUrl = process.env.WIKIDATA_SERVICE_URL || 'http://localhost:3001';
+const mathGameServiceUrl = process.env.MATHGAME_SERVICE_URL || 'http://localhost:3002';
 const groupServiceUrl = process.env.GROUP_SERVICE_URL || 'http://localhost:8004';
 
 app.use(cors());
@@ -245,6 +246,35 @@ app.put('/users/:id', async (req, res) => {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
   }
 });
+
+app.get('/mathgame/question/:base?', async (req, res) => {
+  try {
+    const raw = req.params.base;
+    const suffix = raw != null && !Number.isNaN(parseInt(raw, 10))
+      ? `/${parseInt(raw, 10)}`
+      : '';
+    const response = await axios.get(`${mathGameServiceUrl}/mathgame/question${suffix}`);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error getting math question:', error);
+    res
+      .status(error.response?.status || 500)
+      .json({ error: error.response?.data?.error || 'Error fetching math question' });
+  }
+});
+
+app.post('/mathgame/verify', async (req, res) => {
+  try {
+    const response = await axios.post(`${mathGameServiceUrl}/mathgame/verify`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error verifying math answer:', error);
+    res
+      .status(error.response?.status || 500)
+      .json({ error: error.response?.data?.error || 'Error verifying math answer' });
+  }
+});
+
 
 // Start the gateway service
 const server = app.listen(port, () => {
