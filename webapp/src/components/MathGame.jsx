@@ -7,15 +7,17 @@ import {
   Button,
   Grid,
   Card,
+  CardHeader,
   CardContent,
   CardActions,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Chip
 } from '@mui/material';
+import { Timer as TimerIcon } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import Countdown from './Countdown';
-import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme(defaultTheme);
 const GATEWAY_URL = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
@@ -67,8 +69,7 @@ const MathGame = ({ timeLimit = 10 }) => {
         { choice, correct: question.correct }
       );
       if (verifyRes.data.isCorrect) {
-        setScore(s => s + 1);
-        // fetch next with base = correct
+        setScore((s) => s + 1);
         fetchQuestion(question.correct);
       } else {
         finishGame();
@@ -85,57 +86,75 @@ const MathGame = ({ timeLimit = 10 }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="sm" sx={{ mt: 6, mb: 6, position: 'relative' }}>
-        <Card>
-          <CardContent sx={{ textAlign: 'center', minHeight: 200 }}>
+      <Container maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
+        <Card sx={{ boxShadow: 4, borderRadius: 2 }}>
+          <CardHeader
+            title="Juego Matemático"
+            subheader={started && !ended ? `Resuelve en ${timeLimit}s` : ''}
+            titleTypographyProps={{ variant: 'h5', align: 'center' }}
+            subheaderTypographyProps={{ variant: 'body2', align: 'center', color: 'textSecondary' }}
+            sx={{ backgroundColor: 'primary.light', color: 'primary.contrastText' }}
+          />
+          <Divider />
+          <CardContent>
             {!started && !ended && (
-              <Button variant="contained" size="large" onClick={initGame}>
-                Iniciar Juego Matemático
-              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <Button variant="contained" size="large" onClick={initGame}>
+                  Iniciar Juego
+                </Button>
+              </Box>
             )}
 
             {started && !ended && (
               loading || !question ? (
-                <CircularProgress />
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                  <CircularProgress />
+                </Box>
               ) : (
-                <>
-                  <Typography variant="h6" gutterBottom>
-                    Resuelve en {timeLimit}s:
-                  </Typography>
-                  <Typography variant="h4" color="primary" gutterBottom>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                    <Chip
+                      icon={<TimerIcon />}
+                      label={`${timeLimit}s restantes`}
+                      color="primary"
+                    />
+                  </Box>
+                  <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
                     {question.expr}
                   </Typography>
-                  <Countdown customTime={timeLimit} onCountdownFinish={onTimeout} />
-                  <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Countdown timerLevel={timeLimit} onCountdownFinish={onTimeout} />
+                  <Grid container spacing={2} sx={{ mt: 3 }}>
                     {question.options.map((opt, idx) => (
                       <Grid item xs={6} key={idx}>
                         <Button
                           fullWidth
-                          variant="contained"
+                          variant="outlined"
+                          size="large"
                           onClick={() => handleChoice(opt)}
                           disabled={loading}
+                          sx={{ height: 64, fontSize: '1.2rem' }}
                         >
                           {opt}
                         </Button>
                       </Grid>
                     ))}
                   </Grid>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>
-                    Puntuación: {score}
+                  <Typography variant="subtitle1" sx={{ mt: 3 }}>
+                    Puntuación: <strong>{score}</strong>
                   </Typography>
-                </>
+                </Box>
               )
             )}
 
             {ended && (
-              <Box>
+              <Box sx={{ textAlign: 'center', p: 4 }}>
                 <Typography variant="h4" color="error" gutterBottom>
                   ¡Juego Terminado!
                 </Typography>
-                <Typography variant="h6">
-                  Respuestas correctas: {score}
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  Correctas: {score}
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ mb: 2 }}>
                   Tiempo total: {totalTime}s
                 </Typography>
               </Box>
