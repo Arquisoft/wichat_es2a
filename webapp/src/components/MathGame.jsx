@@ -18,11 +18,15 @@ import { Timer as TimerIcon } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import Countdown from './Countdown';
+import { loadConfig, defaultConfig } from '../utils/config';
 
 const theme = createTheme(defaultTheme);
 const GATEWAY_URL = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
-const MathGame = ({ timeLimit = 10 }) => {
+const storedConfig = loadConfig() ?? defaultConfig;
+const defaultMathTime = storedConfig.mathTime;
+
+const MathGame = ({ timeLimit = defaultMathTime }) => {
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
