@@ -59,6 +59,7 @@ const Configuration = () => {
     saveConfig(config);
     sessionStorage.setItem('configSaved', 'true');
     setOpenSuccess(true);
+    window.location.reload();
   };
 
   return (
