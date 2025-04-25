@@ -17,7 +17,7 @@ import Profile from './components/Profile';
 import UserGroups from './components/UserGroups';
 import GroupDetails from './components/GroupDetails';
 import GameHistoryUIGroup from './components/GameHistoryUIGroup';
-import Countdown from './components/Countdown'; // Importar el componente Countdown
+import EditProfile from './components/EditProfile';
 
 const theme = createTheme(defaultTheme);
 
@@ -43,6 +43,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
             </Route>
 
             {/* Redirección por defecto */}
