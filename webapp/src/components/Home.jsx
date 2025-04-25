@@ -29,7 +29,7 @@ const Home = () => {
     "Filosofos": "🧠",
     "Actores": "🎬",
     "Científicos": "🔬",
-    "DeportistasEspañoles": "🏅",
+    "Deportistas Españoles": "🏅",
     "Lugares": "🌍",
     "Banderas": "🏳️‍🌈",
   };

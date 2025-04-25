@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], 
       default:[],
     },
+    friendRequests: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
     avatarOptions: {
       hair: String,
       eyes: String,

@@ -13,7 +13,8 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const pages = [
     { code: 'home', link: '/home', name: 'Home' },
-    { code: 'history', link: '/history', name: 'Historial' },
+    { code: 'history', link: '/history', name: 'Historial' }, // Added Historial button
+    { code: 'friends', link: '/friends', name: 'Amigos' }, // Added Friends button
     { code: 'groups', link: '/groups', name: 'Grupos' },
     { code: 'contact', link: '/contact', name: 'Contacto' }
 ];
