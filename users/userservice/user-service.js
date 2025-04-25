@@ -77,6 +77,39 @@ app.post('/adduser', async (req, res) => {
     res.status(400).json({ error: error.message }); 
   }});
 
+// Actualizar el usuario
+app.put('/users/:id', async (req, res) => {
+  try {
+    const { username, avatarOptions } = req.body;
+
+    // Validación de longitud del username
+    if (username.length < 3 || username.length > 20) {
+      return res.status(400).json({ error: "El nombre de usuariio debe tener entre 3 y 20 caracteres." });
+    }
+
+    // Verificar si el nombre de usuario ya existe
+    const existingUser = await User.findOne({ username: req.body.username });
+    if (existingUser && existingUser._id.toString() !== req.params.id) {
+      return res.status(400).json({ error: "El nombre de usuario ya existe." });
+    }
+
+    const updateUser = await User.findByIdAndUpdate(
+      req.params.id, 
+      { username, avatarOptions },
+      { new: true } // Return the updated user
+    );
+
+    if(!updateUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(updateUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.post('/addFriend', async (req, res) => {
   try {
     // Verificar que los campos requeridos estén presentes

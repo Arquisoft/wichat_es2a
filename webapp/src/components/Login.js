@@ -64,7 +64,7 @@ const Login = () => {
       if (error.response && error.response.data.error) {
         setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
       }
-      setError(error.response.data.error);
+      setError("Por favor, revisa tu usuario y contraseña.");
 
     } finally {
       setLoading(false);  // Desactivamos la carga

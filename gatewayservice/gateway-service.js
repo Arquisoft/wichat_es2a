@@ -236,6 +236,16 @@ app.get('/users/:id', async (req, res) => {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching user by id' });
   }
 });
+app.put('/users/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const response = await axios.put(`${userServiceUrl}/users/${userId}`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
+  }
+});
+
 // Start the gateway service
 const server = app.listen(port, () => {
   console.log(`Gateway Service listening at http://localhost:${port}`);

@@ -16,6 +16,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import BrushIcon from '@mui/icons-material/Brush';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import PaletteIcon from '@mui/icons-material/Palette';
+import AvatarEditor from './AvatarEditor';
 
 
 
@@ -30,21 +31,23 @@ const AddUser = () => {
   const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // mostrar confirmar contraseña
   // Para el avatar
-  const [hairColor, setHairColor] = useState('3a1a00');
-  const [eyeStyle, setEyeStyle] = useState('cheery');
-  const [hairType, setHairType] = useState('shortHair');
-  const [mouth, setMouth] = useState('teethSmile');
-  const [skin, setSkin] = useState('efcc9f');
-  const [activeCategory, setActiveCategory] = useState('skin'); // puede ser 'hair' o 'eyes'
-  const [avatarUrl, setAvatarUrl] = useState(`https://api.dicebear.com/9.x/big-smile/svg?hairColor=${hairColor}&eyes=${eyeStyle}&hair=${hairType}&mouth=${mouth}&skinColor=${skin}`);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarOptions, setAvatarOptions] = useState({
+    hairColor: '3a1a00',
+    eyes: 'cheery',
+    hair: 'shortHair',
+    mouth: 'teethSmile',
+    skinColor: 'efcc9f'
+  });
 
   const navigate = useNavigate();
 
   // Según vayamos cambiando el avatar, se va mostrando
   useEffect(() => {
-    const newAvatarUrl = `https://api.dicebear.com/9.x/big-smile/svg?hairColor=${hairColor}&eyes=${eyeStyle}&hair=${hairType}&mouth=${mouth}&skinColor=${skin}`;
+    const { hairColor, eyes, hair, mouth, skinColor } = avatarOptions;
+    const newAvatarUrl = `https://api.dicebear.com/9.x/big-smile/svg?hairColor=${hairColor}&eyes=${eyes}&hair=${hair}&mouth=${mouth}&skinColor=${skinColor}`;
     setAvatarUrl(newAvatarUrl);
-  }, [hairColor, eyeStyle, hairType, mouth, skin]);
+  }, [avatarOptions]);
 
   const addUser = async () => {
     try {
@@ -52,13 +55,7 @@ const AddUser = () => {
         username,
         password,
         confirmPassword,
-        avatarOptions: {
-          hair: hairType,
-          eyes: eyeStyle,
-          mouth: mouth,
-          hairColor: hairColor,
-          skinColor: skin
-        }
+        avatarOptions
       });
 
       setOpenSnackbar(true);
@@ -173,226 +170,7 @@ const AddUser = () => {
           height: '100%',
           paddingBottom: { xs: 2, md: 0 }
         }}>
-
-          <Box sx={{
-            width: '200px',
-            height: '200px',
-            marginBottom: 3,
-            borderRadius: '50%',
-            overflow: 'hidden',
-            boxShadow: 2
-          }}
-          >
-            <img
-              src={avatarUrl}
-              alt="Avatar"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                borderRadius: '50%'
-              }} />
-          </Box>
-
-          {/* Controles de personalización */}
-          <Box sx={{ width: '100%', textAlign: 'center' }}>
-            <Typography variant="body1" sx={{ mb: 2, fontWeight: 500 }} >
-              Customize your Avatar
-            </Typography>
-
-            {/* Selector de Categoría tipo Mii */}
-            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
-              {/* Piel */}
-              <IconButton
-                aria-label="piel"
-                onClick={() => setActiveCategory('skin')}
-                color={activeCategory === 'skin' ? 'primary' : 'default'}
-              >
-                <PaletteIcon fontSize="large" />
-              </IconButton>
-
-              {/* Pelo */}
-              <IconButton
-                aria-label="pelo"
-                onClick={() => setActiveCategory('hair')}
-                color={activeCategory === 'hair' ? 'primary' : 'default'}
-              >
-                <BrushIcon fontSize="large" />
-              </IconButton>
-
-              {/* Ojos */}
-              <IconButton
-                aria-label="ojos"
-                onClick={() => setActiveCategory('eyes')}
-                color={activeCategory === 'eyes' ? 'primary' : 'default'}
-              >
-                <VisibilityIcon fontSize="large" />
-              </IconButton>
-
-              {/* Boca */}
-              <IconButton
-                aria-label="boca"
-                onClick={() => setActiveCategory('mouth')}
-                color={activeCategory === 'mouth' ? 'primary' : 'default'}
-              >
-                <TagFacesIcon fontSize="large" />
-              </IconButton>
-            </Box>
-
-            {/* Contenido de la categoría activa */}
-            {/* Piel */}
-            {activeCategory === 'skin' && (
-              <Box>
-                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                  Select Eye Style
-                </Typography>
-                <ToggleButtonGroup
-                  value={skin}
-                  exclusive
-                  onChange={(e, val) => val && setSkin(val)}
-                  color="primary"
-                  size="small"
-                  sx={{
-                    flexWrap: 'wrap',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <ToggleButton value="643d19">Deep Brown</ToggleButton>
-                  <ToggleButton value="8c5a2b">Espresso</ToggleButton>
-                  <ToggleButton value="a47539">Bronze</ToggleButton>
-                  <ToggleButton value="c99c62">Tan</ToggleButton>
-                  <ToggleButton value="e2ba87">Ligth Tan</ToggleButton>
-                  <ToggleButton value="efcc9f">Beige</ToggleButton>
-                  <ToggleButton value="f5d7b1">Ligth Beige</ToggleButton>
-                  <ToggleButton value="ffe4c0">Porcelain</ToggleButton>
-                </ToggleButtonGroup>
-              </Box>
-            )}
-            {/* Pelo */}
-            {activeCategory === 'hair' && (
-              <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                <Box>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Select Hair Color
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={hairColor}
-                    exclusive
-                    onChange={(e, val) => val && setHairColor(val)}
-                    color="primary"
-                    size="small"
-                    sx={{
-                      flexWrap: 'wrap',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      gap: 1
-                    }}
-                  >
-                    <ToggleButton value="3a1a00">Brown</ToggleButton>
-                    <ToggleButton value="e2ba87">Blonde</ToggleButton>
-                    <ToggleButton value="220f00">Black</ToggleButton>
-                    <ToggleButton value="238d80">Green</ToggleButton>
-                    <ToggleButton value="605de4">Blue</ToggleButton>
-                    <ToggleButton value="d56c0c">Orange</ToggleButton>
-                  </ToggleButtonGroup>
-                </Box>
-
-                <Box>
-                  <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                    Select Type Hair
-                  </Typography>
-                  <ToggleButtonGroup
-                    value={hairType}
-                    exclusive
-                    onChange={(e, val) => val && setHairType(val)}
-                    color="primary"
-                    size="small"
-                    sx={{
-                      flexWrap: 'wrap',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      gap: 1
-                    }}
-                  >
-                    <ToggleButton value="bangs">bangs</ToggleButton>
-                    <ToggleButton value="shortHair">shortHair</ToggleButton>
-                    <ToggleButton value="bowlCutHair">bowlCutHair</ToggleButton>
-                    <ToggleButton value="bunHair">bunHair</ToggleButton>
-                    <ToggleButton value="curlyBob">curlyBob</ToggleButton>
-                    <ToggleButton value="curlyShortHair">curlyShortHair</ToggleButton>
-                    <ToggleButton value="froBun">froBun</ToggleButton>
-                    <ToggleButton value="halfShavedHead">halfShavedHead</ToggleButton>
-                    <ToggleButton value="mohawk">mohawk</ToggleButton>
-                  </ToggleButtonGroup>
-                </Box>
-              </Box>
-            )}
-
-            {activeCategory === 'eyes' && (
-              <Box>
-                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                  Select Eye Style
-                </Typography>
-                <ToggleButtonGroup
-                  value={eyeStyle}
-                  exclusive
-                  onChange={(e, val) => val && setEyeStyle(val)}
-                  color="primary"
-                  size="small"
-                  sx={{
-                    flexWrap: 'wrap',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <ToggleButton value="angry">angry</ToggleButton>
-                  <ToggleButton value="cheery">cheery</ToggleButton>
-                  <ToggleButton value="confused">confused</ToggleButton>
-                  <ToggleButton value="normal">normal</ToggleButton>
-                  <ToggleButton value="sad">sad</ToggleButton>
-                  <ToggleButton value="sleepy">sleepy</ToggleButton>
-                  <ToggleButton value="starstruck">starstruck</ToggleButton>
-                  <ToggleButton value="winking">winking</ToggleButton>
-                </ToggleButtonGroup>
-              </Box>
-            )}
-
-            {activeCategory === 'mouth' && (
-              <Box>
-                <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-                  Select Mouth Style
-                </Typography>
-                <ToggleButtonGroup
-                  value={mouth}
-                  exclusive
-                  onChange={(e, val) => val && setMouth(val)}
-                  color="primary"
-                  size="small"
-                  sx={{
-                    flexWrap: 'wrap',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <ToggleButton value="awkwardSmile">awkwardSmile</ToggleButton>
-                  <ToggleButton value="braces">braces</ToggleButton>
-                  <ToggleButton value="gapSmile">gapSmile</ToggleButton>
-                  <ToggleButton value="kawaii">kawaii</ToggleButton>
-                  <ToggleButton value="openedSmile">openedSmile</ToggleButton>
-                  <ToggleButton value="openSad">openSad</ToggleButton>
-                  <ToggleButton value="teethSmile">teethSmile</ToggleButton>
-                  <ToggleButton value="unimpressed">unimpressed</ToggleButton>
-                </ToggleButtonGroup>
-              </Box>
-            )}
-          </Box>
-
-
-
+          <AvatarEditor avatarOptions={avatarOptions} setAvatarOptions={setAvatarOptions} />
         </Grid>
       </Grid>
     </Container>
