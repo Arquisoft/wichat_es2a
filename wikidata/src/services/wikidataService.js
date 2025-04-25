@@ -20,6 +20,7 @@ const service = {
             console.error(`Category ${category} not found in the queries`);
             return questions;
         }
+        console.log(query)
         const url = `${WIKIDATA_SPARQL_URL}?query=${encodeURIComponent(query.sparql)}&format=json`;
         try {
             const response = await fetch(url);
@@ -59,7 +60,7 @@ const service = {
         }
         else
         {
-            const questions = await service.fetchQuestionsFromWikidata(category, 10);
+            const questions = await service.fetchQuestionsFromWikidata(category, 15);
             await repository.insertQuestions(questions);
             return await repository.getQuestions(category, 1);
         }

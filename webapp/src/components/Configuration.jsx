@@ -8,19 +8,20 @@ import {
   Card,
   CardHeader,
   CardContent,
+  CardActions,
   Divider,
   Grid,
   Snackbar,
   Alert,
-  Stack
+  InputAdornment
 } from '@mui/material';
+import { Timer as TimerIcon } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
 import { loadConfig, saveConfig, defaultConfig as initialConfig } from '../utils/config';
 
 const theme = createTheme(defaultTheme);
 
-// Map de niveles para usar labels en español y keys internas
 const levels = [
   { key: 'easy', label: 'Fácil' },
   { key: 'medium', label: 'Medio' },
@@ -35,26 +36,17 @@ const Configuration = () => {
   useEffect(() => {
     const stored = loadConfig();
     setConfig(stored);
-
     if (sessionStorage.getItem('configSaved') === 'true') {
       setOpenSuccess(true);
       sessionStorage.removeItem('configSaved');
     }
   }, []);
 
-  const handleChangeNum = (e) => {
-    const val = Math.max(1, parseInt(e.target.value, 10) || 1);
-    setConfig(prev => ({ ...prev, numQuestions: val }));
-  };
-
   const handleChangeTimer = (levelKey) => (e) => {
-    const val = parseInt(e.target.value, 10) || 0;
+    const val = Math.max(0, parseInt(e.target.value, 10) || 0);
     setConfig(prev => ({
       ...prev,
-      timerSettings: {
-        ...prev.timerSettings,
-        [levelKey]: val
-      }
+      timerSettings: { ...prev.timerSettings, [levelKey]: val }
     }));
   };
 
@@ -66,102 +58,65 @@ const Configuration = () => {
     }
     saveConfig(config);
     sessionStorage.setItem('configSaved', 'true');
-    window.location.reload();
-  };
-
-  const handleCloseSuccess = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setOpenSuccess(false);
-  };
-
-  const handleCloseError = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setOpenError(false);
+    setOpenSuccess(true);
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="sm">
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6, mb: 4 }}>
-          <Card sx={{ width: '100%', boxShadow: 4, borderRadius: 2 }}>
-            <CardHeader
-              title="Configuración"
-              titleTypographyProps={{ variant: 'h4', align: 'center', gutterBottom: true }}
-            />
-            <Divider />
-            <CardContent>
-              <Stack spacing={3}>
-                <TextField
-                  label="Número de preguntas"
-                  type="number"
-                  fullWidth
-                  value={config.numQuestions}
-                  onChange={handleChangeNum}
-                  InputProps={{ inputProps: { min: 1 } }}
-                />
-
-                <Typography variant="h6" sx={{ textAlign: 'center', mt: 2 }}>
-                  Tiempo del Cronómetro (segundos)
-                </Typography>
-
-                <Grid container spacing={2}>
-                  {levels.map(({ key, label }) => (
-                    <Grid item xs={12} sm={4} key={key}>
-                      <TextField
-                        label={label}
-                        type="number"
-                        fullWidth
-                        value={config.timerSettings[key]}
-                        onChange={handleChangeTimer(key)}
-                      />
-                    </Grid>
-                  ))}
+      <Container maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
+        <Card sx={{ boxShadow: 6, borderRadius: 3 }}>
+          <CardHeader
+            title="Ajustes de Tiempo"
+            subheader="Define el tiempo disponible por nivel"
+            titleTypographyProps={{ variant: 'h5', align: 'center' }}
+            subheaderTypographyProps={{ variant: 'body2', align: 'center', color: 'textSecondary' }}
+            sx={{ backgroundColor: 'primary.light', color: 'primary.contrastText' }}
+          />
+          <Divider />
+          <CardContent>
+            <Grid container spacing={3} alignItems="center">
+              {levels.map(({ key, label }) => (
+                <Grid item xs={12} sm={4} key={key}>
+                  <TextField
+                    label={label}
+                    type="number"
+                    fullWidth
+                    size="medium"
+                    sx={{
+                      '& .MuiInputBase-root': { height: 64 },
+                      '& .MuiInputBase-input': { fontSize: '1rem' }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <TimerIcon fontSize="small" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: <InputAdornment position="end">s</InputAdornment>
+                    }}
+                    helperText=">= 5 segundos"
+                    value={config.timerSettings[key]}
+                    onChange={handleChangeTimer(key)}
+                  />
                 </Grid>
-
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    onClick={handleSave}
-                    sx={{ px: 4 }}
-                  >
-                    Guardar Cambios
-                  </Button>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Box>
-        {/* Snackbar Éxito */}
-        <Snackbar
-          open={openSuccess}
-          autoHideDuration={4000}
-          onClose={handleCloseSuccess}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            onClose={handleCloseSuccess}
-            severity="success"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
+              ))}
+            </Grid>
+          </CardContent>
+          <Divider />
+          <CardActions sx={{ justifyContent: 'center', p: 2 }}>
+            <Button variant="contained" size="large" onClick={handleSave} sx={{ px: 5 }}>
+              Guardar Cambios
+            </Button>
+          </CardActions>
+        </Card>
+        <Snackbar open={openSuccess} autoHideDuration={4000} onClose={() => setOpenSuccess(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Alert severity="success" variant="filled" sx={{ width: '100%' }}>
             ¡Listo! Tus ajustes se han guardado 🎉
           </Alert>
         </Snackbar>
-        {/* Snackbar Error */}
-        <Snackbar
-          open={openError}
-          autoHideDuration={4000}
-          onClose={handleCloseError}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            onClose={handleCloseError}
-            severity="error"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            Error: Los tiempos deben ser al menos 5 segundos.
+        <Snackbar open={openError} autoHideDuration={4000} onClose={() => setOpenError(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+            Los tiempos deben ser al menos 5 segundos.
           </Alert>
         </Snackbar>
       </Container>

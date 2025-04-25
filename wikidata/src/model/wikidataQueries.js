@@ -4,7 +4,7 @@
  * Devuelve el array de queries con el LIMIT exterior personalizado.
  * @param {number} outerLimit — número de resultados finales por query
  */
-function getQueries(outerLimit = 10) {
+function getQueries(outerLimit) {
     return [
       {
         category: "Lugares",
