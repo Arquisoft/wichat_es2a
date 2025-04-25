@@ -4,7 +4,7 @@
  * @returns {{expr: string, result: number}}
  */
 export function generateExpression(baseValue) {
-    const ops = ['+', '-', '*'];
+    const ops = ['+', '-', '*', '/'];
     if (baseValue == null) {
       const a = Math.floor(Math.random() * 10) + 1;
       const b = Math.floor(Math.random() * 10) + 1;

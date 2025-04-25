@@ -1,0 +1,24 @@
+{
+  "name": "mathgame",
+  "version": "1.0.0",
+  "description": "Service for obtaining operations for MathGame",
+  "main": "mathGameService.js",
+  "scripts": {
+    "start": "node src/mathGameService.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arquisoft/wichat_es2a.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arquisoft/wichat_es2a/issues"
+  },
+  "homepage": "https://github.com/arquisoft/wichat_es2a#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
