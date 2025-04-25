@@ -2,7 +2,7 @@
   "name": "mathgame",
   "version": "1.0.0",
   "description": "Service for obtaining operations for MathGame",
-  "main": "mathGameService.js",
+  "main": "/service/mathGameService.js",
   "scripts": {
     "start": "node src/mathGameService.js",
     "test": "jest"
