@@ -16,23 +16,29 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
-import { loadConfig, saveConfig } from '../utils/config';
+import { loadConfig, saveConfig, defaultConfig as initialConfig } from '../utils/config';
 
 const theme = createTheme(defaultTheme);
 
-const defaultConfig = {
-  numQuestions: 10,
-  timerSettings: { easy: 30, medium: 20, hard: 10 }
-};
+// Map de niveles para usar labels en español y keys internas
+const levels = [
+  { key: 'easy', label: 'Fácil' },
+  { key: 'medium', label: 'Medio' },
+  { key: 'hard', label: 'Difícil' }
+];
 
 const Configuration = () => {
-  const [config, setConfig] = useState(defaultConfig);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [config, setConfig] = useState(initialConfig);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   useEffect(() => {
     const stored = loadConfig();
-    if (stored) {
-      setConfig(stored);
+    setConfig(stored);
+
+    if (sessionStorage.getItem('configSaved') === 'true') {
+      setOpenSuccess(true);
+      sessionStorage.removeItem('configSaved');
     }
   }, []);
 
@@ -41,22 +47,36 @@ const Configuration = () => {
     setConfig(prev => ({ ...prev, numQuestions: val }));
   };
 
-  const handleChangeTimer = (level) => (e) => {
-    const val = Math.max(5, parseInt(e.target.value, 10) || 5);
+  const handleChangeTimer = (levelKey) => (e) => {
+    const val = parseInt(e.target.value, 10) || 0;
     setConfig(prev => ({
       ...prev,
-      timerSettings: { ...prev.timerSettings, [level]: val }
+      timerSettings: {
+        ...prev.timerSettings,
+        [levelKey]: val
+      }
     }));
   };
 
   const handleSave = () => {
+    const { easy, medium, hard } = config.timerSettings;
+    if (easy < 5 || medium < 5 || hard < 5) {
+      setOpenError(true);
+      return;
+    }
     saveConfig(config);
-    setOpenSnackbar(true);
+    sessionStorage.setItem('configSaved', 'true');
+    window.location.reload();
   };
 
-  const handleCloseSnackbar = (event, reason) => {
+  const handleCloseSuccess = (event, reason) => {
     if (reason === 'clickaway') return;
-    setOpenSnackbar(false);
+    setOpenSuccess(false);
+  };
+
+  const handleCloseError = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenError(false);
   };
 
   return (
@@ -85,15 +105,14 @@ const Configuration = () => {
                 </Typography>
 
                 <Grid container spacing={2}>
-                  {['easy', 'medium', 'hard'].map((level) => (
-                    <Grid item xs={12} sm={4} key={level}>
+                  {levels.map(({ key, label }) => (
+                    <Grid item xs={12} sm={4} key={key}>
                       <TextField
-                        label={level.charAt(0).toUpperCase() + level.slice(1)}
+                        label={label}
                         type="number"
                         fullWidth
-                        value={config.timerSettings[level]}
-                        onChange={handleChangeTimer(level)}
-                        InputProps={{ inputProps: { min: 5 } }}
+                        value={config.timerSettings[key]}
+                        onChange={handleChangeTimer(key)}
                       />
                     </Grid>
                   ))}
@@ -113,19 +132,36 @@ const Configuration = () => {
             </CardContent>
           </Card>
         </Box>
+        {/* Snackbar Éxito */}
         <Snackbar
-          open={openSnackbar}
+          open={openSuccess}
           autoHideDuration={4000}
-          onClose={handleCloseSnackbar}
+          onClose={handleCloseSuccess}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
           <Alert
-            onClose={handleCloseSnackbar}
+            onClose={handleCloseSuccess}
             severity="success"
             variant="filled"
             sx={{ width: '100%' }}
           >
             ¡Listo! Tus ajustes se han guardado 🎉
+          </Alert>
+        </Snackbar>
+        {/* Snackbar Error */}
+        <Snackbar
+          open={openError}
+          autoHideDuration={4000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleCloseError}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            Error: Los tiempos deben ser al menos 5 segundos.
           </Alert>
         </Snackbar>
       </Container>
