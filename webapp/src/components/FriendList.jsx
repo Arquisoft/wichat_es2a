@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import profilePic from '../media/fotousuario.png';
 import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -8,6 +8,20 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
 const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+
+// Función para construir la URL del avatar de DiceBear desde avatarOptions
+const getAvatarUrl = (options) => {
+    if (!options) return '';
+    const base = 'https://api.dicebear.com/9.x/big-smile/svg';
+    const params = new URLSearchParams({
+        hair: options.hair,
+        eyes: options.eyes,
+        mouth: options.mouth,
+        hairColor: options.hairColor,
+        skinColor: options.skinColor
+    });
+    return `${base}?${params.toString()}`;
+}
 
 function FriendList({ friends, user }) {
     const theme = useTheme();
@@ -89,7 +103,10 @@ function FriendList({ friends, user }) {
                 {username && (
                     <ListItem key="you" alignItems="center" sx={{ padding: 1, bgcolor: theme.palette.grey[200] }}>
                         <ListItemAvatar>
-                            <Avatar src={profilePic} alt="Tu foto de perfil" />
+                            <Avatar 
+                                sx={{ width: 40, height: 40, margin: 'auto' }} 
+                                src={getAvatarUrl(user.avatarOptions)} 
+                            />
                         </ListItemAvatar>
                         <ListItemText primary={`Tú: ${username}`} secondary="(Jugador)" />
                     </ListItem>
@@ -97,7 +114,10 @@ function FriendList({ friends, user }) {
                 {friends.map((friend) => (
                     <ListItem key={friend._id} alignItems="center" sx={{ padding: 1 }}>
                         <ListItemAvatar>
-                            <Avatar src={profilePic} alt="Foto de perfil" />
+                        <Avatar 
+                                sx={{ width: 40, height: 40, margin: 'auto' }} 
+                                src={getAvatarUrl(friend.avatarOptions)} 
+                            />
                         </ListItemAvatar>
                         <ListItemText 
                             primary={friend.username} 
