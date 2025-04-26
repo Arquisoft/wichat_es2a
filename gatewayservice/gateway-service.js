@@ -245,6 +245,22 @@ app.put('/users/:id', async (req, res) => {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
   }
 });
+app.post('/group/sendMessage', async (req, res) => {
+  try {
+    const response = await axios.post(`${groupServiceUrl}/group/sendMessage`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error sending group message' });
+  }
+});
+app.get('/group/messages', async (req, res) => {
+  try {
+    const response = await axios.get(`${groupServiceUrl}/group/messages`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group messages' });
+  }
+});
 
 // Start the gateway service
 const server = app.listen(port, () => {

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors');
 const Group = require('./group-model');
+const GroupMessage = require('./group-message-model');
 
 app.use(cors());
 app.use(express.json());
@@ -150,6 +151,7 @@ app.get('/listGroups', async (req, res) => {
         }
 
         const statistics = groups.map(group => ({
+            _id: group._id, // <-- Añadir el _id del grupo
             groupName: group.groupName,
             memberCount: group.memberCount,
             createdAt: group.createdAt,
@@ -160,6 +162,45 @@ app.get('/listGroups', async (req, res) => {
     } catch (error) {
         console.error("Error al obtener los grupos:", error);
         res.json([]); // En caso de error, devolver array vacío
+    }
+});
+
+app.post('/group/sendMessage', async (req, res) => {
+    try {
+        validateRequiredFields(req, ['groupName', 'username', 'message']);
+        const { groupName, username, message } = req.body;
+
+        const group = await Group.findOne({ groupName });
+
+        const memberUsernames = await Promise.all(
+            group.users.map(async (member) => {
+                try {
+                    const userId = member.user.toString();
+                    const response = await axios.get(`${apiEndpoint}/getUsername`, { params: { userId } });
+                    return response.data.username;
+                } catch {
+                    return null;
+                }
+            })
+        );
+
+        const newMessage = new GroupMessage({ groupName, username, message });
+        await newMessage.save();
+        res.json(newMessage);
+    } catch (error) {
+        console.error('Error enviando mensaje grupal:', error);
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/group/messages', async (req, res) => {
+    try {
+        const { groupName } = req.query;
+        const messages = await GroupMessage.find({ groupName }).sort({ createdAt: 1 });
+        res.json(messages);
+    } catch (error) {
+        console.error('Error obteniendo mensajes grupales:', error);
+        res.status(400).json({ error: error.message });
     }
 });
 
