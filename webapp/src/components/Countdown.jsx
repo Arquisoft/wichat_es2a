@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { loadConfig, defaultConfig } from '../utils/config';
 // Añadimos la hoja de estilos para la animación del circulo
 import './Countdown.css';
 
+const stored = loadConfig() ?? defaultConfig;
+const { easy, medium, hard } = stored.timerSettings;
 const Countdown = ( {timerLevel, onCountdownFinish}) => {
 
     // Ahora no se le pasa el tiempo
@@ -9,16 +12,16 @@ const Countdown = ( {timerLevel, onCountdownFinish}) => {
     let questionTime = 0;
     switch (timerLevel) {
         case 'facil':
-            questionTime = 120;
+            questionTime = easy;
             break;
         case 'medio':
-            questionTime = 30;
+            questionTime = medium;
             break;
         case 'dificil':
-            questionTime = 10;
+            questionTime = hard;
             break;
         default:
-            questionTime = 30; // Valor por defecto
+            questionTime = medium; // Valor por defecto
     }
 
 
