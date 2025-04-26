@@ -16,6 +16,7 @@ const pages = [
     { code: 'history', link: '/history', name: 'Historial' }, // Added Historial button
     { code: 'friends', link: '/friends', name: 'Amigos' }, // Added Friends button
     { code: 'groups', link: '/groups', name: 'Grupos' },
+    { code: 'mathgame', link: '/mathgame', name: 'Juego Matemático' },
     { code: 'contact', link: '/contact', name: 'Contacto' }
 ];
 

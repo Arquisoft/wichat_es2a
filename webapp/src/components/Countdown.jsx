@@ -10,18 +10,23 @@ const Countdown = ( {timerLevel, onCountdownFinish}) => {
     // Ahora no se le pasa el tiempo
     // Se le pasa el nivel y ya calcula el compontente el tiempo
     let questionTime = 0;
+    if (typeof timerLevel === 'number') {
+        questionTime = timerLevel;
+    }
+    else {
     switch (timerLevel) {
-        case 'facil':
-            questionTime = easy;
-            break;
-        case 'medio':
-            questionTime = medium;
-            break;
-        case 'dificil':
-            questionTime = hard;
-            break;
-        default:
-            questionTime = medium; // Valor por defecto
+            case 'facil':
+                questionTime = easy;
+                break;
+            case 'medio':
+                questionTime = medium;
+                break;
+            case 'dificil':
+                questionTime = hard;
+                break;
+            default:
+                questionTime = medium; // Valor por defecto
+        }
     }
 
 

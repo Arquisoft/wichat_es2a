@@ -22,6 +22,7 @@ import { loadConfig, saveConfig, defaultConfig as initialConfig } from '../utils
 
 const theme = createTheme(defaultTheme);
 
+// Niveles para cronómetro
 const levels = [
   { key: 'easy', label: 'Fácil' },
   { key: 'medium', label: 'Medio' },
@@ -42,12 +43,19 @@ const Configuration = () => {
     }
   }, []);
 
+  // Maneja cambio de cronómetro por nivel
   const handleChangeTimer = (levelKey) => (e) => {
     const val = Math.max(0, parseInt(e.target.value, 10) || 0);
     setConfig(prev => ({
       ...prev,
       timerSettings: { ...prev.timerSettings, [levelKey]: val }
     }));
+  };
+
+  // Maneja cambio de tiempo de juego matemáticas
+  const handleChangeMathTime = (e) => {
+    const val = Math.max(1, parseInt(e.target.value, 10) || 1);
+    setConfig(prev => ({ ...prev, mathTime: val }));
   };
 
   const handleSave = () => {
@@ -68,7 +76,7 @@ const Configuration = () => {
         <Card sx={{ boxShadow: 6, borderRadius: 3 }}>
           <CardHeader
             title="Ajustes de Tiempo"
-            subheader="Define el tiempo disponible por nivel"
+            subheader="Define los tiempos de juego"
             titleTypographyProps={{ variant: 'h5', align: 'center' }}
             subheaderTypographyProps={{ variant: 'body2', align: 'center', color: 'textSecondary' }}
             sx={{ backgroundColor: 'primary.light', color: 'primary.contrastText' }}
@@ -76,17 +84,37 @@ const Configuration = () => {
           <Divider />
           <CardContent>
             <Grid container spacing={3} alignItems="center">
+              {/* Tiempo total juego matemáticas */}
+              <Grid item xs={12}>
+                <TextField
+                  label="Tiempo juego matemáticas"
+                  type="number"
+                  fullWidth
+                  size="medium"
+                  value={config.mathTime || 10}
+                  onChange={handleChangeMathTime}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <TimerIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: <InputAdornment position="end">s</InputAdornment>
+                  }}
+                  helperText=">= 1 segundo"
+                  sx={{ '& .MuiInputBase-root': { height: 56 } }}
+                />
+              </Grid>
+              {/* Cronómetros por nivel */}
               {levels.map(({ key, label }) => (
                 <Grid item xs={12} sm={4} key={key}>
                   <TextField
-                    label={label}
+                    label={`Cronómetro ${label}`}
                     type="number"
                     fullWidth
                     size="medium"
-                    sx={{
-                      '& .MuiInputBase-root': { height: 64 },
-                      '& .MuiInputBase-input': { fontSize: '1rem' }
-                    }}
+                    value={config.timerSettings[key]}
+                    onChange={handleChangeTimer(key)}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -96,8 +124,7 @@ const Configuration = () => {
                       endAdornment: <InputAdornment position="end">s</InputAdornment>
                     }}
                     helperText=">= 5 segundos"
-                    value={config.timerSettings[key]}
-                    onChange={handleChangeTimer(key)}
+                    sx={{ '& .MuiInputBase-root': { height: 56 } }}
                   />
                 </Grid>
               ))}
@@ -105,19 +132,20 @@ const Configuration = () => {
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'center', p: 2 }}>
-            <Button variant="contained" size="large" onClick={handleSave} sx={{ px: 5 }}>
+            <Button variant="contained" size="large" onClick={handleSave} sx={{ px: 6 }}>
               Guardar Cambios
             </Button>
           </CardActions>
         </Card>
+        {/* Snackbars */}
         <Snackbar open={openSuccess} autoHideDuration={4000} onClose={() => setOpenSuccess(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
           <Alert severity="success" variant="filled" sx={{ width: '100%' }}>
-            ¡Listo! Tus ajustes se han guardado 🎉
+            ¡Ajustes guardados! 🎉
           </Alert>
         </Snackbar>
         <Snackbar open={openError} autoHideDuration={4000} onClose={() => setOpenError(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
           <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-            Los tiempos deben ser al menos 5 segundos.
+            Los tiempos por nivel deben ser ≥ 5 s.
           </Alert>
         </Snackbar>
       </Container>
