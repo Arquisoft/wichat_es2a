@@ -8,3 +8,5 @@ start cmd /k "cd users\groupservice && npm install && npm start"
 start cmd /k "cd wikidata && npm install && npm start"
 start cmd /k "cd apiservice && npm install && npm start"
 start cmd /k "cd webapp && npm install && npm start"
+start cmd /k "cd mathGame && npm install && npm start"
+

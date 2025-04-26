@@ -32,7 +32,11 @@ app.listen(PORT, () => {
 // Example: http://localhost:3001/wikidata/question/Lugares/10
 app.get("/wikidata/question/:category/:number", async (req, res) => {
     const category= req.params.category;
-    const n = req.params.number;
+    const raw = parseInt(req.params.number, 10);
+    // si no es un entero válido, usar tu valor por defecto
+    const n = Number.isNaN(raw) || raw < 1 
+      ? require('./utils/config').defaultConfig.numQuestions 
+      : raw;
     try {
         console.log("actualizado");
         const questions = await service.getQuestions(category, n);

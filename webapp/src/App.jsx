@@ -14,12 +14,15 @@ import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
 import GameHistoryUI from './components/GameHistoryUI';
 import Contact from './components/Contact';
 import Profile from './components/Profile';
+import MathGame from './components/MathGame';
+import Configuration from './components/Configuration';
 import UserGroups from './components/UserGroups';
 import GroupDetails from './components/GroupDetails';
 import GameHistoryUIGroup from './components/GameHistoryUIGroup';
 import Countdown from './components/Countdown'; // Importar el componente Countdown
 import Friends from './components/Friends'; // Importar el componente Friends
 import EditProfile from './components/EditProfile';
+import ChatGlobal from './components/ChatGlobal';
 
 const theme = createTheme(defaultTheme);
 
@@ -43,7 +46,10 @@ function App() {
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
               <Route path="/gamehistory/:username" element={<GameHistoryUIGroup />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/configuration" element={<Configuration />} />
+              <Route path="/mathgame" element={<MathGame />} />
               <Route path="/friends" element={<Friends userId={localStorage.getItem('user')} />} />
+              <Route path="/chat" element={<ChatGlobal userId={localStorage.getItem('user')} />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />
               <Route path="/edit-profile" element={<EditProfile />} />
