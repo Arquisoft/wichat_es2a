@@ -22,6 +22,7 @@ import GameHistoryUIGroup from './components/GameHistoryUIGroup';
 import Countdown from './components/Countdown'; // Importar el componente Countdown
 import Friends from './components/Friends'; // Importar el componente Friends
 import EditProfile from './components/EditProfile';
+import ChatGlobal from './components/ChatGlobal';
 
 const theme = createTheme(defaultTheme);
 
@@ -48,6 +49,7 @@ function App() {
               <Route path="/configuration" element={<Configuration />} />
               <Route path="/mathgame" element={<MathGame />} />
               <Route path="/friends" element={<Friends userId={localStorage.getItem('user')} />} />
+              <Route path="/chat" element={<ChatGlobal userId={localStorage.getItem('user')} />} />
               <Route path="/groups" element={<UserGroups />} />
               <Route path="/groups/:groupName" element={<GroupDetails />} />
               <Route path="/edit-profile" element={<EditProfile />} />
