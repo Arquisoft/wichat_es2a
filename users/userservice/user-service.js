@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('./user-model');
 const cors = require('cors');
+const Message = require('./message-model');
 
 const app = express();
 const port = 8001;
@@ -424,6 +425,44 @@ app.get('/users/:id', async (req, res) => {
 
 const server = app.listen(port, () => {
   console.log(`User Service listening at http://localhost:${port}`);
+});
+
+// Endpoint para enviar un mensaje al chat global
+app.post('/sendMessage', async (req, res) => {
+  try {
+    const { username, content } = req.body;
+
+    if (!username || !content) {
+      return res.status(400).json({ error: 'Faltan datos requeridos' });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const newMessage = new Message({ content, sender: user._id });
+    await newMessage.save();
+
+    res.status(200).json({ message: 'Mensaje enviado' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint para obtener los últimos 50 mensajes del chat global
+app.get('/getMessages', async (req, res) => {
+  try {
+    const messages = await Message.find()
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .populate('sender', 'username')
+      .exec();
+
+    res.json(messages.reverse()); // para mostrar de más antiguo a más reciente
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Listen for the 'close' event on the Express.js server
