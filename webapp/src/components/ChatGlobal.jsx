@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Box, Typography, TextField, Button, List, ListItem, ListItemText
+  Box, Typography, TextField, Button, List, ListItem, ListItemText, Paper
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 
 const apiEndpoint = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
 
-function ChatGlobal({ username }) {
+function ChatGlobal() {
   const theme = useTheme();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user ? user.username : null;
 
   const fetchMessages = async () => {
     try {
@@ -52,7 +55,7 @@ function ChatGlobal({ username }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        maxWidth: 600,
+        maxWidth: '80%',
         mx: 'auto',
         mt: 4,
         border: '1px solid #ccc',
@@ -66,13 +69,27 @@ function ChatGlobal({ username }) {
       </Typography>
 
       <Box sx={{ flex: 1, overflowY: 'auto', mb: 2, maxHeight: 400 }}>
-        <List>
+      <List>
           {messages.map((msg) => (
-            <ListItem key={msg._id} alignItems="flex-start">
-              <ListItemText
-                primary={<strong>{msg.sender.username}</strong>}
-                secondary={msg.content}
-              />
+            <ListItem key={msg._id} alignItems="flex-start" sx={{ display: 'flex', flexDirection: 'column', mb: 1 }}>
+              <Paper
+                sx={{
+                  backgroundColor: msg.sender.username === username ? theme.palette.primary.main : '#e0e0e0',
+                  color: msg.sender.username === username ? 'white' : 'black',
+                  borderRadius: '16px',
+                  padding: '8px 16px',
+                  maxWidth: '70%',
+                  alignSelf: msg.sender.username === username ? 'flex-end' : 'flex-start',
+                  wordWrap: 'break-word',
+                  margin: '4px 0',
+                  boxShadow: 2,
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                  {msg.sender.username}
+                </Typography>
+                <Typography variant="body2">{msg.content}</Typography>
+              </Paper>
             </ListItem>
           ))}
           <div ref={messagesEndRef} />
