@@ -92,3 +92,23 @@ Decision accepted.
 
 ==== Consequences
 Gemini 1.5 Flash substitutes Mistral 7B as the chosen LLM service for our system.
+
+[[ADR-05]]
+=== ADR 05: DiceBear Avatar Library
+*_Date: 2025-04-20_*
+
+image::DiceBear.png["DiceBear", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+DiceBear is a JavaScript library that allows you to create unique avatars for your applications in no time. It provides a wide range of customizable avatars, which can be generated on the fly. This library is particularly useful for applications that require user avatars, as it allows for easy integration and customization.
+
+As we wanted our users to be able to create their own avatars, and not use a default one, we needed to find a library that would allow us to do so. DiceBear is a good candidate for this purpose, and will enhance the user experience giving the application a more personalized touch.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+DiceBear will be used in our project to allow users to create their own avatars.
