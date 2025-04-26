@@ -102,6 +102,12 @@ function ChatGlobal() {
           variant="outlined"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
           fullWidth
         />
         <Button variant="contained" color="primary" onClick={sendMessage}>
