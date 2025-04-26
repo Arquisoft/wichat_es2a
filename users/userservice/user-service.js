@@ -151,7 +151,7 @@ app.post('/addFriend', async (req, res) => {
 
 app.get('/listUsers', async (req, res) => {
   try {
-    const users = await User.find({}, 'username friends'); // Return only the username and friends fields (password isn't included)
+    const users = await User.find({}, 'username friends avatarOptions'); // Return only the username and friends fields (password isn't included)
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -162,7 +162,7 @@ app.get('/user/:username', async (req, res) => {
   try {
     // Busca al usuario por su 'username' y rellena la lista de amigos con solo el campo 'username'
     const user = await User.findOne({ username: req.params.username })
-      .populate('friends', 'username');  // Poblar el campo 'friends' con solo los nombres de usuario
+      .populate('friends', 'username avatarOptions');  // Poblar el campo 'friends' con solo los nombres de usuario
   
     // Si el usuario no se encuentra
     if (!user) {

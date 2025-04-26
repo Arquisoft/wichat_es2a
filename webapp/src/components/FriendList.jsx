@@ -100,17 +100,6 @@ function FriendList({ friends, user }) {
                 Lista de Amigos
             </Typography>
             <List>
-                {username && (
-                    <ListItem key="you" alignItems="center" sx={{ padding: 1, bgcolor: theme.palette.grey[200] }}>
-                        <ListItemAvatar>
-                            <Avatar 
-                                sx={{ width: 40, height: 40, margin: 'auto' }} 
-                                src={getAvatarUrl(user.avatarOptions)} 
-                            />
-                        </ListItemAvatar>
-                        <ListItemText primary={`Tú: ${username}`} secondary="(Jugador)" />
-                    </ListItem>
-                )}
                 {friends.map((friend) => (
                     <ListItem key={friend._id} alignItems="center" sx={{ padding: 1 }}>
                         <ListItemAvatar>
