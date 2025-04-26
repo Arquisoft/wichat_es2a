@@ -27,9 +27,9 @@ app.listen(PORT, () => {
  *   correct: 90
  * }
  */
-app.get('/mathgame/question/:base?', (req, res) => {
+app.get('/mathgame/question', (req, res) => {
   try {
-    const raw = req.params.base;
+    const raw = req.query.base;
     const base = raw != null && !Number.isNaN(parseInt(raw, 10))
       ? parseInt(raw, 10)
       : null;
@@ -43,6 +43,7 @@ app.get('/mathgame/question/:base?', (req, res) => {
     res.status(500).json({ error: 'Error generating math question' });
   }
 });
+
 
 /**
  * POST /mathgame/verify
