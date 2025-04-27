@@ -138,7 +138,7 @@ const GameHistoryUIGroup = () => {
                                 <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.correct}</TableCell>
                                 <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.wrong}</TableCell>
                                 <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.duration}</TableCell>
-                                <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{new Date(game.createdAt).toLocaleString('es-ES')}</TableCell>
+                                <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.createdAt}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

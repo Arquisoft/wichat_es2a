@@ -87,7 +87,7 @@ function FriendList({ friends, user }) {
         const friendHistory = gameHistories[friendId];
         if (friendHistory && friendHistory.length > 0) {
             const lastGame = friendHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-            return new Date(lastGame.createdAt).toLocaleString('es-ES');
+            return lastGame.createdAt;
         }
         return 'Nunca';
     };
