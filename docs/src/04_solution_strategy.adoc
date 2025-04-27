@@ -42,7 +42,7 @@ An architecture using services has been chosen for this project, so that each mo
 
 
 .Interaction between services
-image::services_connection.svg[Interaction between services, 700, 500, align="center"]
+image::services_connection_v2.svg[Interaction between services, 700, 500, align="center"]
 
 
 
