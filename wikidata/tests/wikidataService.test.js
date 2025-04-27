@@ -112,7 +112,7 @@ describe('wikidataService', () => {
     const question = await service.getQuestion(category);
 
     expect(repository.existsQuestions).toHaveBeenCalledWith(category);
-    expect(service.fetchQuestionsFromWikidata).toHaveBeenCalledWith(category, 10);
+    expect(service.fetchQuestionsFromWikidata).toHaveBeenCalledWith(category, 15);
     expect(repository.insertQuestions).toHaveBeenCalledWith(mockQuestion);
     expect(question).toEqual(mockQuestion);
   });
