@@ -6,6 +6,7 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useNavigate } from 'react-router-dom';
+import HistoryIcon from '@mui/icons-material/History';
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
@@ -115,6 +116,15 @@ function FriendList({ friends, user }) {
                             primary={friend.username} 
                             secondary={`Última partida: ${getLastGameDate(friend._id)} | Total de partidas: ${getTotalGamesPlayed(friend._id)}`} 
                         />
+                        <IconButton
+                            edge="end"
+                            color="secondary"
+                            onClick={() => navigate(`/gamehistory/${friend.username}`)} // Navegar al historial
+                            aria-label={`Historial de ${friend.username}`}
+                            sx={{ mr: 1 }}
+                        >
+                            <HistoryIcon />
+                        </IconButton>
                         <IconButton
                             edge="end"
                             color="secondary"
