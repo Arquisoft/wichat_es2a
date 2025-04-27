@@ -117,7 +117,7 @@ function FriendList({ friends, user }) {
                         />
                         <IconButton
                             edge="end"
-                            color="primary"
+                            color="secondary"
                             onClick={() => navigate(`/chat/${friend.username}`)} // Navegar al chat privado
                             aria-label={`Chat con ${friend.username}`}
                             sx={{ mr: 1 }}
