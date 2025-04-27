@@ -38,18 +38,20 @@ const scoreStyle = {
 const Score = ({ currentQuestion, trues, falses, currentScore }) => {
     return (
         <div style={marcadorStyle}>
-        {/* Sección superior con X/10 y trues/falses */}
+
+        {/* Sección izquierda con X/10 y trues/falses */}
         <div style={miniSectionStyle}>
             <div style={miniLabelStyle}>
-            {currentQuestion}/10
+            Pregunta: {currentQuestion}/10
             </div>
             <div style={miniLabelStyle}>
-            <span style={{ color: 'green' }}>{trues}</span> / <span style={{ color: 'red' }}>{falses}</span>
+                <span style={{ color: 'green' }}>Aciertos: {trues}</span> / <span style={{ color: 'red' }}>Fallos: {falses}</span>
             </div>
         </div>
+        
         {/* Sección derecha con la puntuación */}
         <div style={scoreStyle}>
-            {currentScore}
+            Puntos: {currentScore}
         </div>
         </div>
     );
