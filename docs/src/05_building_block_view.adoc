@@ -5,8 +5,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 == Building Block View
 
-ifdef::arc42help[]
-
 === Whitebox Overall System
 
 .Building Block View.
