@@ -13,6 +13,7 @@ import img4_7 from '../media/4-7.gif';
 import img7_10 from '../media/7-10.gif';
 
 import { useLocation, useNavigate } from 'react-router-dom';
+import Score from './Score';
 
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';

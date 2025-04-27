@@ -1,31 +1,37 @@
 import React from 'react';
+import defaultTheme from './config/default-Theme.json';
 
 // Estilo del componente
 const marcadorStyle = {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
     height: '100%',
     border: '1px solid #ccc',
     borderRadius: '8px',
     padding: '10px',
     boxSizing: 'border-box',
+    backgroundColor: defaultTheme.palette.primary.main,
 };
 
-const topSectionStyle = {
+const miniSectionStyle = {
+    backgroundColor: '#ffffff',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    borderRadius: '8px',
+    padding: '10px',
 };
 
-const scoreLabelStyle = {
+const miniLabelStyle = {
     fontSize: '14px', // Tamaño pequeño para X/10 y trues/falses
-    color: '#333',
+    color: '#000000',
 };
 
 const scoreStyle = {
     fontSize: '36px', // Tamaño más grande para la puntuación
-    color: '#333',
+    color: '#ffffff',
     textAlign: 'right',
 };
 
@@ -33,11 +39,11 @@ const Score = ({ currentQuestion, trues, falses, currentScore }) => {
     return (
         <div style={marcadorStyle}>
         {/* Sección superior con X/10 y trues/falses */}
-        <div style={topSectionStyle}>
-            <div style={scoreLabelStyle}>
+        <div style={miniSectionStyle}>
+            <div style={miniLabelStyle}>
             {currentQuestion}/10
             </div>
-            <div style={scoreLabelStyle}>
+            <div style={miniLabelStyle}>
             <span style={{ color: 'green' }}>{trues}</span> / <span style={{ color: 'red' }}>{falses}</span>
             </div>
         </div>
