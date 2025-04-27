@@ -34,9 +34,9 @@ describe('Login component', () => {
         fireEvent.click(loginButton);
       });
 
-    // Espera a que desaparezca el botón de login tras login exitoso
+    // Espera a que el usuario sea guardado en localStorage tras login exitoso
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Login/i })).not.toBeInTheDocument();
+      expect(localStorage.getItem('user')).not.toBeNull();
     });
   });
 
