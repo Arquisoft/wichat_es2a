@@ -40,6 +40,10 @@ jobs:
     - run: npm install --prefix webapp react-router-dom@6.23.1
     - run: npm install --save-dev --prefix webapp @babel/plugin-proposal-private-property-in-object
     - run: npm --prefix wikidata ci
+    - run: npm --prefix users/authservice test -- --coverage
+    - run: npm --prefix users/userservice test -- --coverage
+    - run: npm --prefix llmservice test -- --coverage
+    - run: npm --prefix gatewayservice test -- --coverage
     - run: npm --prefix webapp test -- --coverage
     - run: npm --prefix wikidata test -- --coverage
     - name: Analyze with SonarQube
