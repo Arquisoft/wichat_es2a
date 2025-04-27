@@ -98,10 +98,25 @@ const GameHistoryUI = () => {
                 <TableHead>
                     <TableRow style={{ background: theme.palette.primary.main }}>
                         <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
+                            Preguntas totales
+                        </TableCell>
+                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
+                            Preguntas respondidas
+                        </TableCell>
+                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
+                            Categoria
+                        </TableCell>
+                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
+                            Nivel
+                        </TableCell>
+                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
                             <CheckCircle color="success" style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Correctas
                         </TableCell>
                         <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
                             <Cancel color="error" style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Erróneas
+                        </TableCell>
+                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
+                            Puntuacion
                         </TableCell>
                         <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
                             <AccessTime style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Duración (segundos)
@@ -114,8 +129,13 @@ const GameHistoryUI = () => {
                 <TableBody>
                     {gameHistory.map((game, index) => (
                         <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#bbdefb' }}>
+                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.totalQuestions}</TableCell>
+                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.answered}</TableCell>
+                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.category}</TableCell>
+                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.level}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.correct}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.wrong}</TableCell>
+                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.points}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.duration}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.createdAt}</TableCell>
                         </TableRow>

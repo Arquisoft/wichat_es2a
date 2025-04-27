@@ -105,7 +105,13 @@ app.post('/game/start', async (req, res) => {
             correct: 0,
             wrong: 0,
             duration: 0,
-            createdAt: new Date()
+            createdAt: new Date(),
+            isCompleted: false,
+            category: "",
+            level: "",
+            totalQuestions: 10,
+            answered: 0,
+            points: 0
         });
 
         return res.json({ message: "Game started successfully" });
@@ -190,7 +196,12 @@ app.get('/game/statistics', async (req, res) => {
                 correct: game.correct,
                 wrong: game.wrong,
                 duration: game.duration,
-                createdAt: formattedDate
+                createdAt: formattedDate,
+                category: game.category,
+                level: game.level,
+                totalQuestions: game.totalQuestions,
+                answered: game.answered,
+                points: game.points
             };
         });
 
