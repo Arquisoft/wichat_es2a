@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Divider,
-  Grid,
-  Snackbar,
-  Alert,
-  InputAdornment
-} from '@mui/material';
+import {Container,Typography,Box,TextField,Button,Card,CardHeader,CardContent,CardActions,Divider,Grid,Snackbar,Alert,InputAdornment} from '@mui/material';
 import { Timer as TimerIcon } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from './config/default-Theme.json';
@@ -60,7 +45,7 @@ const Configuration = () => {
 
   const handleSave = () => {
     const { easy, medium, hard } = config.timerSettings;
-    if (easy < 5 || medium < 5 || hard < 5) {
+    if (!validateTimes(easy, medium, hard)) {
       setOpenError(true);
       return;
     }
@@ -69,6 +54,25 @@ const Configuration = () => {
     setOpenSuccess(true);
     window.location.reload();
   };
+
+  // Validación de tiempos para cada nivel
+  const validateTimes = (easy, medium, hard) => {
+    return isValidTime(easy, 'easy') 
+      && isValidTime(medium, 'medium') 
+      && isValidTime(hard, 'hard');
+  }
+
+  const isValidTime = (time, level) => {
+    if (level === 'easy') {
+      return (time >= 60 && time <= 600);
+    } else if (level === 'medium') {
+      return (time >= 10 && time <= 60);
+    } else if (level === 'hard') {
+      return (time >= 5 && time <= 10);
+    }
+    return false;
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -106,7 +110,19 @@ const Configuration = () => {
                 />
               </Grid>
               {/* Cronómetros por nivel */}
-              {levels.map(({ key, label }) => (
+              {levels.map(({ key, label }) => {
+
+                // Mensajes de tiempos por nivel
+                let helperTextMessage = "";
+                if (key === 'easy') {
+                  helperTextMessage = "Entre 1 y 10 minutos"; 
+                } else if (key === 'medium') {
+                  helperTextMessage = "Entre 10 y 60 segundos";
+                } else if (key === 'hard') {
+                  helperTextMessage = "Entre 5 y 10 segundos";
+                }
+
+                return (
                 <Grid item xs={12} sm={4} key={key}>
                   <TextField
                     label={`Cronómetro ${label}`}
@@ -123,11 +139,12 @@ const Configuration = () => {
                       ),
                       endAdornment: <InputAdornment position="end">s</InputAdornment>
                     }}
-                    helperText=">= 5 segundos"
+                    
+                    helperText= { helperTextMessage}
                     sx={{ '& .MuiInputBase-root': { height: 56 } }}
                   />
                 </Grid>
-              ))}
+              )})}
             </Grid>
           </CardContent>
           <Divider />
@@ -145,7 +162,7 @@ const Configuration = () => {
         </Snackbar>
         <Snackbar open={openError} autoHideDuration={4000} onClose={() => setOpenError(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
           <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-            Los tiempos por nivel deben ser ≥ 5 s.
+            Los tiempos por nivel no cumplen los requisitos.
           </Alert>
         </Snackbar>
       </Container>
