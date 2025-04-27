@@ -37,6 +37,8 @@ jobs:
     - run: npm --prefix llmservice ci
     - run: npm --prefix gatewayservice ci
     - run: npm --prefix webapp ci
+    - run: npm install --prefix webapp react-router-dom
+    - run: npm install --save-dev --prefix webapp @babel/plugin-proposal-private-property-in-object
     - run: npm --prefix wikidata ci
     - run: npm --prefix users/authservice test -- --coverage
     - run: npm --prefix users/userservice test -- --coverage
