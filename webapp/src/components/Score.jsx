@@ -1,6 +1,7 @@
 import React from 'react';
 import defaultTheme from './config/default-Theme.json';
 
+
 // Estilo del componente
 const marcadorStyle = {
     display: 'flex',
@@ -13,6 +14,7 @@ const marcadorStyle = {
     padding: '10px',
     boxSizing: 'border-box',
     backgroundColor: defaultTheme.palette.primary.main,
+    margin: 'auto 50px',
 };
 
 const miniSectionStyle = {
@@ -38,6 +40,11 @@ const scoreStyle = {
 const Score = ({ currentQuestion, trues, falses, currentScore }) => {
     return (
         <div style={marcadorStyle}>
+        
+        {/* Sección izquierda */}
+        <div style={scoreStyle}>
+            Marcador
+        </div>
 
         {/* Sección izquierda con X/10 y trues/falses */}
         <div style={miniSectionStyle}>
@@ -48,12 +55,14 @@ const Score = ({ currentQuestion, trues, falses, currentScore }) => {
                 <span style={{ color: 'green' }}>Aciertos: {trues}</span> / <span style={{ color: 'red' }}>Fallos: {falses}</span>
             </div>
         </div>
-        
+
         {/* Sección derecha con la puntuación */}
         <div style={scoreStyle}>
             Puntos: {currentScore}
         </div>
+
         </div>
+
     );
 };
 

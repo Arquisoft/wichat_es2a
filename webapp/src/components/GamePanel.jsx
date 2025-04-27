@@ -351,17 +351,23 @@ useEffect(() => {
             style={{ 
               display: 'flex', 
               flexDirection:'row', 
-              justifyContent: 'space-around', 
-              width: '100%'
+              justifyContent: 'space-between', 
+              width: '80%'
               }}>
 
-            {/* Texto con el indice de la pregunta */}
+            {/* Texto con el indice de la pregunta
             <Typography variant="h4" align="center">
                   {`Pregunta ${currentQuestionIndex + 1} de ${TOTAL_QUESTIONS}`}
-            </Typography>
+            </Typography> */}
 
             {/* Marcador de puntuacion */}
-            <Score
+            <Score 
+
+              style=
+              {{
+                width: '50%',
+              }}
+
               currentQuestion={currentQuestionIndex + 1}
               trues={correctCount}
               falses={incorrectCount}
@@ -370,6 +376,7 @@ useEffect(() => {
             
             {/* Cuenta atras del tiempo para responder esa pregunta */}
             <Countdown 
+
               key={countdownKey} 
               timerLevel={level} 
               onCountdownFinish={handleCountdownFinish}
