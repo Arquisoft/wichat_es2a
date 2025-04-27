@@ -7,16 +7,21 @@ const User = require('./user-model');
 let mongoServer;
 let app;
 
+afterAll(async () => {
+  if (app && typeof app.close === 'function') {
+    await app.close();
+  }
+  if (mongoServer && typeof mongoServer.stop === 'function') {
+    await mongoServer.stop();
+  }
+});
+
 beforeAll(async () => {
+  jest.setTimeout(30000); 
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   process.env.MONGODB_URI = mongoUri;
   app = require('./user-service');
-});
-
-afterAll(async () => {
-  app.close();
-  await mongoServer.stop();
 });
 
 describe('User Service', () => {
@@ -28,6 +33,7 @@ describe('User Service', () => {
     const newUser = {
       username: 'testuser',
       password: 'testpassword',
+      confirmPassword: 'testpassword', 
     };
 
     const response = await request(app).post('/adduser').send(newUser);
