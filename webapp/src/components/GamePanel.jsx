@@ -283,20 +283,34 @@ useEffect(() => {
         backgroundColor: theme.palette.background.default,
         }}
       >
-        <Paper style={{ padding: '32px', textAlign: 'center' }}>
+        <Paper style={{ padding: '14px 32px', textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
           Resumen del Juego
         </Typography>
-        <Typography variant="h6">
+        <Typography 
+          variant="h6"
+          style={{ fontSize: '0.9rem' }}
+          >
           Preguntas totales de la partida: {TOTAL_QUESTIONS}
         </Typography>
-        <Typography variant="h6">
+        <Typography 
+          variant="h6"
+          style={{ fontSize: '0.9rem' }}
+          >
           Preguntas contestadas: {numberOfQuestionsAnswered}
         </Typography>
-        <Typography variant="h6" color="green">
+        <Typography 
+          variant="h6" 
+          color="green"
+          style={{ fontSize: '0.9rem' }}
+          >
           Respuestas correctas: {correctCount}
         </Typography>
-        <Typography variant="h6" color="red">
+        <Typography 
+          variant="h6" 
+          color="red"
+          style={{ fontSize: '0.9rem' }}
+          >
           Respuestas incorrectas: {incorrectCount}
         </Typography>
         {correctCount < 4 ? (
@@ -306,7 +320,10 @@ useEffect(() => {
           ) : (
           <img src={img7_10} alt="Nivel 7-10" style={{ width: '100%', maxWidth: '400px' }} />
           )}
-        <Typography variant="h5" style={{ marginTop: '16px' }}>
+        <Typography 
+          variant="h6" 
+          style={{ marginTop: '14px', fontSize: '0.9rem' }}
+          >
           {performanceMessage}
         </Typography>
         <Box
@@ -314,7 +331,7 @@ useEffect(() => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          marginTop: '16px',
+          marginTop: '3px',
           }}
         >
           <Button
