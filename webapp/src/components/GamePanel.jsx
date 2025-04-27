@@ -313,6 +313,12 @@ useEffect(() => {
           >
           Respuestas incorrectas: {incorrectCount}
         </Typography>
+        <Typography 
+          variant="h6" 
+          style={{ fontSize: '0.9rem' }}
+          >
+          Puntuacion: {scoreRef.current.getTotalScore()}
+        </Typography>
         {correctCount < 4 ? (
           <img src={img0_4} alt="Nivel 0-4" style={{ width: '100%', maxWidth: '400px' }} />
           ) : correctCount >= 4 && correctCount < 7 ? (

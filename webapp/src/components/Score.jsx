@@ -91,7 +91,7 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
 
 
     // Función para calcular la puntuación total
-    const calculateTotalScore = () => {
+    const getTotalScore = () => {
 
         return currentScore;
     }
@@ -100,7 +100,7 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
     // Funciones accesibles desde el componente superior
     useImperativeHandle(ref, () => ({
         calculateNewScore,
-        calculateTotalScore,
+        getTotalScore,
     }));
 
     return (
