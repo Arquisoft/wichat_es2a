@@ -120,7 +120,7 @@ app.post('/game/start', async (req, res) => {
 // Example: http://localhost:3001/game/end
 app.post('/game/end', async (req, res) => {
     try {
-        const { userId, correct, wrong } = req.body;
+        const { userId, category, level, totalQuestions, answered, correct, wrong, points } = req.body;
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
@@ -139,6 +139,11 @@ app.post('/game/end', async (req, res) => {
         game.correct = correct;
         game.wrong = wrong;
         game.isCompleted = true;
+        game.category = category;
+        game.level = level;
+        game.totalQuestions = totalQuestions;
+        game.answered = answered;
+        game.points = points;
 
         await game.save();
 
@@ -146,7 +151,12 @@ app.post('/game/end', async (req, res) => {
             correct: game.correct,
             wrong: game.wrong,
             duration: game.duration,
-            isCompleted: game.isCompleted
+            isCompleted: game.isCompleted,
+            category: game.category,
+            level: game.level,
+            totalQuestions: game.totalQuestions,
+            answered: game.answered,
+            points: game.points
         });
 
     } catch (error) {
