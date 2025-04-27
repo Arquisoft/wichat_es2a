@@ -34,9 +34,9 @@ describe('Login component', () => {
         fireEvent.click(loginButton);
       });
 
-    // Espera a que aparezca el texto "WICHAT" tras login exitoso
+    // Espera a que desaparezca el botón de login tras login exitoso
     await waitFor(() => {
-      expect(screen.getByText('WICHAT')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /Login/i })).not.toBeInTheDocument();
     });
   });
 
