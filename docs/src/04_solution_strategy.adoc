@@ -22,21 +22,24 @@ Many of them have been based on the project template provided by the teachers, a
 
 === Top-level decomposition of the system
 
-An architecture using microservices has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:
+An architecture using services has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:
 
-* *User management service*: It will manage the creation of new users, their login, store their game history ...
+* *Gateway service*: It will manage different services of the application (users, game, chat, etc).
 
-* *Group management service*: It will manage the creation of new groups, the addition of users to them and the chat between users.
+* *User service*: It will manage the creation of new users, store their information ...
 
-* *Game service*: It will generate questions and possible answers from the chosen image.
+* *Authentication service*: It will manage the authentication of users when they log in.
 
-* *Chat service*: It will use the LLM to help the user with hints to facilitate the game.
+* *Groups service*: It will manage the creation of new groups, the addition of users to them and the chat between users.
 
-* *Wikidata connection service*: It will get the image and the necessary information from Wikidata.
+* *Wikidata service*: It will connect with Wikidata API to get the image and the necessary information for the game.
 
-* *Service to export user information*: It will allow access to user information stored in the system through an API.
+* *Web app*: It will contain the game and other functionabilities of the application.
 
-* *Service to export the information of the questions*: It will allow access to the information of the questions through an API.
+* *LLM service*: It will use Google Gemini to generate a chat to help the user with hints to facilitate the game.
+
+* *API service*: It will allow access to information stored in data base of the system (questions, users, etc) through an API.
+
 
 .Interaction between services
 image::services_connection.svg[Interaction between services, 700, 500, align="center"]
