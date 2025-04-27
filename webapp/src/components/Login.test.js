@@ -3,6 +3,7 @@ import { render, fireEvent, screen, waitFor, act } from '@testing-library/react'
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Login from './Login';
+import { MemoryRouter } from 'react-router-dom';
 
 const mockAxios = new MockAdapter(axios);
 
@@ -12,7 +13,11 @@ describe('Login component', () => {
   });
 
   it('should log in successfully', async () => {
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
 
     const usernameInput = screen.getByLabelText(/Username/i);
     const passwordInput = screen.getByLabelText(/Password/i);
@@ -29,12 +34,18 @@ describe('Login component', () => {
         fireEvent.click(loginButton);
       });
 
-    // Verify that the user information is displayed
-    expect(screen.getByText(/Your account was created on 1\/1\/2024/i)).toBeInTheDocument();
+    // Espera a que el usuario sea guardado en localStorage tras login exitoso
+    await waitFor(() => {
+      expect(localStorage.getItem('user')).not.toBeNull();
+    });
   });
 
   it('should handle error when logging in', async () => {
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
 
     const usernameInput = screen.getByLabelText(/Username/i);
     const passwordInput = screen.getByLabelText(/Password/i);
@@ -52,7 +63,7 @@ describe('Login component', () => {
 
     // Wait for the error Snackbar to be open
     await waitFor(() => {
-      expect(screen.getByText(/Error: Unauthorized/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor, revisa tu usuario y contraseña\./i)).toBeInTheDocument();
     });
 
     // Verify that the user information is not displayed
