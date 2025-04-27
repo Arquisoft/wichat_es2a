@@ -20,8 +20,11 @@ The game will consist of the user having to guess the location of a photo shown 
 The objective of this game will be to expand the users' knowledge and memory, while they have a good time. In the meantime, its main functionalities will be:
 
 * Question and answer generation
-* Implementation of a chat to give clues
+* Implementation of a IA chat to give clues
 * User registration and their previous results
+* Implementation of users groups
+* Implementation of chat between different users
+
 
 
 
@@ -32,9 +35,13 @@ The main objective of this project is the development of a new web application t
 The application will have the following functionalities:
 
 * A web frontend that will display the images of the game along with the question and its possible answers, which must be answered in a given time.
+* Questions topic will be choose by users from a list of topics (footballers, painters, scientists, etc.).
+* Game will have a time limit to answer the questions in function of the difficulty level.
 * Both images and answers will be generated from Wikidata data and will be accessible through an API.
 * A chat using an LLM to give hints to users.
 * User registration system to save their previous results, which will be accessible through an API.
+* Users will be able to create new groups or join existing ones.
+* Users will be able to chat with each other.
 
 For more information about the requirements, see next link:
 
