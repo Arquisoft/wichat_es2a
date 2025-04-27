@@ -46,6 +46,7 @@ const GamePanel = () => {
   const [numberOfQuestionsAnswered, setNumberOfQuestionsAnswered] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+  const [scorePoints, setScorePoints] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -117,6 +118,7 @@ const GamePanel = () => {
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
       setGameEnded(true);
+      endGame();
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -137,7 +139,8 @@ const GamePanel = () => {
     // Sacas el tiempo que ha tardado en responder
     const timeUse = countdownRef.current.getCurrentTime();
     // Recalculas la puntuación del marcador
-    scoreRef.current.calculateNewScore(timeUse, true, answer === questionData.correctAnswer);
+    let score = scoreRef.current.calculateNewScore(timeUse, true, answer === questionData.correctAnswer);
+    setScorePoints(prev => score);
 
     if (answer === questionData.correctAnswer) {
       setCorrectCount(prev => prev + 1);
@@ -162,12 +165,12 @@ const GamePanel = () => {
     return {};
   };
 
-  const resetGame = async () => {
+  const resetGame = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    await endGame(); // Asegurarse de que endGame se complete antes de continuar
-    await startGame(); // Iniciar un nuevo juego después de finalizar el anterior
+    // await endGame(); // Asegurarse de que endGame se complete antes de continuar
+    startGame(); // Iniciar un nuevo juego después de finalizar el anterior
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -213,7 +216,17 @@ const endGame = async () => {
     try {
         const userId = getUserId();
         if (userId) {
-            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+            await axios.post(`${apiEndpoint}/game/end`, 
+              { 
+                userId, 
+                category: category,
+                level: level,
+                totalQuestions: TOTAL_QUESTIONS,
+                answered: numberOfQuestionsAnswered,
+                correct: correctCount, 
+                wrong: incorrectCount,
+                points: scorePoints
+              });
         }
     } catch (error) {
         console.error('Error al finalizar el juego:', error);
@@ -268,7 +281,7 @@ useEffect(() => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
-    endGame();
+    // endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
