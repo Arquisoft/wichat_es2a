@@ -225,7 +225,7 @@ const endGame = async () => {
                 answered: numberOfQuestionsAnswered,
                 correct: correctCount, 
                 wrong: incorrectCount,
-                points: scorePoints 
+                points: scorePoints
               });
         }
     } catch (error) {
