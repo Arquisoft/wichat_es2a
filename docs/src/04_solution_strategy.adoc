@@ -16,7 +16,7 @@ Many of them have been based on the project template provided by the teachers, a
 * *MongoDB*: NoSQL-like database, which stores data in a JSON-like format and favours application scalability and flexibility when it comes to handling unstructured data.
 * *GitHub*: Web application used in software development that allows code to be written, stored, organised by version and collaborated on by different members of a team using Git.
 * *Docker*: Tool that allows you to create, deploy and run applications in containers, testing that the application works in different environments.
-* *Mistral / Qwen*: One of this AI tools to implement the LLM for the chat service in the game.
+* *Google Gemini*: One of this AI tools to implement the LLM for the chat service in the game.
 
 
 
@@ -25,6 +25,8 @@ Many of them have been based on the project template provided by the teachers, a
 An architecture using microservices has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:
 
 * *User management service*: It will manage the creation of new users, their login, store their game history ...
+
+* *Group management service*: It will manage the creation of new groups, the addition of users to them and the chat between users.
 
 * *Game service*: It will generate questions and possible answers from the chosen image.
 
