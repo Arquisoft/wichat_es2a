@@ -359,6 +359,14 @@ useEffect(() => {
                   {`Pregunta ${currentQuestionIndex + 1} de ${TOTAL_QUESTIONS}`}
             </Typography>
 
+            {/* Marcador de puntuacion */}
+            <Score
+              currentQuestion={currentQuestionIndex + 1}
+              trues={correctCount}
+              falses={incorrectCount}
+              currentScore={correctCount - incorrectCount}
+            />
+            
             {/* Cuenta atras del tiempo para responder esa pregunta */}
             <Countdown 
               key={countdownKey} 
