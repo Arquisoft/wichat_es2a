@@ -1,14 +1,9 @@
-// tests/wikidataFakeAnswersService.real.test.js
-
-// Limpiamos módulos y mocks previos
 jest.resetModules();
 
-// Mock controlado del modelo de datos antes de importar el servicio real
 jest.doMock('../src/model/wikidataFakeAnswers', () => [
   { category: 'TestCat', answers: ['A', 'B', 'C', 'D', 'E'] }
 ]);
 
-// Aseguramos que usamos la implementación real del servicio
 jest.unmock('../src/services/wikidataFakeAnswersService');
 const realFakeAnswersService = require('../src/services/wikidataFakeAnswersService');
 
@@ -24,7 +19,6 @@ describe('wikidataFakeAnswersService.getFakeAnswers (real implementation)', () =
     const correct = 'B';
     const len = testAnswers.length;
     const startIdx = testAnswers.indexOf(correct);
-    // Secuencia determinista de Math.random()
     const seq = [
       startIdx / len,
       ((startIdx + 1) % len) / len,
@@ -50,7 +44,6 @@ describe('wikidataFakeAnswersService.getFakeAnswers (real implementation)', () =
   it('si correctAnswer no está en la lista, devuelve 3 válidas', () => {
     const correct = 'Z';
     const len = testAnswers.length;
-    // 3 picks distintos
     jest.spyOn(Math, 'random')
       .mockImplementationOnce(() => 0)
       .mockImplementationOnce(() => 1 / len)

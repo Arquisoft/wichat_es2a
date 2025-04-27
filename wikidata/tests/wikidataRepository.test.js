@@ -1,6 +1,3 @@
-// tests/wikidataRepository.unit.test.js
-
-// Mock del modelo de Mongoose (Question)
 jest.mock('../src/model/wikidataModel', () => ({
   Question: {
     find: jest.fn(),
@@ -21,7 +18,6 @@ describe('wikidataRepository core methods (unit tests, sin BD)', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Inicializamos con instancia y URI mockeados
     repository.init(dummyMongoose, dummyUri);
   });
 
@@ -71,7 +67,6 @@ describe('wikidataRepository core methods (unit tests, sin BD)', () => {
 
   describe('getAllQuestions', () => {
     beforeEach(() => {
-      // Stub checkUp para evitar conexión real
       repository.checkUp = jest.fn().mockResolvedValue();
     });
 
