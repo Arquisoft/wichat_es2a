@@ -4,7 +4,7 @@ import { loadConfig, defaultConfig } from '../utils/config';
 import './Countdown.css';
 
 
-import React, { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 
 
 
@@ -82,12 +82,12 @@ const Countdown = forwardRef(({ timerLevel, onCountdownFinish }, ref) => {
 
     // Funcion para devolver al juego el tiempo utilizado
     const getCurrentTime = () => {
-        return seconds;
+        return questionTime - seconds;
     };
 
     // Funcion para devolver al juego el tiempo restante
     const getTimeLeft = () => {
-        return questionTime - seconds;
+        return seconds;
     };
 
     // Funciones accesibles desde el componente superior

@@ -1,6 +1,9 @@
 import React from 'react';
 import defaultTheme from './config/default-Theme.json';
 
+import { forwardRef, useImperativeHandle } from 'react';
+import { useState } from 'react';
+
 
 // Estilo del componente
 const marcadorStyle = {
@@ -37,7 +40,69 @@ const scoreStyle = {
     textAlign: 'right',
 };
 
-const Score = ({ currentQuestion, trues, falses, currentScore }) => {
+const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, falses  }, ref) => {
+
+    const [currentScore, setCurrentScore] = useState(0);
+
+    // Función interna para calcular la puntuación de una pregunta
+    const calculateAnswerPoints = (timeUse, isAnswer, isCorrect) => {
+
+        // Si no se ha respondido, no se le da puntuación
+        if (!isAnswer) {
+            return 0;
+        }
+
+        // Puntos por acierto por nivel
+        let truesPoints = 0;
+        switch (scoreLevel) {
+            case 'facil':
+                truesPoints = 300;
+            case 'medio':
+                truesPoints = 500;
+            case 'dificil':
+                truesPoints = 700;
+        }
+
+        // Puntos por fallo por nivel
+        let falsesPoints = 0;
+        switch (scoreLevel) {
+            case 'facil':
+                falsesPoints = -100;
+            case 'medio':
+                falsesPoints = -200;
+            case 'dificil':
+                falsesPoints = -300;
+        }
+
+        // Se quita 10 puntos por cada segundo que se ha tardado en responder
+        let answerPoints = isCorrect ? (truesPoints - timeUse * 10) : falsesPoints;
+
+        return answerPoints;
+    };
+
+
+
+    // Función para calcular la puntuación total en cada pregunta
+    const calculateNewScore = (timeUse, isAnswer, isCorrect) => {
+        
+        setCurrentScore(p => p + calculateAnswerPoints(timeUse, isAnswer, isCorrect));
+        return currentScore;
+    }
+
+
+    // Función para calcular la puntuación total
+    const calculateTotalScore = () => {
+
+        return currentScore;
+    }
+
+    
+    // Funciones accesibles desde el componente superior
+    useImperativeHandle(ref, () => ({
+        calculateNewScore,
+        calculateTotalScore,
+    }));
+
     return (
         <div style={marcadorStyle}>
         
@@ -52,7 +117,16 @@ const Score = ({ currentQuestion, trues, falses, currentScore }) => {
             Pregunta: {currentQuestion}/10
             </div>
             <div style={miniLabelStyle}>
-                <span style={{ color: 'green' }}>Aciertos: {trues}</span> / <span style={{ color: 'red' }}>Fallos: {falses}</span>
+                <span>
+                    Respondidas: {answered} | 
+                </span>
+                <span style={{ color: 'green' }}>
+                    | Aciertos: {trues} |
+                </span> 
+                    
+                <span style={{ color: 'red' }}>
+                    | Fallos: {falses}
+                </span>
             </div>
         </div>
 
@@ -64,6 +138,6 @@ const Score = ({ currentQuestion, trues, falses, currentScore }) => {
         </div>
 
     );
-};
+});
 
 export default Score;
