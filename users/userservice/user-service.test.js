@@ -32,8 +32,8 @@ describe('User Service', () => {
   it('should add a new user on POST /adduser', async () => {
     const newUser = {
       username: 'testuser',
-      password: 'testpassword',
-      confirmPassword: 'testpassword', 
+      password: 'Testpassword1!', // Cumple requisitos de seguridad
+      confirmPassword: 'Testpassword1!',
     };
 
     const response = await request(app).post('/adduser').send(newUser);
@@ -48,7 +48,7 @@ describe('User Service', () => {
     expect(userInDb.username).toBe('testuser');
 
     // Assert that the password is encrypted
-    const isPasswordValid = await bcrypt.compare('testpassword', userInDb.password);
+    const isPasswordValid = await bcrypt.compare('Testpassword1!', userInDb.password);
     expect(isPasswordValid).toBe(true);
   });
 
