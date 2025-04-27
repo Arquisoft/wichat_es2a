@@ -7,16 +7,21 @@ const User = require('./user-model');
 let mongoServer;
 let app;
 
+afterAll(async () => {
+  if (app && typeof app.close === 'function') {
+    await app.close();
+  }
+  if (mongoServer && typeof mongoServer.stop === 'function') {
+    await mongoServer.stop();
+  }
+});
+
 beforeAll(async () => {
+  jest.setTimeout(30000); 
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   process.env.MONGODB_URI = mongoUri;
   app = require('./user-service');
-});
-
-afterAll(async () => {
-  app.close();
-  await mongoServer.stop();
 });
 
 describe('User Service', () => {
@@ -27,7 +32,8 @@ describe('User Service', () => {
   it('should add a new user on POST /adduser', async () => {
     const newUser = {
       username: 'testuser',
-      password: 'testpassword',
+      password: 'Testpassword1!', // Cumple requisitos de seguridad
+      confirmPassword: 'Testpassword1!',
     };
 
     const response = await request(app).post('/adduser').send(newUser);
@@ -42,7 +48,7 @@ describe('User Service', () => {
     expect(userInDb.username).toBe('testuser');
 
     // Assert that the password is encrypted
-    const isPasswordValid = await bcrypt.compare('testpassword', userInDb.password);
+    const isPasswordValid = await bcrypt.compare('Testpassword1!', userInDb.password);
     expect(isPasswordValid).toBe(true);
   });
 
