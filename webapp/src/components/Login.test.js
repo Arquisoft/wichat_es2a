@@ -35,7 +35,7 @@ describe('Login component', () => {
       });
 
     // Verify that the user information is displayed
-    expect(screen.getByText(/Your account was created on 1\/1\/2024/i)).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes('Your account was created on 1/1/2024'))).toBeInTheDocument();
   });
 
   it('should handle error when logging in', async () => {
@@ -61,7 +61,7 @@ describe('Login component', () => {
 
     // Wait for the error Snackbar to be open
     await waitFor(() => {
-      expect(screen.getByText(/Error: Unauthorized/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor, revisa tu usuario y contraseña\./i)).toBeInTheDocument();
     });
 
     // Verify that the user information is not displayed
