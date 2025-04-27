@@ -34,8 +34,10 @@ describe('Login component', () => {
         fireEvent.click(loginButton);
       });
 
-    // Verify that the user information is displayed
-    expect(screen.getByText((content) => content.includes('WICHAT'))).toBeInTheDocument();
+    // Espera a que aparezca el texto "WICHAT" tras login exitoso
+    await waitFor(() => {
+      expect(screen.getByText('WICHAT')).toBeInTheDocument();
+    });
   });
 
   it('should handle error when logging in', async () => {

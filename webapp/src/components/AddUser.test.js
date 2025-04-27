@@ -64,9 +64,9 @@ describe('AddUser component', () => {
     // Trigger the add user button click
     fireEvent.click(addUserButton);
 
-    // Wait for the error Snackbar to be open
+    // Wait for the error Snackbar a que aparezca el mensaje de error
     await waitFor(() => {
-      expect(screen.getByText(/Error: Internal Server Error/i)).toBeInTheDocument();
+      expect(screen.getByText('Internal Server Error')).toBeInTheDocument();
     });
   });
 });
