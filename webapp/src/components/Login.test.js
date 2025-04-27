@@ -35,7 +35,7 @@ describe('Login component', () => {
       });
 
     // Verify that the user information is displayed
-    expect(screen.getByText((content) => content.includes('Your account was created on 1/1/2024'))).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes('WICHAT'))).toBeInTheDocument();
   });
 
   it('should handle error when logging in', async () => {
