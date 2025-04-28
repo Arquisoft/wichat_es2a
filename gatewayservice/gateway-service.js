@@ -51,6 +51,14 @@ app.post('/adduser', async (req, res) => {
 
 app.post('/askllm', async (req, res) => {
   try {
+    // Log the request parameters
+    console.log("Gateway: Solicitud LLM recibida con params:", {
+      question: req.body.question,
+      category: req.body.category,
+      answer: req.body.answer,
+      language: req.body.language || 'en'
+    });
+    
     // Forward the LLM question request to the LLM service
     const llmResponse = await axios.post(llmServiceUrl + '/ask', req.body);
     res.json(llmResponse.data);
