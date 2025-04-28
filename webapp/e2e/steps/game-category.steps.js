@@ -37,7 +37,7 @@ defineFeature(feature, test => {
       password = "admin"
 
       // Definimos la categoría a seleccionar
-      category = "Futbolistas"
+      category = "Lugares"
       dificulty = "medio"
 
       // Introduces los datos de usuario y contraseña
@@ -51,10 +51,10 @@ defineFeature(feature, test => {
 
     when('User choose category and press start button', async () => {
       
-      // Abre el Select para escoger la categoría (Futbolistas)
+      // Abre el Select para escoger la categoría
       await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
-      // Escoge la categoría "Futbolistas" del menú desplegable
+      // Escoge la categoría del menú desplegable
       await page.click('li[data-value="'+category+'"]');
 
       // Abre el Select para escoger la dificultad
@@ -73,12 +73,12 @@ defineFeature(feature, test => {
     then('Game start in this category', async () => {
         
         // Espera a que el div que contiene el texto sea visible.
-        await page.waitForSelector('div', { text: '¿Quién es este futbolista?' });  
+        await page.waitForSelector('div', { text: '¿A qué lugar corresponde la siguiente foto?' });  
 
         // Verifica que el texto esté presente en el div.
         // Se comprueba el texto de la pregunta que se muestra en el juego.
         // Ya que cada categoría tiene su propia pregunta.
-        await expect(page).toMatchElement('div', { text: '¿Quién es este futbolista?' });  
+        await expect(page).toMatchElement('div', { text: '¿A qué lugar corresponde la siguiente foto?' });  
         
     });
   })
