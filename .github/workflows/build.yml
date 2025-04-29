@@ -274,7 +274,7 @@ jobs:
   deploy-to-oracle:
     name: Deploy to Oracle Machine
     runs-on: ubuntu-latest
-    needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-apiservice,docker-push-groupservice]
+    needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-apiservice,docker-push-groupservice,docker-push-mathgame]
     if: github.event_name == 'push'
     steps:
     - name: Deploy over SSH
