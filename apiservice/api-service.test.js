@@ -24,6 +24,7 @@ describe('API Service', () => {
     jest.clearAllMocks();
   });
 
+ 
   describe('Health Check', () => {
     it('should return status OK', async () => {
       const response = await request(app).get('/health');
@@ -155,14 +156,23 @@ describe('API Service', () => {
   });
   
   describe('Server bootstrap', () => {
-    it('should start the server without crashing', () => {
-      jest.spyOn(console, 'log').mockImplementation(() => {});
-      require('./server');
-      expect(true).toBe(true); 
+    let server;
   
+    beforeAll(() => {
+      jest.spyOn(console, 'log').mockImplementation(() => {});
+      server = require('./server'); 
+    });
+  
+    afterAll((done) => {
+      server.close(done);
       console.log.mockRestore();
     });
+  
+    it('should start the server without crashing', () => {
+      expect(true).toBe(true);
+    });
   });
+  
   
   
 
