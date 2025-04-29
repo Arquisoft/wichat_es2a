@@ -1,6 +1,7 @@
 const request = require('supertest');
 const axios = require('axios');
 const app = require('./gateway-service');
+const crypto = require('crypto');
 
 jest.mock('axios');
 
@@ -83,7 +84,7 @@ describe('Gateway Service', () => {
   });
 
   it('should forward login request to auth service', async () => {
-    const response = await request(app).post('/login').send({ username: 'testuser', password: Math.random() });
+    const response = await request(app).post('/login').send({ username: 'testuser', password: crypto.randomBytes(1) });
     expect(response.status).toBe(200);
     expect(response.body.token).toBe('mockedToken');
   });
