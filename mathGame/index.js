@@ -6,12 +6,6 @@ app.use(express.json());
 
 const PORT = process.env.MATHGAME_PORT || 3002;
 
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`MathGame service listening at http://localhost:${PORT}`);
-  });
-}
-
 /**
  * GET /mathgame/question/:base?
  * Devuelve una nueva operación matemática y opciones.
@@ -71,4 +65,13 @@ app.post('/mathgame/verify', (req, res) => {
   }
 });
 
-module.exports = app;
+if (require.main === module) {
+  const server = app.listen(PORT, () => {
+    console.log(`MathGame service listening at http://localhost:${PORT}`);
+  });
+
+  module.exports = server;
+} else {
+  module.exports = app;
+}
+
