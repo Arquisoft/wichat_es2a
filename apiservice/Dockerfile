@@ -14,4 +14,4 @@ RUN npm install
 COPY . .
 
 # Define the command to run your app
-CMD ["node", "api-service.js"]
+CMD ["node", "server.js"]

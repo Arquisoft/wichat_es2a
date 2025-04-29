@@ -4,7 +4,7 @@
     "description": "Api service, includes endpoint for wikidata and for users.",
     "main": "service.js",
     "scripts": {
-        "start": "node api-service.js",
+        "start": "node server.js",
         "test": "jest"
     },
     "repository": {
