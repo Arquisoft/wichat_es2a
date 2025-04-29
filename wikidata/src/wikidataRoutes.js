@@ -23,9 +23,14 @@ mongoose.connect(mongoUri, mongooseOptions).then(() => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`Server listening in port http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server listening in port http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
+
 
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
