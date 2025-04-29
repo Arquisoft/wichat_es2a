@@ -1,5 +1,3 @@
-// mathGame/index.js
-
 const express = require('express');
 const app = express();
 const service = require('./service/mathGameService');
@@ -7,9 +5,12 @@ const service = require('./service/mathGameService');
 app.use(express.json());
 
 const PORT = process.env.MATHGAME_PORT || 3002;
-app.listen(PORT, () => {
-  console.log(`MathGame service listening at http://localhost:${PORT}`);
-});
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`MathGame service listening at http://localhost:${PORT}`);
+  });
+}
 
 /**
  * GET /mathgame/question/:base?
@@ -69,3 +70,5 @@ app.post('/mathgame/verify', (req, res) => {
     res.status(500).json({ error: 'Error verifying math answer' });
   }
 });
+
+module.exports = app;
