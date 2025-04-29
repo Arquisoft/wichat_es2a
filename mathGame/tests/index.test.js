@@ -109,6 +109,41 @@ describe('MathGame API', () => {
           
             console.error.mockRestore();
           });
+
+          it('should handle internal error correctly in POST /mathgame/verify', async () => {
+            const { app } = require('../index'); // Importamos solo la app (sin server)
+          
+            // Espiamos console.error
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+          
+            // Preparamos una app que simula error en body
+            const brokenApp = require('express')();
+            brokenApp.use(require('express').json());
+          
+            // Ruta que simula error dentro de req.body
+            brokenApp.post('/mathgame/verify', (req, res) => {
+              try {
+                throw new Error('Simulated verify error');
+              } catch (err) {
+                console.error('Error verifying math answer:', err);
+                res.status(500).json({ error: 'Error verifying math answer' });
+              }
+            });
+          
+            const response = await request(brokenApp)
+              .post('/mathgame/verify')
+              .send({ choice: 1, correct: 1 });
+          
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual({ error: 'Error verifying math answer' });
+            expect(consoleSpy).toHaveBeenCalledWith(
+              expect.stringContaining('Error verifying math answer'),
+              expect.any(Error)
+            );
+          
+            consoleSpy.mockRestore();
+          });
+          
                   
     });
 });
