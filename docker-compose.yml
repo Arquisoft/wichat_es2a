@@ -175,7 +175,7 @@ services:
       - userservice
       - wikidata
     ports:
-      - "8008:8000"
+      - "8008:8008"
     networks:
       - mynetwork
     environment:
