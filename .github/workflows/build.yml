@@ -37,6 +37,8 @@ jobs:
     - run: npm --prefix llmservice ci
     - run: npm --prefix gatewayservice ci
     - run: npm --prefix webapp ci
+    - run: npm --prefix mathGame ci
+    - run: npm --prefix apiservice ci
     - run: npm install --prefix webapp react-router-dom@6.23.1
     - run: npm install --save-dev --prefix webapp @babel/plugin-proposal-private-property-in-object
     - run: npm --prefix wikidata ci
@@ -46,6 +48,8 @@ jobs:
     - run: npm --prefix gatewayservice test -- --coverage
     - run: npm --prefix webapp test -- --coverage
     - run: npm --prefix wikidata test -- --coverage
+    - run: npm --prefix mathGame test -- --coverage
+    - run: npm --prefix apiservice test -- --coverage
     - name: Analyze with SonarQube
       uses: SonarSource/sonarqube-scan-action@master
       env:
