@@ -36,9 +36,8 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
     // si no es un entero válido, usar tu valor por defecto
     const n = Number.isNaN(raw) || raw < 1 
       ? require('./utils/config').defaultConfig.numQuestions 
-      : raw;
-    try {
-        console.log("actualizado");
+      : raw;    
+      try {
         const questions = await service.getQuestions(category, n);
         res.json(questions);
     } catch (error) {

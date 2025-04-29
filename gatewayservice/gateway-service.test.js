@@ -37,14 +37,21 @@ describe('Gateway Service', () => {
       .send({ username: 'newuser', password: 'newpassword' });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.userId).toBe('mockedUserId');
-  });
+    expect(response.body.userId).toBe('mockedUserId');  });
 
   // Test /askllm endpoint
   it('should forward askllm request to the llm service', async () => {
     const response = await request(app)
       .post('/askllm')
-      .send({ question: 'question', apiKey: 'apiKey', model: 'gemini' });
+      .send({ 
+        question: 'question', 
+        apiKey: 'apiKey', 
+        model: 'gemini',
+        userId: 'testUser',
+        answer: 'testAnswer',
+        category: 'locations',
+        language: 'en'
+      });
 
     expect(response.statusCode).toBe(200);
     expect(response.body.answer).toBe('llmanswer');

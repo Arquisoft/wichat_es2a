@@ -22,7 +22,6 @@ const TOTAL_QUESTIONS = 10;
 
 
 const GamePanel = () => {
-
   // Obtenemos la categoría pasada en la URL
   const location = useLocation(); // Obtienes la ubicación de la URL
   const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
@@ -56,17 +55,18 @@ const GamePanel = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
 
-  
-
   const getQuestions = async () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
-      const data = response.data;
+      const data = response.data;      
       if (data && data.length == TOTAL_QUESTIONS) {
-        console.log("Preguntas recibidas: ", data.length);
+        // Modificamos las preguntas para asegurarnos de que usen la categoría de la URL
+        const modifiedData = data.map(question => ({
+          ...question,
+          userCategory: category // Guardamos la categoría de la URL para usarla con el LLM
+        }));
         setQuestions(data);
       } else {
-        console.error("No se recibieron preguntas válidas.");
         getQuestions();
       }
     } catch (error) {
@@ -90,13 +90,12 @@ const GamePanel = () => {
     }
     options = options.sort(() => Math.random() - 0.5);
 
-    setImageLoaded(false);
-
-    setQuestionData({
+    setImageLoaded(false);    setQuestionData({
       question: question.statements,
       image: question.image,
       options: options,
       correctAnswer: question.answer,
+      userCategory: category // Usar la categoría de la URL para el LLM
     });
   };
 
@@ -549,9 +548,12 @@ useEffect(() => {
               maxWidth: '500px',
               transition: 'width 0.5s ease-out',
               overflowY: 'auto',
-            }}
-          >
-            <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer} />
+            }}          >
+            <ChatPanel 
+              setShowChat={setShowChat} 
+              correctAnswer={questionData.correctAnswer} 
+              category={category} // Pasamos la categoría de la URL directamente
+            />
           </Grid>
         )}
         {!showChat && (
