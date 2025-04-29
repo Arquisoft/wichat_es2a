@@ -154,6 +154,16 @@ describe('API Service', () => {
     });
   });
   
+  describe('Server bootstrap', () => {
+    it('should start the server without crashing', () => {
+      jest.spyOn(console, 'log').mockImplementation(() => {});
+      require('./server');
+      expect(true).toBe(true); 
+  
+      console.log.mockRestore();
+    });
+  });
+  
   
 
 });
