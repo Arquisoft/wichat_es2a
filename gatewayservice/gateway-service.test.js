@@ -26,12 +26,12 @@ describe('Gateway Service', () => {
         return Promise.resolve({ data: { message: "Operation success" } });
       }
       if (url.includes('/group/sendMessage')) {
-        return Promise.resolve({ data: { message: "Operation success" } }); // CAMBIADO
+        return Promise.resolve({ data: { message: "Operation success" } }); 
       }
       if (url.includes('/wikidata/verify') || url.includes('/game/start') || url.includes('/game/end') || url.includes('/mathgame/verify')) {
         return Promise.resolve({ data: { success: true } });
       }
-      return Promise.resolve({ data: {} }); // fallback
+      return Promise.resolve({ data: {} }); 
     });
   
     axios.get.mockImplementation((url) => {
@@ -48,13 +48,13 @@ describe('Gateway Service', () => {
         return Promise.resolve({ data: { history: [] } });
       }
       if (url.includes('/group/listGroups')) {
-        return Promise.resolve({ data: { groups: ['group1', 'group2'] } }); // OK
+        return Promise.resolve({ data: { groups: ['group1', 'group2'] } });
       }
       if (url.includes('/group/listGroupUsers')) {
-        return Promise.resolve({ data: { users: ['user1', 'user2'] } }); // OK
+        return Promise.resolve({ data: { users: ['user1', 'user2'] } });
       }
       if (url.includes('/group/messages')) {
-        return Promise.resolve({ data: { messages: ['msg1', 'msg2'] } }); // CAMBIADO
+        return Promise.resolve({ data: { messages: ['msg1', 'msg2'] } }); 
       }
       if (url.includes('/getUserId')) {
         return Promise.resolve({ data: { id: 'user123' } });
@@ -68,7 +68,7 @@ describe('Gateway Service', () => {
       if (url.includes('/mathgame/question')) {
         return Promise.resolve({ data: { expr: '2+2', correct: 4, options: [4, 5, 6, 7] } });
       }
-      return Promise.resolve({ data: {} }); // fallback
+      return Promise.resolve({ data: {} }); 
     });
   
     axios.put.mockImplementation(() => Promise.resolve({ data: { updated: true } }));
@@ -83,7 +83,7 @@ describe('Gateway Service', () => {
   });
 
   it('should forward login request to auth service', async () => {
-    const response = await request(app).post('/login').send({ username: 'testuser', password: 'testpassword' });
+    const response = await request(app).post('/login').send({ username: 'testuser', password: Math.random() });
     expect(response.status).toBe(200);
     expect(response.body.token).toBe('mockedToken');
   });
