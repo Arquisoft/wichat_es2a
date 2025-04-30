@@ -2,6 +2,7 @@ const request = require('supertest');
 const axios = require('axios');
 const server = require('./gateway-service'); 
 const fs = require('fs');
+const crypto = require('crypto');
 
 jest.mock('axios');
 
@@ -20,11 +21,13 @@ describe('Gateway API - Primeros 5 endpoints', () => {
     const mockData = { token: 'abc123' };
     axios.post.mockResolvedValueOnce({ data: mockData });
 
-    const res = await request(server).post('/login').send({ username: 'test', password: '123' });
+    let psw = crypto.randomBytes(1);
+
+    const res = await request(server).post('/login').send({ username: 'test', password: psw });
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(mockData);
-    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('/login'), { username: 'test', password: '123' });
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('/login'), { username: 'test', password: psw });
   });
 
   test('POST /login should handle auth error', async () => {
@@ -32,7 +35,9 @@ describe('Gateway API - Primeros 5 endpoints', () => {
       response: { status: 401, data: { error: 'Unauthorized' } }
     });
 
-    const res = await request(server).post('/login').send({ username: 'fail', password: 'wrong' });
+    let psw = crypto.randomBytes(1);
+
+    const res = await request(server).post('/login').send({ username: 'fail', password: psw });
 
     expect(res.statusCode).toBe(401);
     expect(res.body).toEqual({ error: 'Unauthorized' });
