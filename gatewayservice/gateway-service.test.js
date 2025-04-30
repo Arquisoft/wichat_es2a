@@ -10,7 +10,7 @@ afterAll(() => {
   server.close(); 
 });
 
-describe('Gateway API - Primeros 5 endpoints', () => {
+describe('Gateway API - First 5 endpoints', () => {
   test('GET /health should return status OK', async () => {
     const res = await request(server).get('/health');
     expect(res.statusCode).toBe(200);
@@ -21,7 +21,7 @@ describe('Gateway API - Primeros 5 endpoints', () => {
     const mockData = { token: 'abc123' };
     axios.post.mockResolvedValueOnce({ data: mockData });
 
-    let psw = crypto.randomBytes(1);
+    let psw = crypto.randomBytes(1).toString('hex');
 
     const res = await request(server).post('/login').send({ username: 'test', password: psw });
 
