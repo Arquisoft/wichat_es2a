@@ -130,7 +130,7 @@ app.post('/game/start', async (req, res) => {
 // Example: http://localhost:3001/game/end
 app.post('/game/end', async (req, res) => {
     try {
-        const { userId, category, level, totalQuestions, answered, correct, wrong, points } = req.body;
+        const { userId, username, category, level, totalQuestions, answered, correct, wrong, points } = req.body;
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
@@ -145,6 +145,8 @@ app.post('/game/end', async (req, res) => {
 
         const now = new Date();
         const durationInSeconds = Math.floor((now - game.createdAt) / 1000);
+        game.userId = userId;
+        game.username = username;
         game.duration = durationInSeconds;
         game.correct = correct;
         game.wrong = wrong;
@@ -158,6 +160,8 @@ app.post('/game/end', async (req, res) => {
         await game.save();
 
         res.json({
+            userId: game.userId,
+            username: game.username,
             correct: game.correct,
             wrong: game.wrong,
             duration: game.duration,
@@ -220,25 +224,26 @@ app.get('/game/statistics', async (req, res) => {
 // Example: http://localhost:3001/game/ranking
 app.get('/game/ranking', async (req, res) => {
     try {
-        console.log("wikidataroutes 1")
+        
         const filter = { isCompleted: true };
         const sort = { points: -1 };
         const limit = 10;
         const options = { sort, limit };
         const projection = null;
-        console.log("wikidataroutes 2")
+        
         const games = await Game.find(filter, projection, options);
-        console.log("wikidataroutes 3")
+        
         if (!games || games.length === 0) {
             return res.json([]);
         }
-        console.log("wikidataroutes 4")
+        
         const ranking = games.map(game => {
             const createdAt = new Date(game.createdAt);
             const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()} ${String(createdAt.getHours()).padStart(2, '0')}:${String(createdAt.getMinutes()).padStart(2, '0')}:${String(createdAt.getSeconds()).padStart(2, '0')}`;
-            console.log("wikidataroutes 5")
+            
             return {
                 userId: game.userId,
+                username : game.username,
                 correct: game.correct,
                 wrong: game.wrong,
                 duration: game.duration,
