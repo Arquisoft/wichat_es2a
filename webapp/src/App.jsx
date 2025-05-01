@@ -44,7 +44,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/game" element={<GamePanel />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/ranking" element={<GlobalRanking />} />
+              <Route path="/ranking" element={<GlobalRanking userId={localStorage.getItem('user')} />} />
               <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
               <Route path="/gamehistory/:username" element={<GameHistoryUIGroup />} />
               <Route path="/profile" element={<Profile />} />
