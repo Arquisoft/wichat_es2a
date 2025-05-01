@@ -56,9 +56,13 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
 // Example: http://localhost:3001/wikidata/verify?userOption=Option1&answer=CorrectAnswer
 app.post("/wikidata/verify", async (req, res) => {
     console.log("/wikidata/verify route hit with body:", req.body);
-    const { userId, userOption, answer } = req.body; 
+    const { userId, userOption, answer } = req.body;
     try {
-        const isCorrect = await service.checkCorrectAnswer(userOption, answer); 
+        if (!userId || typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
+
+        const isCorrect = await service.checkCorrectAnswer(userOption, answer);
         let games = await Game.find({ userId });
         let game = games[games.length-1];
         if (!game) {
@@ -72,7 +76,7 @@ app.post("/wikidata/verify", async (req, res) => {
         await game.save();
 
         res.json({
-            isCorrect: isCorrect, 
+            isCorrect: isCorrect,
             correctCount: game.correct,
             wrongCount: game.wrong
         });
@@ -102,6 +106,9 @@ app.post('/game/start', async (req, res) => {
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
+        }
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
         }
 
         await Game.create({
@@ -134,6 +141,9 @@ app.post('/game/end', async (req, res) => {
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
+        }
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
         }
 
         let games = await Game.find({ userId });
@@ -184,6 +194,10 @@ app.get('/game/statistics', async (req, res) => {
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
+        }
+
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
         }
 
         const games = await Game.find({ userId, isCompleted: true });
