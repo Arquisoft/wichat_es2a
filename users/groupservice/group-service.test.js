@@ -9,16 +9,27 @@ jest.mock('mongoose', () => ({
 jest.mock('axios', () => ({
   get: jest.fn().mockResolvedValue({ data: { username: 'mockuser' } })
 }));
-jest.mock('./group-model', () => ({
-  findOne: jest.fn(),
-  find: jest.fn(),
-  mockImplementation: jest.fn()
-}));
+jest.mock('./group-model', () => {
+  const findOne = jest.fn();
+  const find = jest.fn();
+  function Group(data) {
+    Object.assign(this, data);
+    this.save = jest.fn().mockResolvedValue(this);
+  }
+  Group.findOne = findOne;
+  Group.find = find;
+  return Group;
+});
 
-jest.mock('./group-message-model', () => ({
-  find: jest.fn(),
-  create: jest.fn()
-}));
+jest.mock('./group-message-model', () => {
+  const find = jest.fn();
+  function GroupMessage(data) {
+    Object.assign(this, data);
+    this.save = jest.fn().mockResolvedValue(this);
+  }
+  GroupMessage.find = find;
+  return GroupMessage;
+});
 
 const Group = require('./group-model');
 const GroupMessage = require('./group-message-model');
@@ -28,6 +39,16 @@ beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {});
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.clearAllMocks();
+});
+it('should create a group', async () => {
+  Group.findOne.mockResolvedValue(null);
+  const res = await request(app)
+    .post('/createGroup')
+    .send({ groupName: 'TestGroup', userId: '507f1f77bcf86cd799439012' });
+  expect(res.statusCode).toBe(200);
+  expect(res.body.groupName).toBe('TestGroup');
+  expect(res.body.users[0].user).toBe('507f1f77bcf86cd799439012');
+  expect(res.body.users[0].role).toBe('admin');
 });
 
   it('should not create a group with missing fields', async () => {
@@ -135,3 +156,29 @@ beforeEach(() => {
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toMatch(/Missing required field/);
   });
+it('should send and get group messages', async () => {
+  const group = {
+    users: [{ user: '507f1f77bcf86cd799439011', role: 'admin' }],
+    save: jest.fn().mockResolvedValue()
+  };
+  Group.findOne.mockResolvedValue(group);
+
+  GroupMessage.find.mockImplementation(() => ({
+    sort: () => Promise.resolve([
+      { groupName: 'TestGroup', username: 'mockuser', message: 'Hello group!' }
+    ])
+  }));
+
+  const sendRes = await request(app)
+    .post('/group/sendMessage')
+    .send({ groupName: 'TestGroup', username: 'mockuser', message: 'Hello group!' });
+  expect(sendRes.statusCode).toBe(200);
+  expect(sendRes.body.message).toBe('Hello group!');
+
+  const getRes = await request(app)
+    .get('/group/messages')
+    .query({ groupName: 'TestGroup' });
+  expect(getRes.statusCode).toBe(200);
+  expect(getRes.body[0].message).toBe('Hello group!');
+  expect(getRes.body[0].username).toBe('mockuser');
+});
