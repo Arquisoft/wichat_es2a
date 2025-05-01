@@ -14,10 +14,14 @@ const apiEndpoint = process.env.GATEWAY_URL || 'http://localhost:8000';
 
 mongoose.connect(mongoUri);
 
-const port = 8004;
-const server=app.listen(port, () => {
-    console.log(`Server listening in port http://localhost:${port}`);
-});
+const PORT = 8004;
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server listening in port http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
 
 // Function to validate required fields in the request body
 function validateRequiredFields(req, requiredFields) {
@@ -204,5 +208,5 @@ app.get('/group/messages', async (req, res) => {
     }
 });
 
-module.exports = server;
+
 
