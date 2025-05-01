@@ -220,23 +220,23 @@ app.get('/game/statistics', async (req, res) => {
 // Example: http://localhost:3001/game/ranking
 app.get('/game/ranking', async (req, res) => {
     try {
-
+        console.log("wikidataroutes 1")
         const filter = { isCompleted: true };
         const sort = { points: -1 };
         const limit = 10;
         const options = { sort, limit };
         const projection = null;
-
+        console.log("wikidataroutes 2")
         const games = await Game.find(filter, projection, options);
-
+        console.log("wikidataroutes 3")
         if (!games || games.length === 0) {
             return res.json([]);
         }
-
+        console.log("wikidataroutes 4")
         const ranking = games.map(game => {
             const createdAt = new Date(game.createdAt);
             const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()} ${String(createdAt.getHours()).padStart(2, '0')}:${String(createdAt.getMinutes()).padStart(2, '0')}:${String(createdAt.getSeconds()).padStart(2, '0')}`;
-
+            console.log("wikidataroutes 5")
             return {
                 userId: game.userId,
                 correct: game.correct,
@@ -251,7 +251,7 @@ app.get('/game/ranking', async (req, res) => {
             };
         });
 
-        res.json(statistics);
+        res.json(ranking);
     } catch (error) {
         console.error("Error al obtener el ranking del juego:", error);
         res.status(500).json({ error: "Server error" });

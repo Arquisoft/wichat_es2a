@@ -174,7 +174,9 @@ app.get('/game/statistics', async (req, res) => {
 
 app.get('/game/ranking', async (req, res) => {
   try {
+    console.log("gateway-sevice 1")
     const response = await axios.get(`${wikidataServiceUrl}/game/ranking`, { params: req.query });
+    console.log("gateway-sevice 2")
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game ranking' });
