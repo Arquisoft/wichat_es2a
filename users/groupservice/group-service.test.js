@@ -182,3 +182,67 @@ it('should send and get group messages', async () => {
   expect(getRes.body[0].message).toBe('Hello group!');
   expect(getRes.body[0].username).toBe('mockuser');
 });
+it('should return 400 if groupName is too long', async () => {
+  Group.findOne.mockResolvedValue(null);
+  const res = await request(app)
+    .post('/createGroup')
+    .send({ groupName: 'a'.repeat(21), userId: '507f1f77bcf86cd799439012' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/no puede superar los 20 caracteres/);
+});
+it('should return 404 if group does not exist when adding user', async () => {
+  Group.findOne.mockResolvedValue(null);
+  const res = await request(app)
+    .post('/addUserToGroup')
+    .send({ groupName: 'Inexistente', userId: '507f1f77bcf86cd799439012' });
+  expect(res.statusCode).toBe(404);
+});
+it('should return 404 if group does not exist when listing users', async () => {
+  Group.findOne.mockResolvedValue(null);
+  const res = await request(app)
+    .get('/listGroupUsers')
+    .query({ groupName: 'Inexistente' });
+  expect(res.statusCode).toBe(404);
+  expect(res.body.error).toMatch(/Group not found/);
+});
+it('should return 400 if error occurs when listing group users', async () => {
+  Group.findOne.mockRejectedValue(new Error('DB error'));
+  const res = await request(app)
+    .get('/listGroupUsers')
+    .query({ groupName: 'TestGroup' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/DB error/);
+});
+it('should return empty array if user has no groups', async () => {
+  Group.find.mockResolvedValue([]);
+  const res = await request(app)
+    .get('/listGroups')
+    .query({ userId: '507f1f77bcf86cd799439011' });
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toEqual([]);
+});
+it('should return empty array if error occurs when listing groups', async () => {
+  Group.find.mockRejectedValue(new Error('DB error'));
+  const res = await request(app)
+    .get('/listGroups')
+    .query({ userId: '507f1f77bcf86cd799439011' });
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toEqual([]);
+});
+it('should return 404 if group does not exist when sending message', async () => {
+  Group.findOne.mockResolvedValue(null);
+  const res = await request(app)
+    .post('/group/sendMessage')
+    .send({ groupName: 'Inexistente', username: 'mockuser', message: 'Hola' });
+  expect(res.statusCode).toBe(400);
+});
+it('should return 400 if error occurs when getting group messages', async () => {
+  GroupMessage.find.mockImplementation(() => ({
+    sort: () => { throw new Error('DB error'); }
+  }));
+  const res = await request(app)
+    .get('/group/messages')
+    .query({ groupName: 'TestGroup' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/DB error/);
+});
