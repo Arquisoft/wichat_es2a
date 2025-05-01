@@ -35,7 +35,14 @@ describe('LLM Service', () => {
   it('the llm should reply', async () => {
     const response = await request(app)
       .post('/ask')
-      .send({ question: 'a question', model: 'gemini', userId: 'userId', answer:'answer'});
+      .send({ 
+        question: 'a question', 
+        model: 'gemini', 
+        userId: 'userId', 
+        answer:'answer', 
+        category: 'locations',
+        language: 'en'
+      });
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('answer');

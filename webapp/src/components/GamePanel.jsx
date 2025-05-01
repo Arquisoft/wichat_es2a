@@ -22,7 +22,6 @@ const TOTAL_QUESTIONS = 10;
 
 
 const GamePanel = () => {
-
   // Obtenemos la categoría pasada en la URL
   const location = useLocation(); // Obtienes la ubicación de la URL
   const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
@@ -46,6 +45,7 @@ const GamePanel = () => {
   const [numberOfQuestionsAnswered, setNumberOfQuestionsAnswered] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+  const [scorePoints, setScorePoints] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -55,17 +55,18 @@ const GamePanel = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
 
-  
-
   const getQuestions = async () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
-      const data = response.data;
+      const data = response.data;      
       if (data && data.length == TOTAL_QUESTIONS) {
-        console.log("Preguntas recibidas: ", data.length);
+        // Modificamos las preguntas para asegurarnos de que usen la categoría de la URL
+        const modifiedData = data.map(question => ({
+          ...question,
+          userCategory: category // Guardamos la categoría de la URL para usarla con el LLM
+        }));
         setQuestions(data);
       } else {
-        console.error("No se recibieron preguntas válidas.");
         getQuestions();
       }
     } catch (error) {
@@ -89,13 +90,12 @@ const GamePanel = () => {
     }
     options = options.sort(() => Math.random() - 0.5);
 
-    setImageLoaded(false);
-
-    setQuestionData({
+    setImageLoaded(false);    setQuestionData({
       question: question.statements,
       image: question.image,
       options: options,
       correctAnswer: question.answer,
+      userCategory: category // Usar la categoría de la URL para el LLM
     });
   };
 
@@ -117,6 +117,7 @@ const GamePanel = () => {
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
       setGameEnded(true);
+      endGame();
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -137,7 +138,8 @@ const GamePanel = () => {
     // Sacas el tiempo que ha tardado en responder
     const timeUse = countdownRef.current.getCurrentTime();
     // Recalculas la puntuación del marcador
-    scoreRef.current.calculateNewScore(timeUse, true, answer === questionData.correctAnswer);
+    let score = scoreRef.current.calculateNewScore(timeUse, true, answer === questionData.correctAnswer);
+    setScorePoints(prev => score);
 
     if (answer === questionData.correctAnswer) {
       setCorrectCount(prev => prev + 1);
@@ -162,12 +164,12 @@ const GamePanel = () => {
     return {};
   };
 
-  const resetGame = async () => {
+  const resetGame = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    await endGame(); // Asegurarse de que endGame se complete antes de continuar
-    await startGame(); // Iniciar un nuevo juego después de finalizar el anterior
+    // await endGame(); // Asegurarse de que endGame se complete antes de continuar
+    startGame(); // Iniciar un nuevo juego después de finalizar el anterior
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -213,7 +215,17 @@ const endGame = async () => {
     try {
         const userId = getUserId();
         if (userId) {
-            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+            await axios.post(`${apiEndpoint}/game/end`, 
+              { 
+                userId, 
+                category: category,
+                level: level,
+                totalQuestions: TOTAL_QUESTIONS,
+                answered: numberOfQuestionsAnswered,
+                correct: correctCount, 
+                wrong: incorrectCount,
+                points: scorePoints
+              });
         }
     } catch (error) {
         console.error('Error al finalizar el juego:', error);
@@ -268,7 +280,7 @@ useEffect(() => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
-    endGame();
+    // endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
@@ -536,9 +548,12 @@ useEffect(() => {
               maxWidth: '500px',
               transition: 'width 0.5s ease-out',
               overflowY: 'auto',
-            }}
-          >
-            <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer} />
+            }}          >
+            <ChatPanel 
+              setShowChat={setShowChat} 
+              correctAnswer={questionData.correctAnswer} 
+              category={category} // Pasamos la categoría de la URL directamente
+            />
           </Grid>
         )}
         {!showChat && (

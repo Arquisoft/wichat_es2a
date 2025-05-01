@@ -43,16 +43,16 @@ const AvatarEditor = ({ avatarOptions, setAvatarOptions }) => {
 
             {/* Botones de categoría */}
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                <IconButton onClick={() => setActiveCategory('skin')} color={activeCategory === 'skin' ? 'primary' : 'default'}>
+                <IconButton aria-label="skin" onClick={() => setActiveCategory('skin')} color={activeCategory === 'skin' ? 'primary' : 'default'}>
                     <PaletteIcon fontSize="large" />
                 </IconButton>
-                <IconButton onClick={() => setActiveCategory('hair')} color={activeCategory === 'hair' ? 'primary' : 'default'}>
+                <IconButton aria-label="hair" onClick={() => setActiveCategory('hair')} color={activeCategory === 'hair' ? 'primary' : 'default'}>
                     <BrushIcon fontSize="large" />
                 </IconButton>
-                <IconButton onClick={() => setActiveCategory('eyes')} color={activeCategory === 'eyes' ? 'primary' : 'default'}>
+                <IconButton aria-label="eyes" onClick= {() => setActiveCategory('eyes')} color={activeCategory === 'eyes' ? 'primary' : 'default'}>
                     <VisibilityIcon fontSize="large" />
                 </IconButton>
-                <IconButton onClick={() => setActiveCategory('mouth')} color={activeCategory === 'mouth' ? 'primary' : 'default'}>
+                <IconButton aria-label="mouth" onClick={() => setActiveCategory('mouth')} color={activeCategory === 'mouth' ? 'primary' : 'default'}>
                     <TagFacesIcon fontSize="large" />
                 </IconButton>
             </Box>

@@ -17,8 +17,8 @@ async function startServer() {
     authservice = await require("../../users/authservice/auth-service");
     llmservice = await require("../../llmservice/llm-service");
     gatewayservice = await require("../../gatewayservice/gateway-service");
-    wikidataservice = await require("../../wikidataservice/wiki-data-service");
-    groupservice = await require("../../groupservice/group-service");
+    wikidataservice = await require("../../wikidata/src/wikidataRoutes");
+    groupservice = await require("../../users/groupservice/group-service");
 }
 
 startServer();

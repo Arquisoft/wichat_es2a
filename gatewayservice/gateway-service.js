@@ -51,6 +51,14 @@ app.post('/adduser', async (req, res) => {
 
 app.post('/askllm', async (req, res) => {
   try {
+    // Log the request parameters
+    console.log("Gateway: Solicitud LLM recibida con params:", {
+      question: req.body.question,
+      category: req.body.category,
+      answer: req.body.answer,
+      language: req.body.language || 'en'
+    });
+    
     // Forward the LLM question request to the LLM service
     const llmResponse = await axios.post(llmServiceUrl + '/ask', req.body);
     res.json(llmResponse.data);
@@ -244,6 +252,22 @@ app.put('/users/:id', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
+  }
+});
+app.post('/group/sendMessage', async (req, res) => {
+  try {
+    const response = await axios.post(`${groupServiceUrl}/group/sendMessage`, req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error sending group message' });
+  }
+});
+app.get('/group/messages', async (req, res) => {
+  try {
+    const response = await axios.get(`${groupServiceUrl}/group/messages`, { params: req.query });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group messages' });
   }
 });
 

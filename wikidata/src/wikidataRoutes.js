@@ -23,9 +23,14 @@ mongoose.connect(mongoUri, mongooseOptions).then(() => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`Server listening in port http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server listening in port http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
+
 
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
@@ -36,9 +41,8 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
     // si no es un entero válido, usar tu valor por defecto
     const n = Number.isNaN(raw) || raw < 1 
       ? require('./utils/config').defaultConfig.numQuestions 
-      : raw;
-    try {
-        console.log("actualizado");
+      : raw;    
+      try {
         const questions = await service.getQuestions(category, n);
         res.json(questions);
     } catch (error) {
@@ -105,7 +109,13 @@ app.post('/game/start', async (req, res) => {
             correct: 0,
             wrong: 0,
             duration: 0,
-            createdAt: new Date()
+            createdAt: new Date(),
+            isCompleted: false,
+            category: "",
+            level: "",
+            totalQuestions: 10,
+            answered: 0,
+            points: 0
         });
 
         return res.json({ message: "Game started successfully" });
@@ -120,7 +130,7 @@ app.post('/game/start', async (req, res) => {
 // Example: http://localhost:3001/game/end
 app.post('/game/end', async (req, res) => {
     try {
-        const { userId, correct, wrong } = req.body;
+        const { userId, category, level, totalQuestions, answered, correct, wrong, points } = req.body;
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
@@ -139,6 +149,11 @@ app.post('/game/end', async (req, res) => {
         game.correct = correct;
         game.wrong = wrong;
         game.isCompleted = true;
+        game.category = category;
+        game.level = level;
+        game.totalQuestions = totalQuestions;
+        game.answered = answered;
+        game.points = points;
 
         await game.save();
 
@@ -146,7 +161,12 @@ app.post('/game/end', async (req, res) => {
             correct: game.correct,
             wrong: game.wrong,
             duration: game.duration,
-            isCompleted: game.isCompleted
+            isCompleted: game.isCompleted,
+            category: game.category,
+            level: game.level,
+            totalQuestions: game.totalQuestions,
+            answered: game.answered,
+            points: game.points
         });
 
     } catch (error) {
@@ -180,7 +200,12 @@ app.get('/game/statistics', async (req, res) => {
                 correct: game.correct,
                 wrong: game.wrong,
                 duration: game.duration,
-                createdAt: formattedDate
+                createdAt: formattedDate,
+                category: game.category,
+                level: game.level,
+                totalQuestions: game.totalQuestions,
+                answered: game.answered,
+                points: game.points
             };
         });
 

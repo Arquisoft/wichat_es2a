@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { 
     Typography, Box, CircularProgress, List, ListItem,
-    ListItemText, ListItemIcon, Paper
+    ListItemText, ListItemIcon, Paper, Button
 } from '@mui/material';
-import { Person, AdminPanelSettings, Groups } from '@mui/icons-material';
+import { Person, AdminPanelSettings, Groups, Chat as ChatIcon } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import GroupChat from './GroupChat';
+
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const GroupDetails = () => {
@@ -14,6 +16,8 @@ const GroupDetails = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [groupId, setGroupId] = useState(null);
+    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         const fetchGroupUsers = async () => {
@@ -28,6 +32,7 @@ const GroupDetails = () => {
                 setLoading(false);
             }
         };
+
         fetchGroupUsers();
     }, [groupName]);
 
@@ -56,7 +61,8 @@ const GroupDetails = () => {
         <Box sx={{ 
             p: 3,
             backgroundColor: '#fff',
-            minHeight: '100vh'
+            minHeight: '100vh',
+            position: 'relative'
         }}>
             <Box sx={{ 
                 display: 'flex', 
@@ -71,6 +77,16 @@ const GroupDetails = () => {
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                     Grupo: {groupName}
                 </Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                <Button
+                    variant={showChat ? 'contained' : 'outlined'}
+                    color="primary"
+                    startIcon={<ChatIcon />}
+                    onClick={() => setShowChat((prev) => !prev)}
+                    sx={{ ml: 2, minWidth: 48, borderRadius: 2 }}
+                >
+                    {showChat ? 'Cerrar chat' : 'Abrir chat'}
+                </Button>
             </Box>
 
             <List component={Paper} sx={{ 
@@ -115,6 +131,26 @@ const GroupDetails = () => {
                     </ListItem>
                 ))}
             </List>
+            {}
+            {showChat && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    height: '100vh',
+                    width: { xs: '100%', sm: '100%', md: '33vw', lg: '33vw' },
+                    maxWidth: 420,
+                    zIndex: 1300,
+                    bgcolor: '#f5f5f5',
+                    boxShadow: 6,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderLeft: '3px solid #1976d2',
+                    transition: 'all 0.3s',
+                }}>
+                    <GroupChat groupName={groupName} onClose={() => setShowChat(false)} />
+                </Box>
+            )}
         </Box>
     );
 };

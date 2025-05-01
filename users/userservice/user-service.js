@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require('./user-model');
 const cors = require('cors');
 const Message = require('./message-model');
+const PrivateMessage = require('./private-message-model');
 
 const app = express();
 const port = 8001;
@@ -152,7 +153,7 @@ app.post('/addFriend', async (req, res) => {
 
 app.get('/listUsers', async (req, res) => {
   try {
-    const users = await User.find({}, 'username friends'); // Return only the username and friends fields (password isn't included)
+    const users = await User.find({}, 'username friends avatarOptions'); // Return only the username and friends fields (password isn't included)
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -163,7 +164,7 @@ app.get('/user/:username', async (req, res) => {
   try {
     // Busca al usuario por su 'username' y rellena la lista de amigos con solo el campo 'username'
     const user = await User.findOne({ username: req.params.username })
-      .populate('friends', 'username');  // Poblar el campo 'friends' con solo los nombres de usuario
+      .populate('friends', 'username avatarOptions');  // Poblar el campo 'friends' con solo los nombres de usuario
   
     // Si el usuario no se encuentra
     if (!user) {
@@ -460,6 +461,57 @@ app.get('/getMessages', async (req, res) => {
       .exec();
 
     res.json(messages.reverse()); // para mostrar de más antiguo a más reciente
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint para enviar un mensaje privado
+app.post('/sendPrivateMessage', async (req, res) => {
+  try {
+    const { senderUsername, receiverUsername, content } = req.body;
+
+    if (!senderUsername || !receiverUsername || !content) {
+      return res.status(400).json({ error: 'Faltan datos requeridos' });
+    }
+
+    const sender = await User.findOne({ username: senderUsername });
+    const receiver = await User.findOne({ username: receiverUsername });
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const newPrivateMessage = new PrivateMessage({
+      content,
+      sender: sender._id,
+      receiver: receiver._id
+    });
+    await newPrivateMessage.save();
+
+    res.status(200).json({ message: 'Mensaje privado enviado' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint para obtener los mensajes privados entre dos usuarios
+app.get('/getPrivateMessages/:user1/:user2', async (req, res) => {
+  try {
+    const { user1, user2 } = req.params;
+
+    const messages = await PrivateMessage.find({
+      $or: [
+        { sender: user1, receiver: user2 },
+        { sender: user2, receiver: user1 }
+      ]
+    })
+    .sort({ createdAt: 1 }) // Ordenar por fecha de creación ascendente
+    .populate('sender', 'username')
+    .populate('receiver', 'username')
+    .exec();
+
+    res.json(messages);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
