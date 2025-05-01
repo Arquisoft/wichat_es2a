@@ -44,7 +44,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
             
             return null;
         } catch (error) {
-            console.error("Error al recuperar userId:", error);
+            //console.error("Error al recuperar userId:", error);
             return null;
         }
     };
@@ -59,7 +59,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
             
             return true;
         } catch (error) {
-            console.error("Error al eliminar el historial de conversación:", error);
+            //console.error("Error al eliminar el historial de conversación:", error);
             return false;
         } finally {
             setIsLoading(false);
@@ -170,7 +170,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
             const llmResponse = { text: response.data.answer, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, llmResponse]);
         } catch (error) {
-            console.error('Error al enviar la pregunta al LLM:', error);
+            //console.error('Error al enviar la pregunta al LLM:', error);
             let errorMessage = "Error al obtener la respuesta";
             if (error.response) {
                 errorMessage += `: ${error.response.data.error || error.response.statusText}`;
@@ -238,6 +238,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
                                 Chat
                             </Typography>
                             <IconButton
+                                aria-label="Cerrar"
                                 color="primary"
                                 onClick={handleCloseChat}
                                 sx={{
