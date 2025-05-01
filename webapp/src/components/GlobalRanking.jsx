@@ -100,9 +100,6 @@ const GlobalRanking = () => {
                 <TableHead>
                     <TableRow style={{ background: theme.palette.primary.main }}>
                         <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
-                            Id Usuario
-                        </TableCell>
-                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
                             Nombre usuario
                         </TableCell>
                         <TableCell align="center" style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.2rem', verticalAlign: 'middle' }}>
@@ -137,7 +134,6 @@ const GlobalRanking = () => {
                 <TableBody>
                     {globalRanking.map((game, index) => (
                         <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#bbdefb' }}>
-                            <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.userId}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.username}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.totalQuestions}</TableCell>
                             <TableCell align="center" style={{ fontSize: '1.1rem', color: '#000' }}>{game.answered}</TableCell>
