@@ -1,10 +1,19 @@
 // src/components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, TextField, Button, Snackbar } from '@mui/material';
-import { Typewriter } from "react-simple-typewriter";
+import { useNavigate, Link } from 'react-router-dom';   // Importamos el hook useNavigate
+import {
+  Container, Grid, Typography, TextField,
+  Button, Snackbar, Alert, IconButton, InputAdornment
+} from '@mui/material';
+import {
+  Visibility, VisibilityOff
+} from '@mui/icons-material';
+import image from '../media/login.svg';
+
 
 const Login = () => {
+  // Estados para manejar la entrada de usuario y la UI
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -12,83 +21,142 @@ const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [createdAt, setCreatedAt] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);  // Estado para manejar la carga
+  const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
+  const navigate = useNavigate(); // Hook de navegación
 
-  const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
-  const apiKey = process.env.REACT_APP_LLM_API_KEY || 'None';
+  // Variable de entorno para la API
+  const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
+  // Función para autenticar al usuario
   const loginUser = async () => {
+    setLoading(true); // Activamos la carga
     try {
+      // Realizamos la petición al servidor
       const response = await axios.post(`${apiEndpoint}/login`, { username, password });
 
-      const question = "Please, generate a greeting message for a student called " + username + " that is a student of the Software Architecture course in the University of Oviedo. Be nice and polite. Two to three sentences max.";
-      const model = "empathy"
+      // const question = "Please, generate a greeting message for a student called " + username + " that is a student of the Software Architecture course in the University of Oviedo. Be nice and polite. Two to three sentences max.";
+      // const model = "empathy"
 
-      if (apiKey==='None'){
-        setMessage("LLM API key is not set. Cannot contact the LLM.");
-      }
-      else{
-        const message = await axios.post(`${apiEndpoint}/askllm`, { question, model, apiKey })
-        setMessage(message.data.answer);
-      }
-      // Extract data from the response
-      const { createdAt: userCreatedAt } = response.data;
+      // if (apiKey === 'None') {
+      //   setMessage("LLM API key is not set. Cannot contact the LLM.");
+      // }
+      // else {
+      //   const responseMessage = await axios.post(`${apiEndpoint}/askllm`, { question, model, apiKey })
+      //   setMessage(responseMessage.data.answer);
+      // }
+      // // Extract data from the response
+      // const { createdAt: userCreatedAt } = response.data;
 
-      setCreatedAt(userCreatedAt);
+      // setCreatedAt(userCreatedAt);
       setLoginSuccess(true);
 
-      setOpenSnackbar(true);
+
+      // Guardamos el usuario en el localStorage
+      localStorage.setItem("user", JSON.stringify(response.data));
+      setOpenSnackbar(true); // Mostramos el snackbar
+      // Redirigimos al usuario a la página del juego
+      navigate('/home');
+      setOpenSnackbar(true); // Mostramos el snackbar
+
     } catch (error) {
-      setError(error.response.data.error);
+      // Caputramos errores de autenticación y mostramos el mensaje adecuado
+      if (error.response && error.response.data.error) {
+        setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
+      }
+      setError("Por favor, revisa tu usuario y contraseña.");
+
+    } finally {
+      setLoading(false);  // Desactivamos la carga
     }
   };
 
+  // Función para cerrar el Snackbar
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: 4 }}>
-      {loginSuccess ? (
-        <div>
-          <Typewriter
-            words={[message]} // Pass your message as an array of strings
-            cursor
-            cursorStyle="|"
-            typeSpeed={50} // Typing speed in ms
-          />
-          <Typography component="p" variant="body1" sx={{ textAlign: 'center', marginTop: 2 }}>
-            Your account was created on {new Date(createdAt).toLocaleDateString()}.
-          </Typography>
-        </div>
-      ) : (
-        <div>
+    <Container component="main" maxWidth="xl" sx={{ marginTop: 4 }}>
+      <Grid container spacing={2}>
+
+        {/* Columna de la izquierda: Formulario */}
+        <Grid item xs={12} md={4}>
+          {/* Mostrar el mensaje de error en la interfaz de usuario */}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Typography component="h1" variant="h5">
-            Login
+            Log in to your account
           </Typography>
+
+          <Typography variant="body2" sx={{ marginTop: 2 }}>
+            Don't have an account? <Link to="/adduser" style={{ color: '#1976D2', textDecoration: 'none' }}>Sign up</Link>
+          </Typography>
+
+          {/* Formulario para login */}
           <TextField
+            data-testid="username-field"
             margin="normal"
             fullWidth
             label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+
           <TextField
+            data-testid="password-field"
             margin="normal"
             fullWidth
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value.toString())}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
-          <Button variant="contained" color="primary" onClick={loginUser}>
-            Login
+          
+          <Button variant="contained" color="primary" onClick={loginUser} disabled={loading}>
+            {loading ? "Loggin in..." : "Login"}
           </Button>
-          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} message="Login successful" />
-          {error && (
-            <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')} message={`Error: ${error}`} />
-          )}
-        </div>
-      )}
+
+        </Grid>
+
+        {/* Columna de la derecha: Imagen */}
+        <Grid
+          item
+          xs={12}
+          md={8}
+          sx={{
+            display: { xs: 'none', md: 'flex' },
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}>
+          <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+            <img
+              src={image}
+              alt="Login"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }} />
+          </div>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

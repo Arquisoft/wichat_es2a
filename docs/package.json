@@ -6,6 +6,7 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
+    "docs": "file:",
     "gh-pages": "^6.3.0",
     "shx": "^0.3.4"
   }

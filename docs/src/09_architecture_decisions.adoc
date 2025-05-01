@@ -6,13 +6,14 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Inherited ADRs
 Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
 
+[[ADR-01]]
 === ADR 01: Mistral 7B as LLM Service
 *_Date: 2025-02-17_*
 
 image::MistralAI.png["Mistral", align="center"]
 
 ==== Status
-Accepted.
+[.red]#Deprecated. See <<ADR-04>>.#
 
 ==== Context
 The LLM is the main feature added to the system, and is responsible for generating the hints the user will have available during each game in relation to the questions asked. An LLM service is required to provide the necessary functionality, and Mistral 7B, LLM developed by Mistral AI, shows the following aspects to consider as a potential candidate:
@@ -25,9 +26,14 @@ The LLM is the main feature added to the system, and is responsible for generati
 ==== Decision
 The Mistral 7B LLM Service will be used as the LLM service for the system.
 
+[.red]#Deprecated. See <<ADR-04>>.#
+
 ==== Consequences
 Mistral 7B will be implemented in our application as the external LLM hint generator.
 
+[.red]#Deprecated. See <<ADR-04>>.#
+
+[[ADR-02]]
 === ADR 02: Gitflow vs Trunk-Based Development
 *_Date: 2025-02-17_*
 
@@ -42,7 +48,47 @@ We need to establish a way to work as a team using Git, and determine the use to
 Gitflow uses branches such as master, develop and feature, being more suitable for large projects and long cycles, with less frequent integration. Trunk-Based Development focuses on integrating changes quickly into a single main branch, promoting continuous delivery and reducing conflicts, making it ideal for agile teams and fast cycles. Gitflow is more structured, while TBD is more agile and simple. 
 
 ==== Decision
+TBD chosen as our git strategy for the project.
+
+==== Consequences
+The chosen option will be the way to work from now on in the project (TBD).
+
+[[ADR-03]]
+=== ADR 03: Use of Neobrutalism components
+*_Date: 2025-03-03_*
+
+image::neobrutalism.png["Neobrutalism Components", align="center"]
+
+==== Status
+Proposed.
+
+==== Context
+React components are essentially the building blocks of a React application. They are the visual elements that make up the user interface of the application. https://www.neobrutalism.dev/[Neobrutalism] components are a collection of neobrutalism-styled React Tailwind components. They are a mix of regular brutalism in web design and more modern typography, illustration, and animation standards.
+
+As part of our design decisions, we need to decide whether to use Neobrutalism components in our project.
+
+==== Decision
 Decision pending.
 
 ==== Consequences
-The chosen option will be the way to work from now on in the project.
+Neobrutalism components will be used in our project.
+
+[[ADR-04]]
+=== ADR 04: Gemini 1.5 Flash as LLM Service
+*_Date: 2025-03-10_*
+
+image::gemini.png["Gemini", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+Gemini 1.5 Flash is a variant of Google's Gemini 1.5 AI model, designed to be lighter and faster. It is a model that has been optimized for speed and efficiency, making it ideal for applications that require quick responses and low latency.
+
+As we've encountered some performance issues with Mistral 7B, we need to consider other LLM services that can provide the necessary functionality, and Gemini 1.5 Flash stands as the main candidate.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+Gemini 1.5 Flash substitutes Mistral 7B as the chosen LLM service for our system.

@@ -1,11 +1,34 @@
-name: CI for wichat_es2a
+name: Release Official Version
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión para probar el release (ej. v1.0.0)'
+        required: true
+        default: 'test-v0.0.0'
+      runTests:
+        description: 'Ejecutar tests'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      isDryRun:
+        description: 'Modo simulación (no despliega)'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   unit-tests:
+    if: github.event_name != 'workflow_dispatch' || inputs.runTests == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -17,15 +40,22 @@ jobs:
     - run: npm --prefix llmservice ci
     - run: npm --prefix gatewayservice ci
     - run: npm --prefix webapp ci
+    - run: npm --prefix wikidata ci
+    - run: npm --prefix mathGame ci
+    - run: npm --prefix apiservice ci
     - run: npm --prefix users/authservice test -- --coverage
     - run: npm --prefix users/userservice test -- --coverage
     - run: npm --prefix llmservice test -- --coverage
     - run: npm --prefix gatewayservice test -- --coverage
     - run: npm --prefix webapp test -- --coverage
+    - run: npm --prefix wikidata test -- --coverage
+    - run: npm --prefix mathGame test -- --coverage
+    - run: npm --prefix apiservice test -- --coverage
     - name: Analyze with SonarCloud
       uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   e2e-tests:
     needs: [unit-tests]
     runs-on: ubuntu-latest
@@ -39,10 +69,12 @@ jobs:
     - run: npm --prefix llmservice install
     - run: npm --prefix gatewayservice install
     - run: npm --prefix webapp install
+    - run: npm --prefix wikidata install
     - run: npm --prefix webapp run build
     - run: npm --prefix webapp run test:e2e
+
   docker-push-webapp:
-    name: Push webapp Docker Image to GitHub Packages
+    name: Push webapp Docker Image to GitHub Packages with version tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -50,20 +82,31 @@ jobs:
     needs: [e2e-tests]
     steps:
     - uses: actions/checkout@v4
+    - name: Extract version from tag or use input
+      id: get_version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       env:
         API_URI: http://${{ secrets.DEPLOY_HOST }}:8000
-        LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       with:
           name: arquisoft/wichat_es2a/webapp
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
           workdir: webapp
-          buildargs: API_URI,LLM_API_KEY
+          tags: "${{ steps.get_version.outputs.VERSION }}"
+          platforms: linux/amd64,linux/arm64
+
   docker-push-authservice:
-    name: Push auth service Docker Image to GitHub Packages
+    name: Push auth service Docker Image to GitHub Packages with version tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,8 +114,11 @@ jobs:
     needs: [e2e-tests]
     steps:
     - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -82,9 +128,10 @@ jobs:
           registry: ghcr.io
           workdir: users/authservice
           platforms: linux/amd64,linux/arm64
+          tags: "${{ steps.get_version.outputs.VERSION }}"
           
   docker-push-userservice:
-    name: Push user service Docker Image to GitHub Packages
+    name: Push user service Docker Image to GitHub Packages with version tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -92,6 +139,14 @@ jobs:
     needs: [e2e-tests]
     steps:
     - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -100,9 +155,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: users/userservice
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
 
   docker-push-llmservice:
-    name: Push llm service Docker Image to GitHub Packages
+    name: Push llm service Docker Image to GitHub Packages with version tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -110,6 +167,11 @@ jobs:
     needs: [e2e-tests]
     steps:
     - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -118,9 +180,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: llmservice
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
 
   docker-push-gatewayservice:
-    name: Push gateway service Docker Image to GitHub Packages
+    name: Push gateway service Docker Image to GitHub Packages with version tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -128,6 +192,11 @@ jobs:
     needs: [e2e-tests]
     steps:
     - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Update OpenAPI configuration
       run: |
         DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}
@@ -140,11 +209,43 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         workdir: gatewayservice
-   deploy:
-     name: Deploy over SSH
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
+
+  docker-push-wikidata:
+    name: Push wikidata service Docker Image to GitHub Packages with version tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [e2e-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/wikidata
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: wikidata
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
+
+  deploy-release:
+     name: Deploy Release Version over SSH
      runs-on: ubuntu-latest
-     needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp]
+     needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-mathgame,docker-push-apiservice,docker-push-groupservice]
      steps:
+     - uses: actions/checkout@v4
+     - name: Extract version from tag
+       id: get_version
+       run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
      - name: Deploy over SSH
        uses: fifsky/ssh-action@master
        with:
@@ -153,5 +254,13 @@ jobs:
          key: ${{ secrets.DEPLOY_KEY }}
          command: |
            wget https://raw.githubusercontent.com/arquisoft/wichat_es2a/master/docker-compose.yml -O docker-compose.yml
+           # Configurar para usar la versión específica del release
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/webapp:latest|ghcr.io/arquisoft/wichat_es2a/webapp:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/authservice:latest|ghcr.io/arquisoft/wichat_es2a/authservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/userservice:latest|ghcr.io/arquisoft/wichat_es2a/userservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/llmservice:latest|ghcr.io/arquisoft/wichat_es2a/llmservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest|ghcr.io/arquisoft/wichat_es2a/gatewayservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+           sed -i 's|ghcr.io/arquisoft/wichat_es2a/wikidata:latest|ghcr.io/arquisoft/wichat_es2a/wikidata:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
            docker compose --profile prod down
-           docker compose --profile prod up -d --pull always
+           docker compose --profile prod pull
+           docker compose --profile prod up -d

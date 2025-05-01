@@ -1,46 +1,69 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+import Nav from "./components/Nav";
 import AddUser from './components/AddUser';
 import Login from './components/Login';
-import CssBaseline from '@mui/material/CssBaseline';
-// import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Nav from "./components/Nav"
-import defaultTheme from "./components/config/default-Theme.json"
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import GamePanel from "./components/GamePanel";
+import Home from "./components/Home";
+import defaultTheme from "./components/config/default-Theme.json";
+import ProtectedRoute from './components/ProtectedRoute';   // Rutas protegidas
+import GameHistoryUI from './components/GameHistoryUI';
+import Contact from './components/Contact';
+import Profile from './components/Profile';
+import MathGame from './components/MathGame';
+import Configuration from './components/Configuration';
+import UserGroups from './components/UserGroups';
+import GroupDetails from './components/GroupDetails';
+import GameHistoryUIGroup from './components/GameHistoryUIGroup';
+import Countdown from './components/Countdown'; // Importar el componente Countdown
+import Friends from './components/Friends'; // Importar el componente Friends
+import EditProfile from './components/EditProfile';
+import ChatGlobal from './components/ChatGlobal';
+import PrivateChat from './components/PrivateChat';
 
 const theme = createTheme(defaultTheme);
 
+
 function App() {
-  const [showLogin, setShowLogin] = useState(true);
-
-  const handleToggleView = () => {
-    setShowLogin(!showLogin);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-        <Nav />
-        <Typography component="h1" variant="h5" align="center" sx={{ marginTop: 2 }}>
-          Welcome to the 2025 edition of the Software Architecture course
-        </Typography>
-        {showLogin ? <Login /> : <AddUser />}
-        <Typography component="div" align="center" sx={{ marginTop: 2 }}>
-          {showLogin ? (
-            <Link name="gotoregister" component="button" variant="body2" onClick={handleToggleView}>
-              Don't have an account? Register here.
-            </Link>
-          ) : (
-            <Link component="button" variant="body2" onClick={handleToggleView}>
-              Already have an account? Login here.
-            </Link>
-          )}
-        </Typography>
-      </Box>
+      <Router> {/* Asegurar que Routes esté dentro de BrowserRouter */}
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Nav />
+          <Routes> {/* Definimos las rutas */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/adduser" element={<AddUser />} />
+            <Route path="/contact" element={<Contact />} />
+
+            {/* Rutas protegidas: solo accesibles si el usuario está autenticado*/}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/game" element={<GamePanel />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/history" element={<GameHistoryUI userId={localStorage.getItem('user')} />} />
+              <Route path="/gamehistory/:username" element={<GameHistoryUIGroup />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/configuration" element={<Configuration />} />
+              <Route path="/mathgame" element={<MathGame />} />
+              <Route path="/friends" element={<Friends userId={localStorage.getItem('user')} />} />
+              <Route path="/chat" element={<ChatGlobal userId={localStorage.getItem('user')} />} />
+              <Route path="/chat/:friendUsername" element={<PrivateChat />} />
+              <Route path="/groups" element={<UserGroups />} />
+              <Route path="/groups/:groupName" element={<GroupDetails />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+            </Route>
+
+            {/* Redirección por defecto */}
+            <Route path="*" element={<Navigate to="/login" replace/>} /> {/* Redirigir si la ruta no existe */}
+          </Routes>
+        </Box>
+      </Router>
     </ThemeProvider>
+  
   );
 }
 

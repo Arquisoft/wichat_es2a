@@ -39,10 +39,13 @@ app.post('/login',  [
   }
     let username =req.body.username.toString();
     let password =req.body.password.toString();
+    if(!username || !password || username.trim().length === 0 || password.trim().length === 0) {
+      return res.status(402).json({ error: 'El nombre de usuario y la contraseña son obligatorios.' });
+    }
+
     // Find the user by username in the database
     const user = await User.findOne({ username });
-    
-
+  
     // Check if the user exists and verify the password
     if (user && await bcrypt.compare(password, user.password)) {
       // Generate a JWT token
@@ -50,7 +53,7 @@ app.post('/login',  [
       // Respond with the token and user information
       res.json({ token: token, username: username, createdAt: user.createdAt });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'Por favor, proporciona una dirección de correo electrónico y una contraseña válidas.' });
     }
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
