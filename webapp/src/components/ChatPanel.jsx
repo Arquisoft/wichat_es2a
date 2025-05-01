@@ -197,7 +197,7 @@ const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
             <ThemeProvider theme={theme}>
                 <Grid container sx={{ height: '100vh' }}>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <CircularProgress />
+                        <CircularProgress role="progressbar"/>
                         <Typography variant="h6" sx={{ ml: 2 }}>Cargando chat...</Typography>
                     </Grid>
                 </Grid>

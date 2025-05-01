@@ -16,7 +16,7 @@ jest.mock('jwt-decode', () => ({
 // Mock scrollIntoView to prevent errors in tests
 beforeAll(() => {
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => { });
 });
 
 afterAll(() => {
@@ -30,12 +30,31 @@ beforeEach(() => {
     };
     window.localStorage.setItem('user', JSON.stringify(user));
     jwtDecode.mockReturnValue({ userId: '12345' });
-})
+});
 
 afterEach(() => {
     jest.clearAllMocks();
     window.localStorage.clear();
-})
+});
+
+// Helper function to render the ChatPanel
+const renderChatPanel = (mockSetShowChat, category = 'Arte') => {
+    render(
+        <ChatPanel
+            setShowChat={mockSetShowChat}
+            correctAnswer="respuesta-correcta"
+            category={category}
+        />
+    );
+};
+
+// Helper function to send a message
+const sendMessage = async (message) => {
+    const input = screen.getByPlaceholderText('Escribe un mensaje...');
+    fireEvent.change(input, { target: { value: message } });
+    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    return waitFor(() => screen.findByText(message));
+};
 
 describe('ChatPanel', () => {
     // Prueba 1: usuario envía un mensaje y recibe respuesta del bot
@@ -47,27 +66,12 @@ describe('ChatPanel', () => {
             },
         });
 
-        render(
-            <ChatPanel
-                setShowChat={() => { }}
-                correctAnswer="respuesta-correcta"
-                category="Arte"
-            />
-        );
+        renderChatPanel();
 
         // Espera al mensaje inicial del bot
         expect(await screen.findByText('¡Hola! ¿Cómo puedo ayudarte?')).toBeInTheDocument();
 
-        // Escribe mensaje del usuario
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: '¿Cuál es la respuesta?' } });
-
-        // Envía el mensaje (Enter)
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-        // Verifica que aparece el mensaje del usuario
-        expect(await screen.findByText('¿Cuál es la respuesta?')).toBeInTheDocument();
-
+        await sendMessage('¿Cuál es la respuesta?');
         // Espera a que aparezca la respuesta del bot
         expect(await screen.findByText('Esta es una respuesta del bot.')).toBeInTheDocument();
     });
@@ -75,47 +79,45 @@ describe('ChatPanel', () => {
     test('Test 2: muestra mensaje de error si falla la llamada al backend', async () => {
         axios.post.mockRejectedValueOnce({ response: { data: { error: 'Error del servidor' } } });
 
-        render(<ChatPanel setShowChat={() => { }} correctAnswer="respuesta" category="Arte" />);
+        renderChatPanel();
 
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: 'Pregunta fallida' } });
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+        await sendMessage('Pregunta fallida');
 
         expect(await screen.findByText(/Error al obtener la respuesta/)).toBeInTheDocument();
     });
 
     test('Test 3: al pulsar el botón de cerrar se llama a setShowChat con false', async () => {
-        const mockSetShowChat = jest.fn();
+        const mockSetShowChat = jest.fn(); // Mock de setShowChat
 
-        render(<ChatPanel setShowChat={mockSetShowChat} correctAnswer="respuesta" category="Arte" />);
+        renderChatPanel(mockSetShowChat); // Pasar mockSetShowChat al renderizado
+
         const closeButton = screen.getByRole('button', { name: /cerrar/i });
         fireEvent.click(closeButton);
 
+        // Verifica que setShowChat haya sido llamado con false
         expect(mockSetShowChat).toHaveBeenCalledWith(false);
     });
 
+
     test('Test 4: el campo de entrada se limpia después de enviar el mensaje', async () => {
-        render(<ChatPanel setShowChat={() => { }} correctAnswer="respuesta" category="Arte" />);
-    
+        renderChatPanel();
+
         const input = screen.getByPlaceholderText('Escribe un mensaje...');
         fireEvent.change(input, { target: { value: 'Mensaje del usuario' } });
         fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+
         // Verifica que el campo de entrada esté vacío después de enviar el mensaje
         expect(input.value).toBe('');
-    });   
-    
+    });
+
     test('Test 5: Muestra error cuando no se puede obtener el userId', async () => {
         // Elimina el user del localStorage para simular que no se puede obtener el userId
         window.localStorage.removeItem('user');
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
-    
-        // Simula el envío de un mensaje
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: '¿Quién soy?' } });
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+
+        renderChatPanel();
+
+        await sendMessage('¿Quién soy?');
+
         // Verifica que el mensaje de error de autenticación aparezca
         expect(await screen.findByText("Error: No se pudo identificar al usuario. Por favor, inicia sesión de nuevo.")).toBeInTheDocument();
     });
@@ -126,44 +128,40 @@ describe('ChatPanel', () => {
                 answer: 'Respuesta de prueba del bot.',
             },
         });
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
-    
+
+        renderChatPanel();
+
         // Envía un mensaje de prueba
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+        await sendMessage('Pregunta al bot');
+
         // Espera que el mensaje de respuesta del bot se muestre
         await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
-    
+
         // Verifica que el mensaje del bot tenga el estilo esperado
         const botMessage = screen.getByText('Respuesta de prueba del bot.');
         expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
     });
-    
+
     test('Test 7: Verifica que las respuestas del bot se muestran correctamente', async () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 answer: 'Respuesta de prueba del bot.',
             },
         });
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
-    
+
+        renderChatPanel();
+
         // Envía un mensaje de prueba
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+        await sendMessage('Pregunta al bot');
+
         // Espera que el mensaje de respuesta del bot se muestre
         await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
-    
+
         // Verifica que el mensaje del bot tenga el estilo esperado
         const botMessage = screen.getByText('Respuesta de prueba del bot.');
         expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
     });
-    
+
 
     test('Test 8: Verifica que el CircularProgress aparece cuando se está esperando una respuesta', async () => {
         axios.post.mockResolvedValueOnce({
@@ -171,55 +169,54 @@ describe('ChatPanel', () => {
                 answer: 'Respuesta del bot mientras carga...',
             },
         });
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
-    
+   
+        renderChatPanel();
+   
         const input = screen.getByPlaceholderText('Escribe un mensaje...');
         fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
         fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+   
         // Verifica que el CircularProgress es visible mientras espera la respuesta
-        expect(screen.getByRole('progressbar')).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByRole('progressbar')).toBeInTheDocument());
         
         // Espera que el mensaje de respuesta del bot se muestre
         await waitFor(() => expect(screen.getByText('Respuesta del bot mientras carga...')).toBeInTheDocument());
     });
+   
 
-    test('Test 10: Verifica la persistencia del userId desde el localStorage', async () => {
+    test('Test 9: Verifica la persistencia del userId desde el localStorage', async () => {
         // Mockeamos el localStorage para que contenga un token
         const user = {
             token: 'mock-token',
         };
         window.localStorage.setItem('user', JSON.stringify(user));
-    
+
         // Mockeamos jwtDecode para devolver un userId
         jwtDecode.mockReturnValue({ userId: '12345' });
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
-    
+
+        render(<ChatPanel setShowChat={() => { }} correctAnswer="respuesta-correcta" category="Arte" />);
+
         // Verificamos que el userId se recupera correctamente
         expect(screen.getByText('¡Hola! ¿Cómo puedo ayudarte?')).toBeInTheDocument();
     });
-    
-    
+
+
     test('Test 11: Verifica el comportamiento cuando no se ha definido una categoría', async () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 answer: 'Respuesta predeterminada del bot.',
             },
         });
-    
-        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="" />);
-    
+
+        renderChatPanel("");
+
         // Envía un mensaje de prueba
-        const input = screen.getByPlaceholderText('Escribe un mensaje...');
-        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
-        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
+        await sendMessage('Pregunta al bot');
+
         // Espera que el mensaje de respuesta del bot se muestre
         await waitFor(() => expect(screen.getByText('Respuesta predeterminada del bot.')).toBeInTheDocument());
     });
-    
-    
+
+
 
 });
