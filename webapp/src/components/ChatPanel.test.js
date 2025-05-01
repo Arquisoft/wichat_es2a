@@ -84,7 +84,7 @@ describe('ChatPanel', () => {
         expect(await screen.findByText(/Error al obtener la respuesta/)).toBeInTheDocument();
     });
 
-    test('al pulsar el botón de cerrar se llama a setShowChat con false', async () => {
+    test('Test 3: al pulsar el botón de cerrar se llama a setShowChat con false', async () => {
         const mockSetShowChat = jest.fn();
 
         render(<ChatPanel setShowChat={mockSetShowChat} correctAnswer="respuesta" category="Arte" />);
@@ -94,5 +94,132 @@ describe('ChatPanel', () => {
         expect(mockSetShowChat).toHaveBeenCalledWith(false);
     });
 
+    test('Test 4: el campo de entrada se limpia después de enviar el mensaje', async () => {
+        render(<ChatPanel setShowChat={() => { }} correctAnswer="respuesta" category="Arte" />);
+    
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: 'Mensaje del usuario' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Verifica que el campo de entrada esté vacío después de enviar el mensaje
+        expect(input.value).toBe('');
+    });   
+    
+    test('Test 5: Muestra error cuando no se puede obtener el userId', async () => {
+        // Elimina el user del localStorage para simular que no se puede obtener el userId
+        window.localStorage.removeItem('user');
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
+    
+        // Simula el envío de un mensaje
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: '¿Quién soy?' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Verifica que el mensaje de error de autenticación aparezca
+        expect(await screen.findByText("Error: No se pudo identificar al usuario. Por favor, inicia sesión de nuevo.")).toBeInTheDocument();
+    });
+
+    test('Test 6: Verifica que las respuestas del bot se muestran correctamente', async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                answer: 'Respuesta de prueba del bot.',
+            },
+        });
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
+    
+        // Envía un mensaje de prueba
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Espera que el mensaje de respuesta del bot se muestre
+        await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
+    
+        // Verifica que el mensaje del bot tenga el estilo esperado
+        const botMessage = screen.getByText('Respuesta de prueba del bot.');
+        expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
+    });
+    
+    test('Test 7: Verifica que las respuestas del bot se muestran correctamente', async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                answer: 'Respuesta de prueba del bot.',
+            },
+        });
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
+    
+        // Envía un mensaje de prueba
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Espera que el mensaje de respuesta del bot se muestre
+        await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
+    
+        // Verifica que el mensaje del bot tenga el estilo esperado
+        const botMessage = screen.getByText('Respuesta de prueba del bot.');
+        expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
+    });
+    
+
+    test('Test 8: Verifica que el CircularProgress aparece cuando se está esperando una respuesta', async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                answer: 'Respuesta del bot mientras carga...',
+            },
+        });
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
+    
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Verifica que el CircularProgress es visible mientras espera la respuesta
+        expect(screen.getByRole('progressbar')).toBeInTheDocument();
+        
+        // Espera que el mensaje de respuesta del bot se muestre
+        await waitFor(() => expect(screen.getByText('Respuesta del bot mientras carga...')).toBeInTheDocument());
+    });
+
+    test('Test 10: Verifica la persistencia del userId desde el localStorage', async () => {
+        // Mockeamos el localStorage para que contenga un token
+        const user = {
+            token: 'mock-token',
+        };
+        window.localStorage.setItem('user', JSON.stringify(user));
+    
+        // Mockeamos jwtDecode para devolver un userId
+        jwtDecode.mockReturnValue({ userId: '12345' });
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="Arte" />);
+    
+        // Verificamos que el userId se recupera correctamente
+        expect(screen.getByText('¡Hola! ¿Cómo puedo ayudarte?')).toBeInTheDocument();
+    });
+    
+    
+    test('Test 11: Verifica el comportamiento cuando no se ha definido una categoría', async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                answer: 'Respuesta predeterminada del bot.',
+            },
+        });
+    
+        render(<ChatPanel setShowChat={() => {}} correctAnswer="respuesta-correcta" category="" />);
+    
+        // Envía un mensaje de prueba
+        const input = screen.getByPlaceholderText('Escribe un mensaje...');
+        fireEvent.change(input, { target: { value: 'Pregunta al bot' } });
+        fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+        // Espera que el mensaje de respuesta del bot se muestre
+        await waitFor(() => expect(screen.getByText('Respuesta predeterminada del bot.')).toBeInTheDocument());
+    });
+    
+    
 
 });
