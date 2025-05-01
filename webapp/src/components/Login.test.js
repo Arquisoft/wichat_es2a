@@ -12,8 +12,33 @@ jest.mock('react-router-dom', () => ({
 }));
 
 import Login from './Login';
+import { red } from '@mui/material/colors';
 
 const mockAxios = new MockAdapter(axios);
+
+// Funcion para utilidad para renderizar el login
+const renderLoginComponent = () => {
+  return render(
+    <MemoryRouter>
+      <Login />
+    </MemoryRouter>
+  );
+};
+
+// Función de utilidad para simular el login
+const simulateLogin = async (username, password) => {
+  const usernameInput = screen.getByLabelText(/Username/i);
+  const passwordInput = screen.getByLabelText(/Password/i);
+  const loginButton = screen.getByRole('button', { name: /Login/i });
+
+  fireEvent.change(usernameInput, { target: { value: username } });
+  fireEvent.change(passwordInput, { target: { value: password } });
+  fireEvent.click(loginButton);
+
+  await waitFor(() => {
+    expect(localStorage.getItem('user')).not.toBeNull();
+  });
+};
 
 describe('Login component', () => {
   beforeEach(() => {
@@ -23,54 +48,24 @@ describe('Login component', () => {
 
   // Prueba 1: Verifica el login exitoso
   it('Test 1: should log in successfully', async () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
-
-    const usernameInput = screen.getByLabelText(/Username/i);
-    const passwordInput = screen.getByLabelText(/Password/i);
-    const loginButton = screen.getByRole('button', { name: /Login/i });
+    renderLoginComponent();
 
     // Mock the axios.post request to simulate a successful response
     mockAxios.onPost('http://localhost:8000/login').reply(200, { createdAt: '2024-01-01T12:34:56Z' });
     mockAxios.onPost('http://localhost:8000/askllm').reply(200, { answer: 'Hello test user' });
 
-    // Simulate user input
-    await act(async () => {
-      fireEvent.change(usernameInput, { target: { value: 'testUser' } });
-      fireEvent.change(passwordInput, { target: { value: 'testPassword' } });
-      fireEvent.click(loginButton);
-    });
+    await simulateLogin('testUser', 'testPassword');
 
-    // Espera a que el usuario sea guardado en localStorage tras login exitoso
-    await waitFor(() => {
-      expect(localStorage.getItem('user')).not.toBeNull();
-    });
   });
 
   // Prueba 2: Verifica el login fallido
   it('Test 2: should handle error when logging in', async () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
-
-    const usernameInput = screen.getByLabelText(/Username/i);
-    const passwordInput = screen.getByLabelText(/Password/i);
-    const loginButton = screen.getByRole('button', { name: /Login/i });
+    renderLoginComponent();
 
     // Mock the axios.post request to simulate an error response
     mockAxios.onPost('http://localhost:8000/login').reply(401, { error: 'Por favor, proporciona una dirección de correo electrónico y una contraseña válidas.' });
 
-    // Simulate user input
-    fireEvent.change(usernameInput, { target: { value: 'testUser' } });
-    fireEvent.change(passwordInput, { target: { value: 'testPassword' } });
-
-    // Trigger the login button click
-    fireEvent.click(loginButton);
+    await simulateLogin('testUser', 'wrongPassword');
 
     // Wait for the error Snackbar to be open
     await waitFor(() => {
@@ -81,7 +76,6 @@ describe('Login component', () => {
       expect(errorAlert).toBeTruthy();
     });
 
-
     // Verify that the user information is not displayed
     expect(screen.queryByText(/Hello testUser!/i)).toBeNull();
     expect(screen.queryByText(/Your account was created on/i)).toBeNull();
@@ -89,11 +83,7 @@ describe('Login component', () => {
 
   // Prueba 3: Validación de renderizado general y estados iniciales
   it('Test 3: should render all input fields and login button', () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
+    renderLoginComponent();
 
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
@@ -102,11 +92,7 @@ describe('Login component', () => {
 
   // Prueba 4: Validación de mostrar/ocultar contraseña
   it('Test 4: should toggle password visibility', () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
+    renderLoginComponent();
 
     const passwordInput = screen.getByLabelText(/Password/i);
     const toggleButton = screen.getByRole('button', { name: '' });
@@ -129,11 +115,7 @@ describe('Login component', () => {
       });
     });
 
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
+    renderLoginComponent();
 
     const usernameInput = screen.getByLabelText(/Username/i);
     const passwordInput = screen.getByLabelText(/Password/i);
@@ -149,23 +131,11 @@ describe('Login component', () => {
 
   // Prueba 6: Verifica la cobertura de navegacion
   it('Test 6: should navigate to home after successful login', async () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
-
-    const usernameInput = screen.getByLabelText(/Username/i);
-    const passwordInput = screen.getByLabelText(/Password/i);
-    const loginButton = screen.getByRole('button', { name: /Login/i });
+    renderLoginComponent();
 
     mockAxios.onPost('http://localhost:8000/login').reply(200, { createdAt: '2024-01-01T12:34:56Z' });
 
-    await act(async () => {
-      fireEvent.change(usernameInput, { target: { value: 'testUser' } });
-      fireEvent.change(passwordInput, { target: { value: 'testPassword' } });
-      fireEvent.click(loginButton);
-    });
+    await simulateLogin('testUser', 'testPassword');
 
     await waitFor(() => {
       // Verifica que el usuario haya sido guardado en localStorage
@@ -177,11 +147,7 @@ describe('Login component', () => {
 
   // Prueba 7: Verifica el manejo de campos vacíos
   it('Test 7: should not allow login with empty fields', async () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
+    renderLoginComponent();
 
     const loginButton = screen.getByRole('button', { name: /Login/i });
 
@@ -201,12 +167,8 @@ describe('Login component', () => {
 
   // Prueba 8: Limpieza de errores previos
   it('Test 8: should clear error after successful login', async () => {
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
-
+    renderLoginComponent();
+    
     const usernameInput = screen.getByLabelText(/Username/i);
     const passwordInput = screen.getByLabelText(/Password/i);
     const loginButton = screen.getByRole('button', { name: /Login/i });
