@@ -61,7 +61,7 @@ const Home = () => {
   // Esta función se ejecuta cuando el usuario hace clic en el botón "Comenzar a jugar"
   // Verifica si se ha seleccionado una categoría y un nivel y navega a la ruta del juego con la categoría seleccionada
   const handleStartGame = () => {
-    console.log('Boton Comenzar pulsado');
+    //console.log('Boton Comenzar pulsado');
     if (!category || !level) {
       setError(!category);
       setLevelError(!level);

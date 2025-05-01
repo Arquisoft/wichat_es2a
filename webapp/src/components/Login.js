@@ -30,6 +30,12 @@ const Login = () => {
 
   // Función para autenticar al usuario
   const loginUser = async () => {
+    // Validación de campos vacíos
+    if (!username.trim() || !password.trim()) {
+      setError('Por favor completa todos los campos');
+      return;
+    }
+    setError(null); // Limpiamos el error previo
     setLoading(true); // Activamos la carga
     try {
       // Realizamos la petición al servidor
@@ -61,10 +67,11 @@ const Login = () => {
 
     } catch (error) {
       // Caputramos errores de autenticación y mostramos el mensaje adecuado
-      if (error.response && error.response.data.error) {
+      if (error.response && error.response.data?.error) {
         setError(error.response.data.error); //Mostrar el mensaje de error en la interfaz de usuario
+      } else {
+        setError("Ha ocurrido un error inesperado.");
       }
-      setError("Por favor, revisa tu usuario y contraseña.");
 
     } finally {
       setLoading(false);  // Desactivamos la carga
@@ -84,7 +91,7 @@ const Login = () => {
         <Grid item xs={12} md={4}>
           {/* Mostrar el mensaje de error en la interfaz de usuario */}
           {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
+            <Alert severity="error" sx={{ mt: 2 }} role="alert">
               {error}
             </Alert>
           )}
@@ -127,7 +134,7 @@ const Login = () => {
               )
             }}
           />
-          
+
           <Button variant="contained" color="primary" onClick={loginUser} disabled={loading}>
             {loading ? "Loggin in..." : "Login"}
           </Button>
