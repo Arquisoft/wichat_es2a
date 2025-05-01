@@ -174,7 +174,7 @@ app.get('/game/statistics', async (req, res) => {
 
 app.get('/game/ranking', async (req, res) => {
   try {
-    const response = await axios.get(`${wikidataServiceUrl}/game/ranking`, { params: req.query });
+    const response = await axios.get(`${wikidataServiceUrl}/game/ranking`);
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game ranking' });
