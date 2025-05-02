@@ -454,6 +454,37 @@ describe('User Service', () => {
 
     // Tests for listing friend requests
 
+    it ('should return all friend requests correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      const res = await request(app).get('/listRequests').query({ username: user2.username });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.requests).toHaveLength(1);
+      expect(res.body.requests[0].toString()).toBe(user1._id.toString());
+    });
+
+    it ('should return error 404 if user does not exist', async () => {
+      const res = await request(app).get('/listRequests').query({ username: 'nonExistentUser' });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 400 if no username param is given', async () => {
+      const res = await request(app).get('/listRequests').query({});
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Se requiere el nombre de usuario');
+    });
+
     // Tests for getting ID by username
 
     // Tests for getting username by ID
