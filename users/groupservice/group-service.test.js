@@ -234,7 +234,7 @@ it('should return 404 if group does not exist when sending message', async () =>
   const res = await request(app)
     .post('/group/sendMessage')
     .send({ groupName: 'Inexistente', username: 'mockuser', message: 'Hola' });
-  expect(res.statusCode).toBe(400);
+  expect(res.statusCode).toBe(404);
 });
 it('should return 400 if error occurs when getting group messages', async () => {
   GroupMessage.find.mockImplementation(() => ({
@@ -245,4 +245,43 @@ it('should return 400 if error occurs when getting group messages', async () => 
     .query({ groupName: 'TestGroup' });
   expect(res.statusCode).toBe(400);
   expect(res.body.error).toMatch(/DB error/);
+});
+it('should return 400 if groupName is not a string in createGroup', async () => {
+  const res = await request(app)
+    .post('/createGroup')
+    .send({ groupName: { $ne: '' }, userId: '507f1f77bcf86cd799439012' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/superar los 20 caracteres/);
+});
+
+it('should return 400 if groupName is not a string in addUserToGroup', async () => {
+  const res = await request(app)
+    .post('/addUserToGroup')
+    .send({ groupName: { $ne: '' }, userId: '507f1f77bcf86cd799439012' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/Invalid groupName/);
+});
+
+it('should return 400 if groupName is not a string in listGroupUsers', async () => {
+  const res = await request(app)
+    .get('/listGroupUsers')
+    .query({ groupName: { $ne: '' } });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/Invalid groupName/);
+});
+
+it('should return 400 if groupName is not a string in sendMessage', async () => {
+  const res = await request(app)
+    .post('/group/sendMessage')
+    .send({ groupName: { $ne: '' }, username: 'mockuser', message: 'Hola' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/Invalid groupName/);
+});
+
+it('should return 400 if userId is not a valid ObjectId in listGroups', async () => {
+  const res = await request(app)
+    .get('/listGroups')
+    .query({ userId: 'notavalidobjectid' });
+  expect(res.statusCode).toBe(400);
+  expect(res.body.error).toMatch(/Invalid userId/);
 });
