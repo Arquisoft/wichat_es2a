@@ -57,10 +57,13 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
         switch (scoreLevel) {
             case 'facil':
                 truesPoints = 300;
+                break;
             case 'medio':
                 truesPoints = 500;
+                break;
             case 'dificil':
                 truesPoints = 700;
+                break;
         }
 
         // Puntos por fallo por nivel
@@ -68,10 +71,13 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
         switch (scoreLevel) {
             case 'facil':
                 falsesPoints = -100;
+                break;
             case 'medio':
                 falsesPoints = -200;
+                break;
             case 'dificil':
                 falsesPoints = -300;
+                break;
         }
 
         // Se quita 10 puntos por cada segundo que se ha tardado en responder

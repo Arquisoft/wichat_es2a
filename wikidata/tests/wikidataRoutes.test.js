@@ -73,11 +73,9 @@ beforeEach(() => {
     it('should verify answer correctly', async () => {
       service.checkCorrectAnswer.mockResolvedValue(true);
       Game.find.mockResolvedValue([{ correct: 0, wrong: 0, save: jest.fn() }]);
-      
       const response = await request(app)
         .post('/wikidata/verify')
-        .send({ userId: 'user123', userOption: 'A', answer: 'A' });
-  
+        .send({ userId: '507f1f77bcf86cd799439011', userOption: 'A', answer: 'A' });
       expect(response.status).toBe(200);
       expect(response.body.isCorrect).toBe(true);
     });
@@ -85,11 +83,9 @@ beforeEach(() => {
     it('should return 404 if no active game found', async () => {
       service.checkCorrectAnswer.mockResolvedValue(true);
       Game.find.mockResolvedValue([]);
-  
       const response = await request(app)
         .post('/wikidata/verify')
-        .send({ userId: 'user123', userOption: 'A', answer: 'A' });
-  
+        .send({ userId: '507f1f77bcf86cd799439011', userOption: 'A', answer: 'A' });
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("No active game found for this user");
     });
@@ -98,8 +94,7 @@ beforeEach(() => {
       service.checkCorrectAnswer.mockRejectedValueOnce(new Error('Failed'));
       const response = await request(app)
         .post('/wikidata/verify')
-        .send({ userId: 'user123', userOption: 'A', answer: 'A' });
-  
+        .send({ userId: '507f1f77bcf86cd799439011', userOption: 'A', answer: 'A' });
       expect(response.status).toBe(500);
       expect(response.body).toEqual({ error: "Error verifying the answer" });
       expect(console.error).toHaveBeenCalled();
@@ -128,7 +123,7 @@ beforeEach(() => {
       Game.create.mockResolvedValue({});
       const response = await request(app)
         .post('/game/start')
-        .send({ userId: 'user123' });
+        .send({ userId: '507f1f77bcf86cd799439011' });
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('Game started successfully');
     });
@@ -144,7 +139,7 @@ beforeEach(() => {
       Game.create.mockRejectedValue(new Error('Failed'));
       const response = await request(app)
         .post('/game/start')
-        .send({ userId: 'user123' });
+        .send({ userId: '507f1f77bcf86cd799439011' });
       expect(response.status).toBe(500);
       expect(response.body.error).toBe('Server error');
     });
@@ -155,7 +150,7 @@ beforeEach(() => {
       Game.find.mockResolvedValue([{ createdAt: new Date(), save: jest.fn() }]);
       const response = await request(app)
         .post('/game/end')
-        .send({ userId: 'user123', correct: 5, wrong: 3, category: "Test", level: "1", totalQuestions: 10, answered: 8, points: 50 });
+        .send({ userId: '507f1f77bcf86cd799439011', correct: 5, wrong: 3, category: "Test", level: "1", totalQuestions: 10, answered: 8, points: 50 });
       expect(response.status).toBe(200);
       expect(response.body.correct).toBe(5);
     });
@@ -171,7 +166,7 @@ beforeEach(() => {
       Game.find.mockResolvedValue([]);
       const response = await request(app)
         .post('/game/end')
-        .send({ userId: 'user123', correct: 5, wrong: 3 });
+        .send({ userId: '507f1f77bcf86cd799439011', correct: 5, wrong: 3 });
       expect(response.status).toBe(404);
     });
   
@@ -179,7 +174,7 @@ beforeEach(() => {
       Game.find.mockRejectedValue(new Error('Failed'));
       const response = await request(app)
         .post('/game/end')
-        .send({ userId: 'user123', correct: 5, wrong: 3 });
+        .send({ userId: '507f1f77bcf86cd799439011', correct: 5, wrong: 3 });
       expect(response.status).toBe(500);
       expect(console.error).toHaveBeenCalled();
     });
@@ -190,7 +185,7 @@ beforeEach(() => {
       Game.find.mockResolvedValue([{ createdAt: new Date(), correct: 2, wrong: 1, duration: 60, category: "Test", level: "1", totalQuestions: 10, answered: 5, points: 50, isCompleted: true }]);
       const response = await request(app)
         .get('/game/statistics')
-        .query({ userId: 'user123' });
+        .query({ userId: '507f1f77bcf86cd799439011' });
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
     });
@@ -205,7 +200,7 @@ beforeEach(() => {
       Game.find.mockResolvedValue([]);
       const response = await request(app)
         .get('/game/statistics')
-        .query({ userId: 'user123' });
+        .query({ userId: '507f1f77bcf86cd799439011' });
       expect(response.status).toBe(200);
       expect(response.body).toEqual([]);
     });
@@ -214,7 +209,7 @@ beforeEach(() => {
       Game.find.mockRejectedValue(new Error('Failed'));
       const response = await request(app)
         .get('/game/statistics')
-        .query({ userId: 'user123' });
+        .query({ userId: '507f1f77bcf86cd799439011' });
       expect(response.status).toBe(500);
       expect(console.error).toHaveBeenCalled();
     });
