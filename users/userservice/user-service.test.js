@@ -281,7 +281,7 @@ describe('User Service', () => {
       expect(res.body).toHaveProperty('error', 'Usuario o amigo no encontrado');
     });
 
-    it ('should should return error 400 if users are already friends', async () => {
+    it ('should return error 400 if users are already friends', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
@@ -299,7 +299,7 @@ describe('User Service', () => {
       expect(res.body).toHaveProperty('error', 'Ya son amigos');
     });
 
-    it ('should should return error 400 if a request has already been sent', async () => {
+    it ('should return error 400 if a request has already been sent', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
@@ -318,22 +318,87 @@ describe('User Service', () => {
       expect(res.body).toHaveProperty('error', 'Ya has enviado una solicitud de amistad a este usuario');
     });
 
-    // Test for accepting a friend request
+    // Tests for accepting a friend request
 
-    // Test for rejecting a friend request
+    it ('should accept a friend request correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
 
-    // Test for listing friend requests
+      await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
 
-    // Test for getting ID by username
+      const res = await request(app).post('/acceptFriendRequest').send({
+        username: user2.username,
+        friendUsername: user1.username,
+      });
 
-    // Test for getting username by ID
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('message', `¡Ahora son amigos! ${user1.username} y ${user2.username}`);
 
-    // Test for sending a message to global chat
+      const updatedUser1 = await User.findById(user1._id);
+      const updatedUser2 = await User.findById(user2._id);
 
-    // Test for getting messages from global chat
+      expect(updatedUser1.friends).toContainEqual(user2._id);
+      expect(updatedUser2.friends).toContainEqual(user1._id);
+    });
 
-    // Test for sending a private message
+    it ('should return error 404 if user does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
 
-    // Test for getting private messages
+      const res = await request(app).post('/acceptFriendRequest').send({
+        username: 'nonExistentUser',
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 404 if friend does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/acceptFriendRequest').send({
+        username: user1.username,
+        friendUsername: 'nonExistentFriend',
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 400 if no request has been sent', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/acceptFriendRequest').send({
+        username: user2.username,
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'No hay solicitud pendiente de este usuario');
+    });
+
+    // Tests for rejecting a friend request
+
+    // Tests for listing friend requests
+
+    // Tests for getting ID by username
+
+    // Tests for getting username by ID
+
+    // Tests for sending a message to global chat
+
+    // Tests for getting messages from global chat
+
+    // Tests for sending a private message
+
+    // Tests for getting private messages
 
 });
