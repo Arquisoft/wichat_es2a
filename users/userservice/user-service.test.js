@@ -387,6 +387,71 @@ describe('User Service', () => {
 
     // Tests for rejecting a friend request
 
+    it ('should reject a friend request correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      const res = await request(app).post('/rejectFriendRequest').send({
+        username: user2.username,
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('message', `Solicitud de amistad rechazada de ${user1.username}`);
+
+      const updatedUser1 = await User.findById(user1._id);
+      const updatedUser2 = await User.findById(user2._id);
+
+      expect(updatedUser1.friendRequests).not.toContainEqual(user2._id);
+      expect(updatedUser2.friendRequests).not.toContainEqual(user1._id);
+    });
+
+    it ('should return error 404 if user does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/rejectFriendRequest').send({
+        username: 'nonExistentUser',
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 404 if friend does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/rejectFriendRequest').send({
+        username: user1.username,
+        friendUsername: 'nonExistentFriend',
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 400 if no request has been sent', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/rejectFriendRequest').send({
+        username: user2.username,
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'No hay solicitud pendiente de este usuario');
+    });
+
     // Tests for listing friend requests
 
     // Tests for getting ID by username
