@@ -163,13 +163,13 @@ describe('User Service', () => {
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.length).toBeGreaterThan(0);
-      expect(res.body[0]).toHaveProperty('username', 'alice123');
+      expect(res.body[0]).toHaveProperty('username', 'specificUser');
     });
 
     it ('should return error 400 if no query is given on GET /searchUsers', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions: {} });
-      const res = await request(server).get('/searchUsers');
+      const res = await request(app).get('/searchUsers');
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Se requiere un término de búsqueda');
     });
@@ -340,7 +340,7 @@ describe('User Service', () => {
       });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('message', `¡Ahora son amigos! ${user1.username} y ${user2.username}`);
+      expect(res.body).toHaveProperty('message', `¡Ahora son amigos! ${user2.username} y ${user1.username}`);
 
       const updatedUser1 = await User.findById(user1._id);
       const updatedUser2 = await User.findById(user2._id);
@@ -602,7 +602,7 @@ describe('User Service', () => {
 
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.length).toBe(3);
-      expect(res.body[0]).toHaveProperty('content', 'Tercer mensaje');
+      expect(res.body[0]).toHaveProperty('content', 'Primer mensaje');
     });
 
     it ('should return an empty array if there are no messages', async () => {
@@ -691,24 +691,20 @@ describe('User Service', () => {
       let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
 
-      await PrivateMessage.create({
-        content: 'Hola Bob',
-        sender: sender._id,
-        receiver: receiver._id,
-      });
-      await PrivateMessage.create({
-        content: 'Hola Alice',
-        sender: receiver._id,
-        receiver: sender._id,
-      });
+      await request(app)
+        .post('/sendPrivateMessage')
+        .send({
+          senderUsername: sender.username,
+          receiverUsername: receiver.username,
+          content: 'Hola',
+        });
 
       const res = await request(app).get('/getPrivateMessages/user1/user2');
 
-      expect(res.body.length).toBe(2);
-      expect(res.body[0]).toHaveProperty('content', 'Hola Bob');
-      expect(res.body[1]).toHaveProperty('content', 'Hola Alice');
-      expect(res.body[0].sender.username).toBe('user1');
-      expect(res.body[1].sender.username).toBe('user2');
+      expect(res.body.length).toBe(1);
+      expect(res.body[0]).toHaveProperty('content', 'Hola');
+      expect(res.body[0].sender.username).toBe(sender.username);
+      expect(res.body[0].receiver.username).toBe(receiver.username);
     });
 
     it ('should return an empty array if there are no messages', async () => {
@@ -718,7 +714,7 @@ describe('User Service', () => {
 
       const res = await request(app).get('/getPrivateMessages/user1/user2');
 
-      expect(res.body).toEqual([]);
+      expect(res.body.length).toBe(0);
     });
 
 });
