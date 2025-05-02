@@ -11,7 +11,9 @@ image::08_domainModel.drawio.svg[]
 
 === User experience
 
-The app is designed as a quiz game that you have a variety of questions across different categories, each with multiple answer choices where only one is correct, the questions will focus on guessing a location based on a displayed photo. Additionally, users can request hints from a LLM, enhancing their learning experience while playing.
+Our application is designed as an engaging quiz game. Players answer questions from a variety of categories, each with multiple 
+choices and only one correct answer. The main challenge is to guess a location based on a displayed photo. To enhance learning and 
+fun, users can request hints from a Large Language Model (LLM) at any time.
 
 === Usability
 
