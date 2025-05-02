@@ -10,6 +10,7 @@ const questionSchema = new mongoose.Schema({
 
 const gameSchema = new mongoose.Schema({
     userId: { type: String, required: true },
+    username: { type: String, required: true },
     correct: { type: Number, required: true },
     wrong: { type: Number, required: true },
     duration: { type: Number, required: true },
