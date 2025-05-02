@@ -699,7 +699,7 @@ describe('User Service', () => {
           content: 'Hola',
         });
 
-      const res = await request(app).get(`/getPrivateMessages/${user1._id}/${user2._id}`);
+      const res = await request(app).get(`/getPrivateMessages/${sender._id}/${receiver._id}`);
 
       expect(res.body.length).toBe(1);
       expect(res.body[0]).toHaveProperty('content', 'Hola');
@@ -712,9 +712,87 @@ describe('User Service', () => {
       let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
 
-      const res = await request(app).get(`/getPrivateMessages/${user1._id}/${user2._id}`);
+      const res = await request(app).get(`/getPrivateMessages/${sender._id}/${receiver._id}`);
 
       expect(res.body.length).toBe(0);
     });
+
+    // Tests for adding user (extended)
+
+    it ('should return error 400 if username already exists', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      const user = new User({
+        username: 'existingUser',
+        password: hashedPassword,
+        avatarOptions: 'default',
+      });
+      await user.save();
+  
+      const newUser = {
+        username: 'existingUser',
+        password: hashedPassword,
+        confirmPassword: hashedPassword,
+        avatarOptions: 'default',
+      };
+  
+      const res = await request(app)
+        .post('/adduser')
+        .send(newUser);
+  
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'El nombre de usuario ya existe');
+    });
+
+    it('should return an error if the username length is invalid', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      const newUser = {
+        username: 'us',
+        password: hashedPassword,
+        confirmPassword: hashedPassword,
+        avatarOptions: 'default',
+      };
+  
+      const response = await request(app)
+        .post('/adduser')
+        .send(newUser);
+  
+      expect(response.status).toBe(400);
+      expect(response.body.error).toBe('El nombre de usuario debe tener entre 3 y 20 caracteres.');
+    });
+
+    it('should return an error if the password complexity is invalid', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      const newUser = {
+        username: 'newUser123',
+        password: hashedPassword,
+        confirmPassword: hashedPassword,
+        avatarOptions: 'default',
+      };
+  
+      const response = await request(app)
+        .post('/adduser')
+        .send(newUser);
+  
+      expect(response.status).toBe(400);
+      expect(response.body.error).toBe('La contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un caracter especial');
+    });
+
+    it('should return an error if the passwords do not match', async () => {
+      const newUser = {
+        username: 'newUser123',
+        password: 'Password123!',
+        confirmPassword: 'Password321!',
+        avatarOptions: 'default',
+      };
+  
+      const response = await request(app)
+        .post('/adduser')
+        .send(newUser);
+  
+      expect(response.status).toBe(400);
+      expect(response.body.error).toBe('Las contraseñas no coinciden.');
+    });
+
+    // Tests for updating user
 
 });
