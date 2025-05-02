@@ -1,0 +1,15 @@
+1 users per second for 10 seconds (10 users) - https://app.artillery.io/share/sh_43d9c1390b6b0bfb92d9347f748bfd3c611337ae90db30653383bce45eff40bd
+3 users per second for 10 seconds (30 users) - https://app.artillery.io/share/sh_b477e6792df54c926f53995547e1d047650580644a201ef4a4128f2919a247e6
+5 users per second for 10 seconds (50 users) - https://app.artillery.io/share/sh_39c93172d87c953d40d820312260dd4f88ad1b47d9c316ef198003b1e779034e
+10 users per second for 10 seconds (100 users) - https://app.artillery.io/share/sh_1a4e2f6ece8f5dd499a3f0e8130dc990bcb423479072ce054173f60c14607e49
+20 users per second for 10 seconds (200 users) - https://app.artillery.io/share/sh_aba2a24da7a54a2a32b942f5b8c116949a043eb040a29246d88cea23924a130c
+50 users per second for 10 seconds (500 users) - https://app.artillery.io/share/sh_43c5bd26400dcff1a9fff643d5b5726536ad6445195b55b041392949e39ed1f1
+100 users per second for 10 seconds (1000 users) - https://app.artillery.io/share/sh_cd49e33450214474c5b35b38ec5541b4c70e58d4746eaebaace56ea0b5db8935
+
+10 users per second for 30 seconds (300 users) - https://app.artillery.io/share/sh_507c6b05f80c599262db951ba06f8475e61a5da8aff73aa757fe50b9a789fa04
+20 users per second for 30 seconds (500 users) - https://app.artillery.io/share/sh_d0465c1bd3c59565557bd7efa7075e91ff35b276ca5874c1b480b27b4cc2e27b
+50 users per second for 30 seconds (1500 users) - https://app.artillery.io/share/sh_9a29bc33cdcbf782e74dd962f59629fa325398a9979b70e3b4e282ca22333596
+
+5 users per second for 50 seconds (250 users) - https://app.artillery.io/share/sh_bfbc074e9d12623055626bc1ec71d233c0b9154b39d9ee065da091e351c32ba4
+15 users per second for 50 seconds (750 users) - https://app.artillery.io/share/sh_bc8f0d68871619aed51e407395c5b11489e8abd88db9b3ec5a32d80052314259
+30 users per second for 50 seconds (1500 users) - https://app.artillery.io/share/sh_6def4f656934202c4712c9fdb79f66652e23a969be92ed7ca4e7240b49f81bb4
