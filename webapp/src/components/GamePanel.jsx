@@ -70,7 +70,7 @@ const GamePanel = () => {
         getQuestions();
       }
     } catch (error) {
-      console.error("Error al recibir preguntas: ", error);
+      //console.error("Error al recibir preguntas: ", error);
     }
   };
   
