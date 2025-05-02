@@ -236,7 +236,87 @@ describe('User Service', () => {
       expect(res.body).toHaveProperty('error', 'No son amigos');
     });
 
-    // Test for sending a friend request
+    // Tests for sending a friend request
+
+    it ('should send a friend request correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('message', `Solicitud de amistad enviada a ${user2.username}`);
+
+      const updatedUser2 = await User.findById(user2._id);
+      expect(updatedUser2.friendRequests).toContainEqual(user1._id);
+    });
+
+    it ('should return error 400 if tried to send a request to yourself', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'No puedes enviarte una solicitud de amistad a ti mismo');
+    });
+
+    it ('should return error 404 if user does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: 'nonExistentUser',
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario o amigo no encontrado');
+    });
+
+    it ('should should return error 400 if users are already friends', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+      user1.friends.push(user2._id);
+      user2.friends.push(user1._id);
+      await user1.save();
+      await user2.save();
+
+      const res = await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Ya son amigos');
+    });
+
+    it ('should should return error 400 if a request has already been sent', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      const res = await request(app).post('/sendFriendRequest').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Ya has enviado una solicitud de amistad a este usuario');
+    });
 
     // Test for accepting a friend request
 
