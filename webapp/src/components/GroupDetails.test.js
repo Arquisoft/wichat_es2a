@@ -1,9 +1,6 @@
-// Mock scrollIntoView para evitar error en JSDOM
 beforeAll(() => {
     window.HTMLElement.prototype.scrollIntoView = function() {};
 });
-// Tests exhaustivos para GroupDetails.jsx sin usar JSX
-// Se usa testing-library/react y jest para máxima cobertura
 
 const React = require('react');
 const { render, screen, fireEvent, waitFor } = require('@testing-library/react');
@@ -73,7 +70,6 @@ describe('GroupDetails', () => {
         });
         const item = screen.getByText('user1');
         fireEvent.click(item);
-        // No hay verificación de navegación real, pero el handler se ejecuta
     });
 
 
@@ -95,9 +91,6 @@ describe('GroupDetails', () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [] } });
         renderWithRouter('testgroup');
         await waitFor(() => {
-            // Busca el Paper que envuelve la lista aunque esté vacía
-            // Si añades data-testid en el componente, usa eso. Si no, busca por clase o por texto
-            // Aquí asumimos que el List siempre se renderiza
             const paperList = document.querySelector('.MuiList-root');
             expect(paperList).toBeTruthy();
         });
