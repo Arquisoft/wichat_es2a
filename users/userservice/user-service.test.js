@@ -521,7 +521,7 @@ describe('User Service', () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       
-      const res = await request(app).get('/getUsername').query({ userId: user1._id });
+      const res = await request(app).get('/getUsername').query({ userId: user1._id.toString() });
       
       expect(res.body).toHaveProperty('username');
       expect(res.body.username).toBe(user1.username);
@@ -699,7 +699,7 @@ describe('User Service', () => {
           content: 'Hola',
         });
 
-      const res = await request(app).get('/getPrivateMessages/user1/user2');
+      const res = await request(app).get(`/getPrivateMessages/${user1._id}/${user2._id}`);
 
       expect(res.body.length).toBe(1);
       expect(res.body[0]).toHaveProperty('content', 'Hola');
@@ -712,7 +712,7 @@ describe('User Service', () => {
       let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
 
-      const res = await request(app).get('/getPrivateMessages/user1/user2');
+      const res = await request(app).get(`/getPrivateMessages/${user1._id}/${user2._id}`);
 
       expect(res.body.length).toBe(0);
     });
