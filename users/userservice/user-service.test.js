@@ -764,8 +764,8 @@ describe('User Service', () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       const newUser = {
         username: 'newUser123',
-        password: hashedPassword,
-        confirmPassword: hashedPassword,
+        password: 'test123',
+        confirmPassword: 'test123',
         avatarOptions: 'default',
       };
   

@@ -45,7 +45,7 @@ app.post('/adduser', async (req, res) => {
     // Verificar si el nombre de usuario ya existe
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.status(400).json({ error: "El nombre de usuario ya existe." });
+      return res.status(400).json({ error: "El nombre de usuario ya existe" });
     }
 
     // Validación de longitud de password
