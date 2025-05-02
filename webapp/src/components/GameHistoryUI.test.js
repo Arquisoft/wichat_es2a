@@ -23,14 +23,14 @@ describe('GameHistoryUI', () => {
         jest.clearAllMocks();
     });
 
-    it('muestra el loading correctamente', async () => {
+    it('shows loading state correctly', async () => {
         axiosInstance.get.mockReturnValue(new Promise(() => {}));
         render(React.createElement(GameHistoryUI));
         expect(screen.getByText(/Cargando historial de partidas/i)).toBeTruthy();
         expect(screen.getByRole('progressbar')).toBeTruthy();
     });
 
-    it('muestra error si la API falla', async () => {
+    it('shows error if API fails', async () => {
         axiosInstance.get.mockRejectedValue(new Error('fail'));
         render(React.createElement(GameHistoryUI));
         await waitFor(() => {
@@ -38,7 +38,7 @@ describe('GameHistoryUI', () => {
         });
     });
 
-    it('muestra mensaje de no hay partidas si gameHistory vacío', async () => {
+    it('shows message if there are no games', async () => {
         axiosInstance.get.mockResolvedValue({ data: [] });
         render(React.createElement(GameHistoryUI));
         await waitFor(() => {
@@ -46,7 +46,7 @@ describe('GameHistoryUI', () => {
         });
     });
 
-    it('renderiza tabla si hay partidas', async () => {
+    it('renders table if there are games', async () => {
         axiosInstance.get.mockResolvedValue({ data: [{ id: 1, winner: 'A', date: '2024-01-01' }] });
         render(React.createElement(GameHistoryUI));
         await waitFor(() => {
@@ -54,7 +54,7 @@ describe('GameHistoryUI', () => {
         });
     });
 
-    it('devuelve null si no hay usuario en localStorage', async () => {
+    it('returns null if there is no user in localStorage', async () => {
         global.localStorage.getItem = () => null;
         render(React.createElement(GameHistoryUI));
         await waitFor(() => {
@@ -62,7 +62,7 @@ describe('GameHistoryUI', () => {
         });
     });
 
-    it('devuelve null si el token es inválido', async () => {
+    it('returns null if token is invalid', async () => {
         global.localStorage.getItem = () => JSON.stringify({ username: 'testuser', token: 'invalid.token.sig' });
         render(React.createElement(GameHistoryUI));
         await waitFor(() => {

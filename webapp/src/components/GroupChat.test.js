@@ -28,13 +28,13 @@ describe('GroupChat', () => {
         jest.clearAllMocks();
     });
 
-    it('renderiza correctamente sin groupName', () => {
+    it('renders correctly without groupName', () => {
         render(React.createElement(GroupChat, { groupName: '', onClose: jest.fn() }));
         expect(screen.getByText(/Chat grupal/i)).toBeTruthy();
         expect(screen.getByText(/Cargando chat del grupo/i)).toBeTruthy();
     });
 
-    it('renderiza mensajes correctamente', async () => {
+    it('renders messages correctly', async () => {
         axiosInstance.get.mockResolvedValue({ data: [
             { _id: '1', username: 'testuser', message: 'Hola', createdAt: new Date().toISOString() },
             { _id: '2', username: 'other', message: 'Hey', createdAt: new Date().toISOString() }
@@ -47,7 +47,7 @@ describe('GroupChat', () => {
         });
     });
 
-    it('muestra error si falla la carga de mensajes', async () => {
+    it('shows error if loading messages fails', async () => {
         axiosInstance.get.mockRejectedValue(new Error('fail'));
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose: jest.fn() }));
         await waitFor(() => {
@@ -55,7 +55,7 @@ describe('GroupChat', () => {
         });
     });
 
-    it('envía mensaje correctamente', async () => {
+    it('sends message correctly', async () => {
         axiosInstance.get.mockResolvedValue({ data: [] });
         axiosInstance.post.mockResolvedValue({});
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose: jest.fn() }));
@@ -69,7 +69,7 @@ describe('GroupChat', () => {
         });
     });
 
-    it('muestra error si falla el envío de mensaje', async () => {
+    it('shows error if sending message fails', async () => {
         axiosInstance.get.mockResolvedValue({ data: [] });
         axiosInstance.post.mockRejectedValue(new Error('fail'));
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose: jest.fn() }));
@@ -83,7 +83,7 @@ describe('GroupChat', () => {
         });
     });
 
-    it('deshabilita el botón de enviar si input vacío o loading', async () => {
+    it('disables send button if input is empty or loading', async () => {
         axiosInstance.get.mockResolvedValue({ data: [] });
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose: jest.fn() }));
         await waitFor(() => {
@@ -93,7 +93,7 @@ describe('GroupChat', () => {
         expect(screen.getByLabelText(/Enviar mensaje/i)).not.toBeDisabled();
     });
 
-    it('llama a onClose al pulsar el botón cerrar', async () => {
+    it('calls onClose when close button is clicked', async () => {
         axiosInstance.get.mockResolvedValue({ data: [] });
         const onClose = jest.fn();
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose }));
@@ -104,12 +104,12 @@ describe('GroupChat', () => {
         expect(onClose).toHaveBeenCalled();
     });
 
-    it('hace polling de mensajes periódicamente', async () => {
+    it('polls messages periodically', async () => {
         jest.useFakeTimers();
         axiosInstance.get.mockResolvedValue({ data: [] });
         render(React.createElement(GroupChat, { groupName: 'grupo', onClose: jest.fn() }));
         await waitFor(() => {
-        expect(axiosInstance.get).toHaveBeenCalledTimes(1);
+            expect(axiosInstance.get).toHaveBeenCalledTimes(1);
         });
         act(() => {
             jest.advanceTimersByTime(1000);

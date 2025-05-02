@@ -28,7 +28,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('muestra el loading correctamente', async () => {
+    it('shows loading state correctly', async () => {
         axiosInstance.get.mockReturnValue(new Promise(() => {}));
         renderWithRouter('testgroup');
         expect(screen.getByText(/Cargando usuarios/i)).toBeTruthy();
@@ -36,7 +36,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('muestra error si la petición falla', async () => {
+    it('shows error if request fails', async () => {
         axiosInstance.get.mockRejectedValue(new Error('fail'));
         renderWithRouter('testgroup');
         await waitFor(() => {
@@ -45,7 +45,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('muestra usuarios y roles correctamente', async () => {
+    it('renders users and roles correctly', async () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [
             { username: 'adminuser', role: 'admin' },
             { username: 'normaluser', role: 'user' }
@@ -60,7 +60,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('navega al historial de usuario al hacer click', async () => {
+    it('navigates to user history on click', async () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [
             { username: 'user1', role: 'user' }
         ] } });
@@ -73,7 +73,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('muestra y oculta el chat de grupo', async () => {
+    it('shows and hides group chat', async () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [] } });
         renderWithRouter('testgroup');
         await waitFor(() => {
@@ -87,7 +87,7 @@ describe('GroupDetails', () => {
     });
 
 
-    it('renderiza correctamente con lista de usuarios vacía', async () => {
+    it('renders correctly with empty user list', async () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [] } });
         renderWithRouter('testgroup');
         await waitFor(() => {
@@ -96,7 +96,7 @@ describe('GroupDetails', () => {
         });
     });
 
-    it('llama a la API con el nombre de grupo correcto', async () => {
+    it('calls API with correct group name', async () => {
         axiosInstance.get.mockResolvedValue({ data: { users: [] } });
         renderWithRouter('grupo123');
         await waitFor(() => {

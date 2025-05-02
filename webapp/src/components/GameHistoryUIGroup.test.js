@@ -23,21 +23,21 @@ describe('GameHistoryUIGroup', () => {
         jest.clearAllMocks();
     });
 
-    it('muestra el loading correctamente', async () => {
+    it('shows loading state correctly', async () => {
         axiosInstance.get.mockReturnValue(new Promise(() => {}));
         renderWithRouter('testuser');
         expect(screen.getByText(/Cargando historial de partidas/i)).toBeTruthy();
         expect(screen.getByRole('progressbar')).toBeTruthy();
     });
 
-    it('muestra error si falta username', async () => {
+    it('shows error if username is missing', async () => {
         renderWithRouter(undefined);
         await waitFor(() => {
             expect(screen.getByText(/No se pudo obtener el ID del usuario/i)).toBeTruthy();
         });
     });
 
-    it('muestra error si la API de userId falla', async () => {
+    it('shows error if userId API fails', async () => {
         axiosInstance.get.mockRejectedValueOnce(new Error('fail'));
         renderWithRouter('testuser');
         await waitFor(() => {
@@ -45,7 +45,7 @@ describe('GameHistoryUIGroup', () => {
         });
     });
 
-    it('muestra error si la API de gameHistory falla', async () => {
+    it('shows error if gameHistory API fails', async () => {
         axiosInstance.get
             .mockResolvedValueOnce({ data: { userId: '123' } })
             .mockRejectedValueOnce(new Error('fail'));
@@ -55,7 +55,7 @@ describe('GameHistoryUIGroup', () => {
         });
     });
 
-    it('muestra mensaje de no hay partidas si gameHistory vacío', async () => {
+    it('shows message if there are no games', async () => {
         axiosInstance.get
             .mockResolvedValueOnce({ data: { userId: '123' } })
             .mockResolvedValueOnce({ data: [] });
@@ -65,7 +65,7 @@ describe('GameHistoryUIGroup', () => {
         });
     });
 
-    it('renderiza tabla si hay partidas', async () => {
+    it('renders table if there are games', async () => {
         axiosInstance.get
             .mockResolvedValueOnce({ data: { userId: '123' } })
             .mockResolvedValueOnce({ data: [{ id: 1, winner: 'A', date: '2024-01-01' }] });
@@ -76,7 +76,7 @@ describe('GameHistoryUIGroup', () => {
         expect(screen.queryByText(/No hay partidas registradas/i)).toBeNull();
     });
 
-    it('el botón volver navega hacia atrás', async () => {
+    it('back button triggers navigation', async () => {
         axiosInstance.get
             .mockResolvedValueOnce({ data: { userId: '123' } })
             .mockResolvedValueOnce({ data: [] });
