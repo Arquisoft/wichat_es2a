@@ -28,6 +28,7 @@ beforeAll(async () => {
 describe('User Service', () => {
   beforeEach(async () => {
     await User.deleteMany();
+    await Message.deleteMany({});
   });
 
   it('should add a new user on POST /adduser', async () => {
@@ -587,6 +588,27 @@ describe('User Service', () => {
     });
 
     // Tests for getting messages from global chat
+
+    it ('should return last messages from global chat', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      await Message.create({ content: 'Primer mensaje', sender: user._id });
+      await Message.create({ content: 'Segundo mensaje', sender: user._id });
+      await Message.create({ content: 'Tercer mensaje', sender: user._id });
+
+      const res = await request(app).get('/getMessages');
+
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBe(3);
+      expect(res.body[0]).toHaveProperty('content', 'Tercer mensaje');
+    });
+
+    it ('should return an empty array if there are no messages', async () => {
+      const res = await request(app).get('/getMessages');
+
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBe(0);
+    });
 
     // Tests for sending a private message
 
