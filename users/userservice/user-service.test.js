@@ -154,7 +154,7 @@ describe('User Service', () => {
 
     it ('should return users matching partial username on GET /searchUsers', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
-      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions:{} });
+      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions: {} });
       const res = await request(app).get('/searchUsers').query({ query: 'specif' });
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
@@ -164,13 +164,77 @@ describe('User Service', () => {
 
     it ('should return error 400 if no query is given on GET /searchUsers', async () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
-      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions:{} });
+      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions: {} });
       const res = await request(server).get('/searchUsers');
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Se requiere un término de búsqueda');
     });
 
-    // Test for removing a friend
+    // Tests for removing a friend
+
+    it ('should remove a friend correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+      user1.friends.push(user2._id);
+      user2.friends.push(user1._id);
+      await user1.save();
+      await user2.save();
+
+      const res = await request(app).post('/removeFriend').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('message', `${user2.username} ha sido eliminado de tus amigos.`);
+
+      const updatedUser1 = await User.findById(user1._id);
+      const updatedUser2 = await User.findById(user2._id);
+
+      expect(updatedUser1.friends).not.toContainEqual(user2._id);
+      expect(updatedUser2.friends).not.toContainEqual(user1._id);
+    });
+
+    it ('should return error 400 if tried to remove yourself from friends', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/removeFriend').send({
+        username: user1.username,
+        friendUsername: user1.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'No puedes eliminarte a ti mismo de la lista de amigos');
+    });
+
+    it ('should return error 404 if user does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/removeFriend').send({
+        username: user1.username,
+        friendUsername: 'nonExistentUser',
+      });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario o amigo no encontrado');
+    });
+
+    it ('should return error 400 if users are not friends', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let user2 = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).post('/removeFriend').send({
+        username: user1.username,
+        friendUsername: user2.username,
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'No son amigos');
+    });
 
     // Test for sending a friend request
 
