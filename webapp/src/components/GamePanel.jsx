@@ -117,7 +117,6 @@ const GamePanel = () => {
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
       setGameEnded(true);
-      endGame();
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -168,8 +167,7 @@ const GamePanel = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    // await endGame(); // Asegurarse de que endGame se complete antes de continuar
-    startGame(); // Iniciar un nuevo juego después de finalizar el anterior
+    startGame(); 
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -280,7 +278,7 @@ useEffect(() => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
-    // endGame();
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (
