@@ -48,11 +48,11 @@ describe('GameHistoryUI', () => {
       expect(screen.getByText('Historial de Partidas')).toBeInTheDocument();
       expect(screen.getByText('Arte')).toBeInTheDocument();
       expect(screen.getByText('Ciencia')).toBeInTheDocument();
-      expect(screen.getAllByText('10').length).toBeGreaterThan(0); // totalQuestions
+      expect(screen.getAllByText('10').length).toBeGreaterThan(0); 
       expect(screen.getByText('Fácil')).toBeInTheDocument();
       expect(screen.getByText('Difícil')).toBeInTheDocument();
-      expect(screen.getByText('70')).toBeInTheDocument(); // points
-      expect(screen.getByText('50')).toBeInTheDocument(); // points
+      expect(screen.getByText('70')).toBeInTheDocument(); 
+      expect(screen.getByText('50')).toBeInTheDocument(); 
       expect(screen.getByText('01/05/2025 12:00:00')).toBeInTheDocument();
       expect(screen.getByText('02/05/2025 13:00:00')).toBeInTheDocument();
     });
@@ -78,7 +78,6 @@ describe('GameHistoryUI', () => {
     axios.get.mockResolvedValueOnce({ data: mockGameHistory });
     render(<GameHistoryUI />);
     await waitFor(() => {
-      // Encabezados
       expect(screen.getByText('Preguntas totales')).toBeInTheDocument();
       expect(screen.getByText('Preguntas respondidas')).toBeInTheDocument();
       expect(screen.getByText('Categoria')).toBeInTheDocument();
@@ -89,17 +88,15 @@ describe('GameHistoryUI', () => {
       expect(screen.getByText('Duración (segundos)')).toBeInTheDocument();
       expect(screen.getByText('Fecha')).toBeInTheDocument();
 
-      // Valores de la primera partida
-      expect(screen.getAllByText('10').length).toBeGreaterThan(1); // totalQuestions (puede haber más de una)
+      expect(screen.getAllByText('10').length).toBeGreaterThan(1); 
       expect(screen.getByText('Arte')).toBeInTheDocument();
       expect(screen.getByText('Fácil')).toBeInTheDocument();
       expect(screen.getByText('7')).toBeInTheDocument();
-      expect(screen.getAllByText('3').length).toBeGreaterThan(1); // wrong puede repetirse
+      expect(screen.getAllByText('3').length).toBeGreaterThan(1); 
       expect(screen.getByText('70')).toBeInTheDocument();
       expect(screen.getByText('60')).toBeInTheDocument();
       expect(screen.getByText('01/05/2025 12:00:00')).toBeInTheDocument();
 
-      // Valores de la segunda partida
       expect(screen.getByText('Ciencia')).toBeInTheDocument();
       expect(screen.getByText('Difícil')).toBeInTheDocument();
       expect(screen.getByText('5')).toBeInTheDocument();
@@ -115,7 +112,6 @@ describe('GameHistoryUI', () => {
     await waitFor(() => {
       const rows = container.querySelectorAll('tbody tr');
       expect(rows.length).toBe(2);
-      // Primer row: #e3f2fd, segundo: #bbdefb
       expect(rows[0]).toHaveStyle('background-color: #e3f2fd');
       expect(rows[1]).toHaveStyle('background-color: #bbdefb');
     });
@@ -124,19 +120,18 @@ describe('GameHistoryUI', () => {
   it('does not fetch if userId is null', async () => {
     window.localStorage.setItem('user', JSON.stringify({ token: btoa(JSON.stringify({})) }));
     render(<GameHistoryUI />);
-    // No loading ni tabla, solo loading inicial
     expect(screen.getByText(/Cargando historial de partidas/i)).toBeInTheDocument();
   });
 
   it('handles incomplete or corrupt data gracefully', async () => {
     const corruptData = [
-      { }, // Empty object
-      { totalQuestions: 5, correct: 2 }, // Missing most fields
+      { }, 
+      { totalQuestions: 5, correct: 2 }, 
     ];
     axios.get.mockResolvedValueOnce({ data: corruptData });
     render(<GameHistoryUI />);
     await waitFor(() => {
-      // Debería renderizar celdas vacías o undefined sin crashear
+      
       expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
   });
