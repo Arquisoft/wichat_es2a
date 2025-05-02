@@ -513,6 +513,30 @@ describe('User Service', () => {
 
     // Tests for getting username by ID
 
+    it ('should return username given user ID', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user1 = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      
+      const res = await request(app).get('/getUsername').query({ userId: user1._id });
+      
+      expect(res.body).toHaveProperty('username');
+      expect(res.body.username).toBe(user1.username);
+    });
+
+    it ('should return error 404 if user does not exist', async () => {
+      const res = await request(app).get('/getUsername').query({ userId: '60a2b1d2b9e8d2c35b9a3e7e' });
+      
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'User not found');
+    });
+
+    it ('should return error 400 if user ID param is not given', async () => {
+      const res = await request(app).get('/getUsername').query({});
+      
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'User ID is required');
+    });
+
     // Tests for sending a message to global chat
 
     // Tests for getting messages from global chat
