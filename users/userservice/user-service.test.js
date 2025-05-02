@@ -686,4 +686,39 @@ describe('User Service', () => {
 
     // Tests for getting private messages
 
+    it ('should return private messages correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      await PrivateMessage.create({
+        content: 'Hola Bob',
+        sender: sender._id,
+        receiver: receiver._id,
+      });
+      await PrivateMessage.create({
+        content: 'Hola Alice',
+        sender: receiver._id,
+        receiver: sender._id,
+      });
+
+      const res = await request(app).get('/getPrivateMessages/user1/user2');
+
+      expect(res.body.length).toBe(2);
+      expect(res.body[0]).toHaveProperty('content', 'Hola Bob');
+      expect(res.body[1]).toHaveProperty('content', 'Hola Alice');
+      expect(res.body[0].sender.username).toBe('user1');
+      expect(res.body[1].sender.username).toBe('user2');
+    });
+
+    it ('should return an empty array if there are no messages', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app).get('/getPrivateMessages/user1/user2');
+
+      expect(res.body).toEqual([]);
+    });
+
 });
