@@ -17,6 +17,8 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('axios');
+
 describe('GamePanel component', () => {
   it('renders loading state', () => {
     render(

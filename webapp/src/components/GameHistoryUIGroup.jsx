@@ -100,6 +100,7 @@ const GameHistoryUIGroup = () => {
     return (
         <Box>
             <GameHistoryTable gameHistory={gameHistory} theme={theme} />
+
             <Button
                 variant="contained"
                 color="primary"
