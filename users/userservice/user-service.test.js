@@ -4,6 +4,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const User = require('./user-model');
 const Message = require('./message-model');
+const PrivateMessage = require('./private-message-model');
 
 let mongoServer;
 let app;
@@ -29,6 +30,7 @@ describe('User Service', () => {
   beforeEach(async () => {
     await User.deleteMany();
     await Message.deleteMany({});
+    await PrivateMessage.deleteMany({});
   });
 
   it('should add a new user on POST /adduser', async () => {
@@ -611,6 +613,76 @@ describe('User Service', () => {
     });
 
     // Tests for sending a private message
+
+    it ('should send a private message correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app)
+        .post('/sendPrivateMessage')
+        .send({
+          senderUsername: sender.username,
+          receiverUsername: receiver.username,
+          content: 'Hola',
+        });
+
+      expect(res.body).toHaveProperty('message', 'Mensaje privado enviado');
+
+      const message = await PrivateMessage.findOne();
+      expect(message).toBeDefined();
+      expect(message.content).toBe('Hola');
+      expect(message.sender.toString()).toBe(sender._id.toString());
+      expect(message.receiver.toString()).toBe(receiver._id.toString());
+    });
+
+    it ('should return error 400 if any param is not given', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      let receiver = await User.create({ username: 'user2', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app)
+        .post('/sendPrivateMessage')
+        .send({
+          senderUsername: sender.username,
+          receiverUsername: receiver.username,
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Faltan datos requeridos');
+    });
+
+    it ('should return error 404 if receiver does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let sender = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app)
+        .post('/sendPrivateMessage')
+        .send({
+          senderUsername: sender.username,
+          receiverUsername: 'nonExistentUser',
+          content: 'Hola',
+        });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
+
+    it ('should return error 404 if sender does not exist', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let receiver = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app)
+        .post('/sendPrivateMessage')
+        .send({
+          senderUsername: 'nonExistentUser',
+          receiverUsername: receiver.username,
+          content: 'Hola',
+        });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
 
     // Tests for getting private messages
 
