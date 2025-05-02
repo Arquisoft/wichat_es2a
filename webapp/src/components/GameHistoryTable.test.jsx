@@ -69,7 +69,6 @@ describe('GameHistoryTable', () => {
     expect(screen.getAllByText('Arte').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Fácil').length).toBeGreaterThan(0);
     expect(screen.getAllByText('10').length).toBeGreaterThan(0);
-    // Should render empty cell for null/undefined
     const cells = screen.getAllByRole('cell');
     expect(cells.some(cell => cell.textContent === '')).toBe(true);
   });
