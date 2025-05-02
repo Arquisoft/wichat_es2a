@@ -148,5 +148,48 @@ describe('User Service', () => {
       const response = await request(app).get('/user/nonexistentUser');
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error', 'User not found');
-   });
+    });
+
+    // Tests for partial user search
+
+    it ('should return users matching partial username on GET /searchUsers', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions:{} });
+      const res = await request(app).get('/searchUsers').query({ query: 'specif' });
+      expect(res.statusCode).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThan(0);
+      expect(res.body[0]).toHaveProperty('username', 'alice123');
+    });
+
+    it ('should return error 400 if no query is given on GET /searchUsers', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      await User.create({ username: 'specificUser', password: hashedPassword, avatarOptions:{} });
+      const res = await request(server).get('/searchUsers');
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Se requiere un término de búsqueda');
+    });
+
+    // Test for removing a friend
+
+    // Test for sending a friend request
+
+    // Test for accepting a friend request
+
+    // Test for rejecting a friend request
+
+    // Test for listing friend requests
+
+    // Test for getting ID by username
+
+    // Test for getting username by ID
+
+    // Test for sending a message to global chat
+
+    // Test for getting messages from global chat
+
+    // Test for sending a private message
+
+    // Test for getting private messages
+
 });
