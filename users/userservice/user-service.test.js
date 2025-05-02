@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const User = require('./user-model');
+const Message = require('./message-model');
 
 let mongoServer;
 let app;
@@ -538,6 +539,52 @@ describe('User Service', () => {
     });
 
     // Tests for sending a message to global chat
+
+    it ('should send a message to global chat correctly', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+      
+      const res = await request(app)
+        .post('/sendMessage')
+        .send({ username: user.username, content: '¡Hola mundo!' });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('message', 'Mensaje enviado');
+
+      const message = await Message.findOne({ content: '¡Hola mundo!' });
+      expect(message).not.toBeNull();
+      expect(message.sender.toString()).toBe(user._id.toString());
+    });
+
+    it ('should return error 400 if no username param is given', async () => {
+      const res = await request(app)
+        .post('/sendMessage')
+        .send({ content: '¡Hola mundo!' });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Faltan datos requeridos');
+    });
+
+    it ('should return error 400 if no content param is given', async () => {
+      const hashedPassword = await bcrypt.hash('securepassword', 10);
+      let user = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
+
+      const res = await request(app)
+        .post('/sendMessage')
+        .send({ username: user.username });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Faltan datos requeridos');
+    });
+
+    it ('should return error 404 if no user does not exist', async () => {
+      const res = await request(app)
+        .post('/sendMessage')
+        .send({ username: 'nonExistentUser', content: '¡Hola mundo!' });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty('error', 'Usuario no encontrado');
+    });
 
     // Tests for getting messages from global chat
 
