@@ -3,7 +3,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChatPanel from './ChatPanel';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { AutoFixHigh } from '@mui/icons-material';
 
 // Mock the axios module
 jest.mock('axios');
@@ -74,6 +73,8 @@ describe('ChatPanel', () => {
         await sendMessage('¿Cuál es la respuesta?');
         // Espera a que aparezca la respuesta del bot
         expect(await screen.findByText('Esta es una respuesta del bot.')).toBeInTheDocument();
+        const botMessage = screen.getByText('Esta es una respuesta del bot.');
+        expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
     });
 
     test('Test 2: muestra mensaje de error si falla la llamada al backend', async () => {
@@ -122,48 +123,7 @@ describe('ChatPanel', () => {
         expect(await screen.findByText("Error: No se pudo identificar al usuario. Por favor, inicia sesión de nuevo.")).toBeInTheDocument();
     });
 
-    test('Test 6: Verifica que las respuestas del bot se muestran correctamente', async () => {
-        axios.post.mockResolvedValueOnce({
-            data: {
-                answer: 'Respuesta de prueba del bot.',
-            },
-        });
-
-        renderChatPanel();
-
-        // Envía un mensaje de prueba
-        await sendMessage('Pregunta al bot');
-
-        // Espera que el mensaje de respuesta del bot se muestre
-        await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
-
-        // Verifica que el mensaje del bot tenga el estilo esperado
-        const botMessage = screen.getByText('Respuesta de prueba del bot.');
-        expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
-    });
-
-    test('Test 7: Verifica que las respuestas del bot se muestran correctamente', async () => {
-        axios.post.mockResolvedValueOnce({
-            data: {
-                answer: 'Respuesta de prueba del bot.',
-            },
-        });
-
-        renderChatPanel();
-
-        // Envía un mensaje de prueba
-        await sendMessage('Pregunta al bot');
-
-        // Espera que el mensaje de respuesta del bot se muestre
-        await waitFor(() => expect(screen.getByText('Respuesta de prueba del bot.')).toBeInTheDocument());
-
-        // Verifica que el mensaje del bot tenga el estilo esperado
-        const botMessage = screen.getByText('Respuesta de prueba del bot.');
-        expect(botMessage.parentNode).toHaveStyle('align-self: flex-start'); // Bot debería estar en el lado izquierdo
-    });
-
-
-    test('Test 8: Verifica que el CircularProgress aparece cuando se está esperando una respuesta', async () => {
+    test('Test 6: Verifica que el CircularProgress aparece cuando se está esperando una respuesta', async () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 answer: 'Respuesta del bot mientras carga...',
@@ -183,8 +143,7 @@ describe('ChatPanel', () => {
         await waitFor(() => expect(screen.getByText('Respuesta del bot mientras carga...')).toBeInTheDocument());
     });
    
-
-    test('Test 9: Verifica la persistencia del userId desde el localStorage', async () => {
+    test('Test 7: Verifica la persistencia del userId desde el localStorage', async () => {
         // Mockeamos el localStorage para que contenga un token
         const user = {
             token: 'mock-token',
@@ -200,8 +159,7 @@ describe('ChatPanel', () => {
         expect(screen.getByText('¡Hola! ¿Cómo puedo ayudarte?')).toBeInTheDocument();
     });
 
-
-    test('Test 11: Verifica el comportamiento cuando no se ha definido una categoría', async () => {
+    test('Test 8: Verifica el comportamiento cuando no se ha definido una categoría', async () => {
         axios.post.mockResolvedValueOnce({
             data: {
                 answer: 'Respuesta predeterminada del bot.',
@@ -216,7 +174,4 @@ describe('ChatPanel', () => {
         // Espera que el mensaje de respuesta del bot se muestre
         await waitFor(() => expect(screen.getByText('Respuesta predeterminada del bot.')).toBeInTheDocument());
     });
-
-
-
 });
