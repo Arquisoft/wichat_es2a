@@ -70,6 +70,9 @@ game information
 
 === Whitebox Overall System Final
 
+.Building Block View.
+image::Building_Block_View_Final.svg["Building Block View Final"]
+
 Motivation::
 
 The goal of this system (WIChat) is to offer a question and answer game based on images, where participants can answer questions automatically generated from Wikidata. 
