@@ -36,6 +36,8 @@ Contained Building Blocks::
 |LLM (Large Language Model)
 |Processes users' questions about the images and returns hints to the Browser to help the participants.
 
+
+
 |===
 
 Important Interfaces::
@@ -65,3 +67,94 @@ game information
 |The LLM sends hints to the browser to be displayed to the user.
 
 |===
+
+=== Whitebox Overall System Final
+
+.Building Block View.
+image::Building_Block_View_Final.svg["Building Block View Final"]
+
+Motivation::
+
+The goal of this system (WIChat) is to offer a question and answer game based on images, where participants can answer questions automatically generated from Wikidata. 
+Additionally, a Large Language Model (LLM) provides hints to participants when requested, enhancing the game experience.
+The system also includes features for user management, group interactions and a math-based mini-game.
+
+Contained Building Blocks::
+|===
+|Name| Description
+
+|*User*
+|Represents the participants of the game. They can answer questions of the main game or the math mini-game, 
+request hints, join groups and interacts with other users.
+
+|*Browser*
+|Interface (frontend) where the user interacts with the game. It sends request to the backend via the Gateway.
+
+|*GatewayService*
+|Acts as a central single entry point for frontend requests. 
+It routes them to the appropriate backend service.
+
+|*WikidataService*
+|Handles the core game logic. It retrieves questions and answers from the external Wikidata repository
+and process them for the game
+
+|*Wikidata* (external)
+|External semantic knowledge base. The WikidataService queries this to obtain data for generating questions.
+
+|*LLM (Large Language Model)*
+|Provides hints based on user requests. It may contact the WikidataService to obtaing context or clarigy game-related
+data before responding
+
+|*MathGame*
+|A backend service that generate math-based questions and evaluates answer, providing an additional mini-game experience.
+
+|*AuthService*
+|Handles user authentication, including login and token generation.
+
+|*UserService*
+|Manages user data, including profile information, friend requests and private messages.
+
+|*GroupService*
+|Handles group-related functionalities, such as creating groups, adding users to groups, and managing group messages.
+
+|*APIService*
+|Provides a REST API for external integrations and serves as a bridge between the GatewayService and other services.
+
+|===
+
+Important Interfaces::
+|===
+|Name| Description
+
+|**User interface** (User ↔ Browser)
+|The user interacts with the Browser to answer questions(for the main game or math mini-game), request hints, manage their profile and join or create groups.
+
+|**Frontend to Backend Gateway** (Browser ↔ GatewayService)
+|The Browser sends all requests (game logic, hints, user info, etc.) to the `GatewayService` using HTTP/REST. 
+The Gateway routes these request to the appropriate backend services.
+
+|**Game Logic** (GatewayService ↔ WikidataService)
+|Routes game-related request (e.g., get question, submit answer) from the frontend to the `WikidataService`.
+
+|**Wikidata Query Interface** (WikidataService ↔ Wikidata)
+|The `WikidataService` comunicates with the public Wikidata knowledge base to retrieve data for generating questions.
+
+|**Hints Requests** (Gateway ↔ LLMService)
+|Routes hint request to the `LLMService`, which enrich response by querying `WikidataService`
+
+|**Math Game** (GatewayService ↔ MathGame)
+|Routes math-game specific request (new question, validate answer) to the `MathGame` service.
+
+|**Authentication** (GatewayService ↔ AuthService)
+|Handles login and authentication logic via secure requests through the Gateway.
+
+|**User Management** (GatewayService ↔ UserService)
+|Routes requests for user profiles, friendships, and messages to the `UserService`.
+
+|**Group Management** (GatewayService ↔ GroupService)
+|Routes group-related operations (create group, join, chat) to the `GroupService`.
+
+|**External API Interface** (APIService ↔ External Systems)
+|Allows external clients to consume parts of the system’s functionality securely.
+|===
+
