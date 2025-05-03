@@ -36,6 +36,8 @@ Contained Building Blocks::
 |LLM (Large Language Model)
 |Processes users' questions about the images and returns hints to the Browser to help the participants.
 
+
+
 |===
 
 Important Interfaces::
@@ -65,3 +67,83 @@ game information
 |The LLM sends hints to the browser to be displayed to the user.
 
 |===
+
+=== Whitebox Overall System Final
+
+Motivation::
+
+The goal of this system is to offer a question and answer game based on images, where participants can answer questions automatically generated from Wikidata. 
+Additionally, a Large Language Model (LLM) provides hints to participants when requested, enhancing the game experience.
+The system also includes features for user management, group interactions and a math-based mini-game.
+
+Contained Building Blocks::
+|===
+|Name| Description
+
+|*User*
+
+|Represents the participants of the game. They can answer questions of the main game or the math mini-game, 
+request hints, join groups and interacts with other users.
+
+|*Browser*
+
+|Interface where the user interacts with the game. It is responsible for sending answers, hint requests and managing user interactions.
+
+|*WIChat*
+|Manages the game logic. It communicates with Wikidata to retrieve data and provides additional information to the LLM when necessary and
+handle user and group management.
+
+|*Wikidata*
+|Database that provides the data to generate the questions.
+
+|*LLM (Large Language Model)*
+|Processes users' questions about the images and returns hints to the Browser to help the participants.
+
+|*MathGame*
+|A service that generate math-based questions and evaluates answer, providing an additional mini-game experience.
+
+|*AuthService*
+|Handles user authentication, including login and token generation.
+
+|*UserService*
+|Manages user data, including profile information, friend requests and private messages.
+
+|*GroupService*
+|Handles group-related functionalities, such as creating groups, adding users to groups, and managing group messages.
+
+|*GatewayService*
+|Acts as a central API gateway, routing request to the appropriate service and providing unified interface for the Browser.
+
+|*APIService*
+|Provides a REST API for external integrations and serves as a bridge between the GatewayService and other services.
+
+|===
+
+Important Interfaces::
+|===
+|Name| Description
+
+|**User interface** (User ↔ Browser)
+|The user interacts with the Browser. The Browser is used to send answers and requests hints.
+
+|**HTTP/REST Inteface** (Browser ↔ WIChat)
+|The browser communicates with de WIChat system using HTTP or REST requests to send answer and retrieve
+game information
+
+|**Hints Requests** (Browser ↔ LLM)
+| The browser requests hints from the Large Language Model (LLM) to assist the participants.
+
+|**Query for Additional Information** (LLM ↔ WIChat)
+|The LLM queries WIChat when additional information is needed to provide hints.
+
+|**REST Inteface** (WIChat ↔ Wikidata)
+|WIChat interacts with Wikidata via REST requests to retrieve data for generating questions.
+
+|**Response in HTML/JSON** (WIChat ↔ Browser)
+|WIChat sends the processed information to the browser in HTML or JSON format to be presented to the user.
+
+|**Sending Hints** (LLM ↔ Browser)
+|The LLM sends hints to the browser to be displayed to the user.
+
+|===
+
