@@ -197,13 +197,13 @@ app.get('/game/statistics', async (req, res) => {
     try {
         const { userId } = req.query;
 
-        // if (!userId) {
-        //     return res.status(400).json({ error: "userId is required" });
-        // }
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
 
-        // if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
-        //     return res.status(400).json({ error: 'Invalid userId' });
-        // }
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
 
         const games = await Game.find({ userId, isCompleted: true });
 
