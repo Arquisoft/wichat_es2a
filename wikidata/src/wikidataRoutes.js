@@ -23,18 +23,26 @@ mongoose.connect(mongoUri, mongooseOptions).then(() => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`Server listening in port http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server listening in port http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
+
 
 // Configuring the route to serve the questions to your frontend. 
 // This route will return n questions from the database based on the specified category and delete them from the database.
 // Example: http://localhost:3001/wikidata/question/Lugares/10
 app.get("/wikidata/question/:category/:number", async (req, res) => {
     const category= req.params.category;
-    const n = req.params.number;
-    try {
-        console.log("actualizado");
+    const raw = parseInt(req.params.number, 10);
+    // si no es un entero válido, usar tu valor por defecto
+    const n = Number.isNaN(raw) || raw < 1 
+      ? require('./utils/config').defaultConfig.numQuestions 
+      : raw;    
+      try {
         const questions = await service.getQuestions(category, n);
         res.json(questions);
     } catch (error) {
@@ -48,9 +56,13 @@ app.get("/wikidata/question/:category/:number", async (req, res) => {
 // Example: http://localhost:3001/wikidata/verify?userOption=Option1&answer=CorrectAnswer
 app.post("/wikidata/verify", async (req, res) => {
     console.log("/wikidata/verify route hit with body:", req.body);
-    const { userId, userOption, answer } = req.body; 
+    const { userId, userOption, answer } = req.body;
     try {
-        const isCorrect = await service.checkCorrectAnswer(userOption, answer); 
+        if (!userId || typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
+
+        const isCorrect = await service.checkCorrectAnswer(userOption, answer);
         let games = await Game.find({ userId });
         let game = games[games.length-1];
         if (!game) {
@@ -64,7 +76,7 @@ app.post("/wikidata/verify", async (req, res) => {
         await game.save();
 
         res.json({
-            isCorrect: isCorrect, 
+            isCorrect: isCorrect,
             correctCount: game.correct,
             wrongCount: game.wrong
         });
@@ -95,13 +107,22 @@ app.post('/game/start', async (req, res) => {
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
         }
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
 
         await Game.create({
             userId,
             correct: 0,
             wrong: 0,
             duration: 0,
-            createdAt: new Date()
+            createdAt: new Date(),
+            isCompleted: false,
+            category: "",
+            level: "",
+            totalQuestions: 10,
+            answered: 0,
+            points: 0
         });
 
         return res.json({ message: "Game started successfully" });
@@ -116,10 +137,13 @@ app.post('/game/start', async (req, res) => {
 // Example: http://localhost:3001/game/end
 app.post('/game/end', async (req, res) => {
     try {
-        const { userId, correct, wrong } = req.body;
+        const { userId, username, category, level, totalQuestions, answered, correct, wrong, points } = req.body;
 
         if (!userId) {
             return res.status(400).json({ error: "userId is required" });
+        }
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
         }
 
         let games = await Game.find({ userId });
@@ -131,18 +155,32 @@ app.post('/game/end', async (req, res) => {
 
         const now = new Date();
         const durationInSeconds = Math.floor((now - game.createdAt) / 1000);
+        game.userId = userId;
+        game.username = username;
         game.duration = durationInSeconds;
         game.correct = correct;
         game.wrong = wrong;
         game.isCompleted = true;
+        game.category = category;
+        game.level = level;
+        game.totalQuestions = totalQuestions;
+        game.answered = answered;
+        game.points = points;
 
         await game.save();
 
         res.json({
+            userId: game.userId,
+            username: game.username,
             correct: game.correct,
             wrong: game.wrong,
             duration: game.duration,
-            isCompleted: game.isCompleted
+            isCompleted: game.isCompleted,
+            category: game.category,
+            level: game.level,
+            totalQuestions: game.totalQuestions,
+            answered: game.answered,
+            points: game.points
         });
 
     } catch (error) {
@@ -162,6 +200,10 @@ app.get('/game/statistics', async (req, res) => {
             return res.status(400).json({ error: "userId is required" });
         }
 
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
+
         const games = await Game.find({ userId, isCompleted: true });
 
         if (!games || games.length === 0) {
@@ -176,13 +218,61 @@ app.get('/game/statistics', async (req, res) => {
                 correct: game.correct,
                 wrong: game.wrong,
                 duration: game.duration,
-                createdAt: formattedDate
+                createdAt: formattedDate,
+                category: game.category,
+                level: game.level,
+                totalQuestions: game.totalQuestions,
+                answered: game.answered,
+                points: game.points
             };
         });
 
         res.json(statistics);
     } catch (error) {
         console.error("Error al obtener las estadísticas del juego:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// This route will return the game ranking.
+// Example: http://localhost:3001/game/ranking
+app.get('/game/ranking', async (req, res) => {
+    try {
+        
+        const filter = { isCompleted: true };
+        const sort = { points: -1 };
+        const limit = 10;
+        const options = { sort, limit };
+        const projection = null;
+        
+        const games = await Game.find(filter, projection, options);
+        
+        if (!games || games.length === 0) {
+            return res.json([]);
+        }
+        
+        const ranking = games.map(game => {
+            const createdAt = new Date(game.createdAt);
+            const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()} ${String(createdAt.getHours()).padStart(2, '0')}:${String(createdAt.getMinutes()).padStart(2, '0')}:${String(createdAt.getSeconds()).padStart(2, '0')}`;
+            
+            return {
+                userId: game.userId,
+                username : game.username,
+                correct: game.correct,
+                wrong: game.wrong,
+                duration: game.duration,
+                createdAt: formattedDate,
+                category: game.category,
+                level: game.level,
+                totalQuestions: game.totalQuestions,
+                answered: game.answered,
+                points: game.points
+            };
+        });
+
+        res.json(ranking);
+    } catch (error) {
+        console.error("Error al obtener el ranking del juego:", error);
         res.status(500).json({ error: "Server error" });
     }
 });

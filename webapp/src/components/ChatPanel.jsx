@@ -11,7 +11,7 @@ const GATEWAY_URL = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000'
 
 const theme = createTheme(defaultTheme);
 
-const ChatPanel = ({ setShowChat, correctAnswer }) => {
+const ChatPanel = ({ setShowChat, correctAnswer, category }) => {
     const [messages, setMessages] = useState([
         { text: '¡Hola! ¿Cómo puedo ayudarte?', sender: 'bot' },
     ]);
@@ -44,7 +44,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
             
             return null;
         } catch (error) {
-            console.error("Error al recuperar userId:", error);
+            //console.error("Error al recuperar userId:", error);
             return null;
         }
     };
@@ -59,7 +59,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
             
             return true;
         } catch (error) {
-            console.error("Error al eliminar el historial de conversación:", error);
+            //console.error("Error al eliminar el historial de conversación:", error);
             return false;
         } finally {
             setIsLoading(false);
@@ -136,22 +136,41 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
         const userMessage = { text: input, sender: 'user' };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setInput('');
-        setIsLoading(true);
-
-        try {
-            const payload = {
+        setIsLoading(true);        try {            
+            // Mapear categorías específicas para asegurar que coincidan con las esperadas por el backend
+            let mappedCategory = category;
+            
+            // Mapa de categorías de frontend a backend
+            const categoryMap = {
+                "Deportistas Españoles": "DeportistasEspañoles",
+                "Lugares": "Lugares",
+                "Futbolistas": "Futbolistas",
+                "Arte": "Arte",
+                "Pintores": "Pintores",
+                "Cantantes": "Cantantes",
+                "Filosofos": "Filosofos",
+                "Actores": "Actores",
+                "Científicos": "Científicos",
+                "Banderas": "Banderas"
+            };
+            
+            // Usa el mapa para obtener la categoría correcta del backend
+            if (categoryMap[category]) {
+                mappedCategory = categoryMap[category];
+            }            const payload = {
                 question: input,
                 model: 'gemini',
                 userId: currentUserId,
                 useHistory: true,
                 answer: correctAnswer,
+                category: mappedCategory, // Usar la categoría mapeada para el backend
+                language: 'es' // Utilizamos español por defecto, puedes cambiarlo si es necesario
             };
-
             const response = await axios.post(`${GATEWAY_URL}/askllm`, payload);
             const llmResponse = { text: response.data.answer, sender: 'bot' };
             setMessages((prevMessages) => [...prevMessages, llmResponse]);
         } catch (error) {
-            console.error('Error al enviar la pregunta al LLM:', error);
+            //console.error('Error al enviar la pregunta al LLM:', error);
             let errorMessage = "Error al obtener la respuesta";
             if (error.response) {
                 errorMessage += `: ${error.response.data.error || error.response.statusText}`;
@@ -178,7 +197,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
             <ThemeProvider theme={theme}>
                 <Grid container sx={{ height: '100vh' }}>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <CircularProgress />
+                        <CircularProgress role="progressbar"/>
                         <Typography variant="h6" sx={{ ml: 2 }}>Cargando chat...</Typography>
                     </Grid>
                 </Grid>
@@ -219,6 +238,7 @@ const ChatPanel = ({ setShowChat, correctAnswer }) => {
                                 Chat
                             </Typography>
                             <IconButton
+                                aria-label="Cerrar"
                                 color="primary"
                                 onClick={handleCloseChat}
                                 sx={{

@@ -13,7 +13,8 @@ import img4_7 from '../media/4-7.gif';
 import img7_10 from '../media/7-10.gif';
 
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import Score from './Score';
+import { useRef } from 'react';
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 const theme = createTheme(defaultTheme);
@@ -21,13 +22,15 @@ const TOTAL_QUESTIONS = 10;
 
 
 const GamePanel = () => {
-
   // Obtenemos la categoría pasada en la URL
   const location = useLocation(); // Obtienes la ubicación de la URL
   const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para leer los parámetros de la URL
   const category = queryParams.get('category'); // Obtenemos el parámetro "category"
   const level = queryParams.get('level'); // Obtenemos el parámetro "level"
 
+
+  const countdownRef = useRef();
+  const scoreRef = useRef();
 
   const [showChat, setShowChat] = useState(false);
   const [questionData, setQuestionData] = useState({
@@ -39,32 +42,35 @@ const GamePanel = () => {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [numberOfQuestionsAnswered, setNumberOfQuestionsAnswered] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+  const [scorePoints, setScorePoints] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [userId, setUserId] = useState(null);
-
+  
   const [countdownKey, setCountdownKey] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
 
 
-  
-
   const getQuestions = async () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
-      const data = response.data;
+      const data = response.data;      
       if (data && data.length == TOTAL_QUESTIONS) {
-        console.log("Preguntas recibidas: ", data.length);
+        // Modificamos las preguntas para asegurarnos de que usen la categoría de la URL
+        const modifiedData = data.map(question => ({
+          ...question,
+          userCategory: category // Guardamos la categoría de la URL para usarla con el LLM
+        }));
         setQuestions(data);
       } else {
-        console.error("No se recibieron preguntas válidas.");
         getQuestions();
       }
     } catch (error) {
-      console.error("Error al recibir preguntas: ", error);
+      //console.error("Error al recibir preguntas: ", error);
     }
   };
   
@@ -84,13 +90,12 @@ const GamePanel = () => {
     }
     options = options.sort(() => Math.random() - 0.5);
 
-    setImageLoaded(false);
-
-    setQuestionData({
+    setImageLoaded(false);    setQuestionData({
       question: question.statements,
       image: question.image,
       options: options,
       correctAnswer: question.answer,
+      userCategory: category // Usar la categoría de la URL para el LLM
     });
   };
 
@@ -102,6 +107,7 @@ const GamePanel = () => {
   // Esta función se pasa al Countdown y se ejecutará cuando termine el tiempo
   const handleCountdownFinish = () => {
     if (!isAnswered) {
+      scoreRef.current.calculateNewScore(0, false, false);
       nextQuestion();
     }
   };
@@ -125,7 +131,15 @@ const GamePanel = () => {
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     setIsAnswered(true);
-  
+    
+    setNumberOfQuestionsAnswered(prev => prev + 1);
+
+    // Sacas el tiempo que ha tardado en responder
+    const timeUse = countdownRef.current.getCurrentTime();
+    // Recalculas la puntuación del marcador
+    let score = scoreRef.current.calculateNewScore(timeUse, true, answer === questionData.correctAnswer);
+    setScorePoints(prev => score);
+
     if (answer === questionData.correctAnswer) {
       setCorrectCount(prev => prev + 1);
     } else {
@@ -149,12 +163,11 @@ const GamePanel = () => {
     return {};
   };
 
-  const resetGame = async () => {
+  const resetGame = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    await endGame(); // Asegurarse de que endGame se complete antes de continuar
-    await startGame(); // Iniciar un nuevo juego después de finalizar el anterior
+    startGame(); 
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -187,6 +200,24 @@ const GamePanel = () => {
     }
 };
 
+const getUserData = () => {
+  try {
+      const userDataStr = window.localStorage.getItem('user');
+      if (!userDataStr) return {};
+      const userData = JSON.parse(userDataStr);
+      const token = userData?.token;
+      let userId = null, username = null;
+      if (token) {
+          const decoded = JSON.parse(atob(token.split('.')[1]));
+          userId = decoded?.userId;
+          username = userData?.username || decoded?.username;
+      }
+      return { userId, username };
+  } catch {
+      return {};
+  }
+};
+
   const startGame = async () => {
     try {
         const userId = getUserId();
@@ -199,8 +230,21 @@ const GamePanel = () => {
 const endGame = async () => {
     try {
         const userId = getUserId();
+        const { id, username } = getUserData();
+        console.log("username: " + username);
         if (userId) {
-            await axios.post(`${apiEndpoint}/game/end`, { userId, correct: correctCount, wrong: incorrectCount });
+            await axios.post(`${apiEndpoint}/game/end`, 
+              { 
+                userId, 
+                username,
+                category: category,
+                level: level,
+                totalQuestions: TOTAL_QUESTIONS,
+                answered: numberOfQuestionsAnswered,
+                correct: correctCount, 
+                wrong: incorrectCount,
+                points: scorePoints
+              });
         }
     } catch (error) {
         console.error('Error al finalizar el juego:', error);
@@ -270,18 +314,41 @@ useEffect(() => {
         backgroundColor: theme.palette.background.default,
         }}
       >
-        <Paper style={{ padding: '32px', textAlign: 'center' }}>
+        <Paper style={{ padding: '14px 32px', textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
           Resumen del Juego
         </Typography>
-        <Typography variant="h6">
-          Preguntas contestadas: {TOTAL_QUESTIONS}
+        <Typography 
+          variant="h6"
+          style={{ fontSize: '0.9rem' }}
+          >
+          Preguntas totales de la partida: {TOTAL_QUESTIONS}
         </Typography>
-        <Typography variant="h6" color="green">
+        <Typography 
+          variant="h6"
+          style={{ fontSize: '0.9rem' }}
+          >
+          Preguntas contestadas: {numberOfQuestionsAnswered}
+        </Typography>
+        <Typography 
+          variant="h6" 
+          color="green"
+          style={{ fontSize: '0.9rem' }}
+          >
           Respuestas correctas: {correctCount}
         </Typography>
-        <Typography variant="h6" color="red">
+        <Typography 
+          variant="h6" 
+          color="red"
+          style={{ fontSize: '0.9rem' }}
+          >
           Respuestas incorrectas: {incorrectCount}
+        </Typography>
+        <Typography 
+          variant="h6" 
+          style={{ fontSize: '0.9rem' }}
+          >
+          Puntuacion: {scoreRef.current.getTotalScore()}
         </Typography>
         {correctCount < 4 ? (
           <img src={img0_4} alt="Nivel 0-4" style={{ width: '100%', maxWidth: '400px' }} />
@@ -290,7 +357,10 @@ useEffect(() => {
           ) : (
           <img src={img7_10} alt="Nivel 7-10" style={{ width: '100%', maxWidth: '400px' }} />
           )}
-        <Typography variant="h5" style={{ marginTop: '16px' }}>
+        <Typography 
+          variant="h6" 
+          style={{ marginTop: '14px', fontSize: '0.9rem' }}
+          >
           {performanceMessage}
         </Typography>
         <Box
@@ -298,7 +368,7 @@ useEffect(() => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          marginTop: '16px',
+          marginTop: '3px',
           }}
         >
           <Button
@@ -350,17 +420,38 @@ useEffect(() => {
             style={{ 
               display: 'flex', 
               flexDirection:'row', 
-              justifyContent: 'space-around', 
-              width: '100%'
+              justifyContent: 'space-between', 
+              width: '80%'
               }}>
 
-            {/* Texto con el indice de la pregunta */}
+            {/* Texto con el indice de la pregunta
             <Typography variant="h4" align="center">
                   {`Pregunta ${currentQuestionIndex + 1} de ${TOTAL_QUESTIONS}`}
-            </Typography>
+            </Typography> */}
 
+            {/* Marcador de puntuacion */}
+            <Score 
+
+              ref={scoreRef}
+
+              style=
+              {{
+                width: '50%',
+              }}
+
+              currentQuestion={currentQuestionIndex + 1}
+              scoreLevel={level}
+              answered={numberOfQuestionsAnswered}
+              trues={correctCount}
+              falses={incorrectCount}
+              currentScore={correctCount - incorrectCount}
+            />
+            
             {/* Cuenta atras del tiempo para responder esa pregunta */}
             <Countdown 
+
+              ref={countdownRef}
+
               key={countdownKey} 
               timerLevel={level} 
               onCountdownFinish={handleCountdownFinish}
@@ -476,9 +567,12 @@ useEffect(() => {
               maxWidth: '500px',
               transition: 'width 0.5s ease-out',
               overflowY: 'auto',
-            }}
-          >
-            <ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer} />
+            }}          >
+            <ChatPanel 
+              setShowChat={setShowChat} 
+              correctAnswer={questionData.correctAnswer} 
+              category={category} // Pasamos la categoría de la URL directamente
+            />
           </Grid>
         )}
         {!showChat && (

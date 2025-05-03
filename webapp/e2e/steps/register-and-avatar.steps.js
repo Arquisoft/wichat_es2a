@@ -41,20 +41,20 @@ defineFeature(feature, test => {
       await expect(page).toFill('input[name="confirmPassword"]', password);
 
       // Piel
-      await expect(page).toClick('button[aria-label="piel"]');
+      await expect(page).toClick('button[aria-label="skin"]');
       await expect(page).toClick('button', { text: 'Bronze' });
 
       // Pelo
-      await expect(page).toClick('button[aria-label="pelo"]');
+      await expect(page).toClick('button[aria-label="hair"]');
       await expect(page).toClick('button', { text: 'Blonde' });
       await expect(page).toClick('button', { text: 'curlyShortHair' });
 
       // Ojos
-      await expect(page).toClick('button[aria-label="ojos"]');
+      await expect(page).toClick('button[aria-label="eyes"]');
       await expect(page).toClick('button', { text: 'starstruck' });
 
       // Boca
-      await expect(page).toClick('button[aria-label="boca"]');
+      await expect(page).toClick('button[aria-label="mouth"]');
       await expect(page).toClick('button', { text: 'unimpressed' });
       await expect(page).toClick('button', { text: 'Sign up' })
     });

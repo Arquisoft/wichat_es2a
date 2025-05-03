@@ -1,13 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import profilePic from '../media/fotousuario.png';
 import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { useNavigate } from 'react-router-dom';
+import HistoryIcon from '@mui/icons-material/History';
 
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
 const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+
+// Función para construir la URL del avatar de DiceBear desde avatarOptions
+const getAvatarUrl = (options) => {
+    if (!options) return '';
+    const base = 'https://api.dicebear.com/9.x/big-smile/svg';
+    const params = new URLSearchParams({
+        hair: options.hair,
+        eyes: options.eyes,
+        mouth: options.mouth,
+        hairColor: options.hairColor,
+        skinColor: options.skinColor
+    });
+    return `${base}?${params.toString()}`;
+}
 
 function FriendList({ friends, user }) {
     const theme = useTheme();
@@ -15,6 +32,7 @@ function FriendList({ friends, user }) {
     const [gameHistories, setGameHistories] = useState({}); // Estado para almacenar el historial de amigos
     const [openDialog, setOpenDialog] = useState(false); // Controla si el diálogo está abierto
     const [friendToRemove, setFriendToRemove] = useState(null); // El amigo a eliminar
+    const navigate = useNavigate();
 
     // Función para abrir el diálogo de confirmación
     const handleOpenDialog = (friend) => {
@@ -69,7 +87,7 @@ function FriendList({ friends, user }) {
         const friendHistory = gameHistories[friendId];
         if (friendHistory && friendHistory.length > 0) {
             const lastGame = friendHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-            return new Date(lastGame.createdAt).toLocaleString('es-ES');
+            return lastGame.createdAt;
         }
         return 'Nunca';
     };
@@ -86,23 +104,36 @@ function FriendList({ friends, user }) {
                 Lista de Amigos
             </Typography>
             <List>
-                {username && (
-                    <ListItem key="you" alignItems="center" sx={{ padding: 1, bgcolor: theme.palette.grey[200] }}>
-                        <ListItemAvatar>
-                            <Avatar src={profilePic} alt="Tu foto de perfil" />
-                        </ListItemAvatar>
-                        <ListItemText primary={`Tú: ${username}`} secondary="(Jugador)" />
-                    </ListItem>
-                )}
                 {friends.map((friend) => (
                     <ListItem key={friend._id} alignItems="center" sx={{ padding: 1 }}>
                         <ListItemAvatar>
-                            <Avatar src={profilePic} alt="Foto de perfil" />
+                        <Avatar 
+                                sx={{ width: 40, height: 40, margin: 'auto' }} 
+                                src={getAvatarUrl(friend.avatarOptions)} 
+                            />
                         </ListItemAvatar>
                         <ListItemText 
                             primary={friend.username} 
                             secondary={`Última partida: ${getLastGameDate(friend._id)} | Total de partidas: ${getTotalGamesPlayed(friend._id)}`} 
                         />
+                        <IconButton
+                            edge="end"
+                            color="secondary"
+                            onClick={() => navigate(`/gamehistory/${friend.username}`)} // Navegar al historial
+                            aria-label={`Historial de ${friend.username}`}
+                            sx={{ mr: 1 }}
+                        >
+                            <HistoryIcon />
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            color="secondary"
+                            onClick={() => navigate(`/chat/${friend.username}`)} // Navegar al chat privado
+                            aria-label={`Chat con ${friend.username}`}
+                            sx={{ mr: 1 }}
+                        >
+                            <ChatBubbleOutlineIcon /> 
+                        </IconButton>
                         <IconButton 
                             edge="end" 
                             color="secondary" 

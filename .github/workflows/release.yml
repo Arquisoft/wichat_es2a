@@ -41,12 +41,16 @@ jobs:
     - run: npm --prefix gatewayservice ci
     - run: npm --prefix webapp ci
     - run: npm --prefix wikidata ci
+    - run: npm --prefix mathGame ci
+    - run: npm --prefix apiservice ci
     - run: npm --prefix users/authservice test -- --coverage
     - run: npm --prefix users/userservice test -- --coverage
     - run: npm --prefix llmservice test -- --coverage
     - run: npm --prefix gatewayservice test -- --coverage
     - run: npm --prefix webapp test -- --coverage
     - run: npm --prefix wikidata test -- --coverage
+    - run: npm --prefix mathGame test -- --coverage
+    - run: npm --prefix apiservice test -- --coverage
     - name: Analyze with SonarCloud
       uses: SonarSource/sonarqube-scan-action@master
       env:
@@ -236,7 +240,7 @@ jobs:
   deploy-release:
      name: Deploy Release Version over SSH
      runs-on: ubuntu-latest
-     needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata]
+     needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp,docker-push-wikidata,docker-push-mathgame,docker-push-apiservice,docker-push-groupservice]
      steps:
      - uses: actions/checkout@v4
      - name: Extract version from tag

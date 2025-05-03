@@ -1,4 +1,4 @@
-const queries = require('../model/wikidataQueries');
+const getQueries = require('../model/wikidataQueries');
 const fakeAnswers = require('../services/wikidataFakeAnswersService');
 const repository = require('../repositories/wikidataRepository');
 const fetch = require("node-fetch");
@@ -13,9 +13,9 @@ const service = {
      * @param {String} category - The category of the questions.
      * @returns {Array} - An array of questions.
      */
-    fetchQuestionsFromWikidata: async function(category) {
+    fetchQuestionsFromWikidata: async function(category, n) {
         let questions = [];
-        const query = queries.find(q => q.category === category);
+        const query = getQueries(n).find(q => q.category === category);
         if (!query) {
             console.error(`Category ${category} not found in the queries`);
             return questions;
@@ -59,7 +59,7 @@ const service = {
         }
         else
         {
-            const questions = await service.fetchQuestionsFromWikidata(category);
+            const questions = await service.fetchQuestionsFromWikidata(category, 15);
             await repository.insertQuestions(questions);
             return await repository.getQuestions(category, 1);
         }
@@ -73,7 +73,7 @@ const service = {
      * @returns An array of n questions from the database of the specified category.
      */
     getQuestions: async function(category, n){
-        const questions = await service.fetchQuestionsFromWikidata(category);
+        const questions = await service.fetchQuestionsFromWikidata(category, n);
         await repository.insertQuestions(questions);
         return questions;
     },

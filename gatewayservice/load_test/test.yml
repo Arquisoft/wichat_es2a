@@ -1,0 +1,76 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 50       # duración de la prueba en segundos
+      arrivalRate: 30    # usuarios que llegan por segundo
+  processor: "./generate-user.js"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Flujo completo"
+    beforeScenario: "generateValidUser"
+    flow:
+      - post:
+          url: "/login"
+          json:
+            username: "admin"
+            password: "admin"
+      - post:
+          url: "/adduser"
+          json:
+            username: "{{ user.username }}"
+            password: "{{ user.password }}"
+            confirmPassword: "{{ user.confirmPassword }}"
+            avatarOptions:
+              avatarColor: "blue"
+              avatarStyle: "circle"
+      - get:
+          url: "/health"
+      - post:
+          url: "/askllm"
+          json:
+            question: "¿Cuál es este lugar?"
+            model: "gemini"
+            userId: "{{user.id}}"
+            useHistory: true
+            maxHistoryLength: 100
+            answer: "Oviedo"
+            category: "Lugares"
+            language:  "es"
+      - get:
+          url: "/conversations/{{ user.id }}"
+      - delete:
+          url: "/conversations/{{user.id}}?preservePrePrompt=true"
+      - put:
+          url: "/conversations/{{user.id}}/settings"
+          json:
+            maxHistoryLength: 100
+            model: "gemini"
+      - get:
+          url: "/wikidata/question/Lugares/10"
+      - post:
+          url: "/game/start"
+          json:
+            userId: "{{user.id}}"
+      - post:
+          url: "/wikidata/verify"
+          json:
+            userId: "{{user.id}}"
+            userOption: "Picasso"
+            answer: "Picasso"
+      - post:
+          url: "/game/end"
+          json:
+            userId: "{{user.id}}"
+            category: "Lugares"
+            level: "dificil"
+            totalQuestions: 10
+            answered: 10
+            correct: 5
+            wrong: 5
+            points: 100
+      - get:
+          url: "/game/statistics?userId={{user.id}}"
+      

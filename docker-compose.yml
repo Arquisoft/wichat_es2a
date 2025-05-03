@@ -10,6 +10,24 @@ services:
     networks:
       - mynetwork
 
+  mathgame:
+    container_name: mathgame-wichat_es2a
+    image: ghcr.io/arquisoft/wichat_es2a/mathgame:latest
+    profiles: ["dev", "prod"]
+    build: 
+      context: ./mathgame
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    ports:
+      - "3002:3002"
+    networks:
+      - mynetwork
+    environment:
+      DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
+      WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+    restart: always
+
   authservice:
     container_name: authservice-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/authservice:latest
@@ -141,6 +159,7 @@ services:
       LLM_SERVICE_URL: http://llmservice:8003
       WIKIDATA_SERVICE_URL: http://wikidata:3001
       GROUP_SERVICE_URL: http://groupservice:8004
+      MATHGAME_SERVICE_URL: http://mathgame:3002
       DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
       WEBAPP_PORT: ${WEBAPP_PORT:-3000}
     restart: always
@@ -156,7 +175,7 @@ services:
       - userservice
       - wikidata
     ports:
-      - "8008:8000"
+      - "8008:8008"
     networks:
       - mynetwork
     environment:

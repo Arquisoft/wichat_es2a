@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import { loadConfig, defaultConfig } from '../utils/config';
 // Añadimos la hoja de estilos para la animación del circulo
 import './Countdown.css';
 
-const Countdown = ( {timerLevel, onCountdownFinish}) => {
+
+import { forwardRef, useImperativeHandle } from 'react';
+
+
+
+
+const stored = loadConfig() ?? defaultConfig;
+const { easy, medium, hard } = stored.timerSettings;
+const Countdown = forwardRef(({ timerLevel, onCountdownFinish }, ref) => {
 
     // Ahora no se le pasa el tiempo
     // Se le pasa el nivel y ya calcula el compontente el tiempo
     let questionTime = 0;
+    if (typeof timerLevel === 'number') {
+        questionTime = timerLevel;
+    }
+    else {
     switch (timerLevel) {
-        case 'facil':
-            questionTime = 120;
-            break;
-        case 'medio':
-            questionTime = 30;
-            break;
-        case 'dificil':
-            questionTime = 10;
-            break;
-        default:
-            questionTime = 30; // Valor por defecto
+            case 'facil':
+                questionTime = easy;
+                break;
+            case 'medio':
+                questionTime = medium;
+                break;
+            case 'dificil':
+                questionTime = hard;
+                break;
+            default:
+                questionTime = medium; // Valor por defecto
+        }
     }
 
 
@@ -64,6 +78,25 @@ const Countdown = ( {timerLevel, onCountdownFinish}) => {
     const isCritical = seconds <= colorChangeTime;
     const circleColor = isCritical ? endColor : initColor;
     const textColor = isCritical ? endColor : initColor;
+
+
+    // Funcion para devolver al juego el tiempo utilizado
+    const getCurrentTime = () => {
+        return questionTime - seconds;
+    };
+
+    // Funcion para devolver al juego el tiempo restante
+    const getTimeLeft = () => {
+        return seconds;
+    };
+
+    // Funciones accesibles desde el componente superior
+    useImperativeHandle(ref, () => ({
+        getCurrentTime,
+        getTimeLeft,
+    }));
+
+
 
     return (
         <div className='countdown-container'>
@@ -111,6 +144,6 @@ const Countdown = ( {timerLevel, onCountdownFinish}) => {
             </svg>
         </div>
     );
-};
+});
 
 export default Countdown;

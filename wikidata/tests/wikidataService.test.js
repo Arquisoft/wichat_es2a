@@ -1,35 +1,13 @@
 const service = require('../src/services/wikidataService');
 const repository = require('../src/repositories/wikidataRepository');
 const fakeAnswers = require('../src/services/wikidataFakeAnswersService');
-const queries = require('../src/model/wikidataQueries'); 
+const getQueries = require('../src/model/wikidataQueries'); 
 const fetch = require('node-fetch');
 
 jest.mock('../src/repositories/wikidataRepository');
 jest.mock('../src/services/wikidataFakeAnswersService');
 jest.mock('node-fetch', () => jest.fn());
-jest.mock('../src/model/wikidataQueries', () => ({
-  find: jest.fn(), 
-  queries: [ 
-    {
-      category: "Lugares",
-      sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
-                {
-                    SELECT ?item ?itemLabel ?image ?answerLabel WHERE {
-                    ?item wdt:P31 wd:Q515;    # Ciudad
-                            wdt:P18 ?image;     # Imagen
-                            wdt:P17 ?answer.    # País de la ciudad (respuesta correcta)
-                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". 
-                                            ?answer rdfs:label ?answerLabel. }
-                    } LIMIT 200
-                }
-                }
-                ORDER BY RAND()
-                LIMIT 10
-              `,
-      statement: "¿A qué lugar corresponde la siguiente foto?"
-    },
-  ]
-}));
+jest.mock('../src/model/wikidataQueries'); 
 
 describe('wikidataService', () => {
   beforeEach(() => {
@@ -43,8 +21,9 @@ describe('wikidataService', () => {
 
   it('should fetch questions from Wikidata', async () => {
     const category = 'Lugares';
+    const outerLimit = 10;
     const mockQuery = {
-      category: category,
+      category,
       sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
                   {
                       SELECT ?item ?itemLabel ?image ?answerLabel WHERE {
@@ -57,8 +36,7 @@ describe('wikidataService', () => {
                   }
                   }
                   ORDER BY RAND()
-                  LIMIT 10
-                `,
+                  LIMIT 10`,  
       statement: "¿A qué lugar corresponde la siguiente foto?"
     };
     const mockData = {
@@ -69,9 +47,10 @@ describe('wikidataService', () => {
       }
     };
 
-    queries.find.mockReturnValue(mockQuery);
+    // getQueries devuelve un array con la única query
+    getQueries.mockReturnValue([ mockQuery ]);
 
-    fetch.mockImplementation(() => 
+    fetch.mockImplementation(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData)
@@ -80,55 +59,47 @@ describe('wikidataService', () => {
 
     fakeAnswers.getFakeAnswers.mockReturnValue(['Paris', 'Berlin', 'Madrid', 'Rome']);
 
-    const questions = await service.fetchQuestionsFromWikidata(category);
+    // Llamamos con el límite deseado
+    const questions = await service.fetchQuestionsFromWikidata(category, outerLimit);
+
+    // Verificamos que usamos el outerLimit al construir las queries
+    expect(getQueries).toHaveBeenCalledWith(outerLimit);
 
     expect(questions).toEqual([{
       statements: mockQuery.statement,
       answer: 'Paris',
       image: 'image1.png',
-      category: category,
+      category,
       options: ['Paris', 'Berlin', 'Madrid', 'Rome']
     }]);
   });
 
   it('should handle errors when fetching questions from Wikidata', async () => {
     const category = 'Lugares';
+    const outerLimit = 10;
     const mockQuery = {
-      category: category,
-      sparql: `SELECT DISTINCT ?itemLabel ?image ?answerLabel WHERE {
-                  {
-                      SELECT ?item ?itemLabel ?image ?answerLabel WHERE {
-                      ?item wdt:P31 wd:Q515;    # Ciudad
-                              wdt:P18 ?image;     # Imagen
-                              wdt:P17 ?answer.    # País de la ciudad (respuesta correcta)
-                      SERVICE wikibase:label { bd:serviceParam wikibase:language "es". 
-                                              ?answer rdfs:label ?answerLabel. }
-                      } LIMIT 200
-                  }
-                  }
-                  ORDER BY RAND()
-                  LIMIT 10
-                `,
+      category,
+      sparql: `...`,
       statement: "¿A qué lugar corresponde la siguiente foto?"
     };
 
-    // Mock the find function
-    queries.find.mockReturnValue(mockQuery);
+    getQueries.mockReturnValue([ mockQuery ]);
 
-    // Mock failed fetch response
-    fetch.mockImplementation(() => 
+    fetch.mockImplementation(() =>
       Promise.resolve({
         ok: false,
         status: 500
       })
     );
 
-    const questions = await service.fetchQuestionsFromWikidata(category);
+    const questions = await service.fetchQuestionsFromWikidata(category, outerLimit);
 
+    expect(getQueries).toHaveBeenCalledWith(outerLimit);
     expect(questions).toEqual([]);
     expect(console.error).toHaveBeenCalled();
   });
 
+  // Los demás tests quedan igual, porque no usan directamente getQueries
   it('should get a question from the database or fetch from Wikidata if not found', async () => {
     const category = 'science';
     const mockQuestion = [{ _id: '123', statements: 'What is the capital of France?', answer: 'Paris', image: 'image.png' }];
@@ -141,7 +112,7 @@ describe('wikidataService', () => {
     const question = await service.getQuestion(category);
 
     expect(repository.existsQuestions).toHaveBeenCalledWith(category);
-    expect(service.fetchQuestionsFromWikidata).toHaveBeenCalledWith(category);
+    expect(service.fetchQuestionsFromWikidata).toHaveBeenCalledWith(category, 15);
     expect(repository.insertQuestions).toHaveBeenCalledWith(mockQuestion);
     expect(question).toEqual(mockQuestion);
   });
