@@ -237,6 +237,82 @@ jobs:
         platforms: linux/amd64,linux/arm64
         tags: "${{ steps.get_version.outputs.VERSION }}"
 
+  docker-push-mathgame:
+    name: Push mathgame service Docker Image to GitHub Packages with version tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [e2e-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/mathgame
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: mathGame
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
+
+  docker-push-apiservice:
+    name: Push apiservice service Docker Image to GitHub Packages with version tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [e2e-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/apiservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: apiservice
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
+
+  docker-push-groupservice:
+    name: Push group service Docker Image to GitHub Packages with version tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [e2e-tests]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: arquisoft/wichat_es2a/groupservice
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        workdir: groupservice
+        platforms: linux/amd64,linux/arm64
+        tags: "${{ steps.get_version.outputs.VERSION }}"
+
+
   deploy-release:
      name: Deploy Release Version over SSH
      runs-on: ubuntu-latest

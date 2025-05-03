@@ -344,6 +344,17 @@ process.on('SIGTERM', () => {
   server.close();
 });
 
+// Exportar las funciones para pruebas unitarias
+// Solo en entorno de prueba
+if (process.env.NODE_ENV === 'test') {
+  global.sendQuestionToLLM = sendQuestionToLLM;
+  global.buildConversationContext = buildConversationContext;
+  global.getOrCreateConversation = getOrCreateConversation;
+  global.addMessageToConversation = addMessageToConversation;
+  global.validateRequiredFields = validateRequiredFields;
+  global.safeUserId = safeUserId;
+}
+
 module.exports = server
 
 
