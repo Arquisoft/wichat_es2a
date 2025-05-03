@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import AvatarEditor from './AvatarEditor';
 import '@testing-library/jest-dom';
 
@@ -84,4 +84,60 @@ describe('AvatarEditor', () => {
 
     });
 
+});
+
+describe('AvatarEditor2', () => {
+  const defaultAvatarOptions = {
+    hairColor: '3a1a00',
+    eyes: 'normal',
+    hair: 'shortHair',
+    mouth: 'kawaii',
+    skinColor: 'f5d7b1',
+  };
+
+  let setAvatarOptionsMock;
+
+  beforeEach(() => {
+    setAvatarOptionsMock = jest.fn();
+    render(<AvatarEditor avatarOptions={defaultAvatarOptions} setAvatarOptions={setAvatarOptionsMock} />);
+  });
+
+  test('renders avatar image', () => {
+    const img = screen.getByAltText('Avatar');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('src', expect.stringContaining('https://api.dicebear.com'));
+  });
+
+  test('renders category buttons and switches between them', () => {
+    const eyesButton = screen.getByLabelText('eyes');
+    fireEvent.click(eyesButton);
+    expect(screen.getByText('Select Eye Style')).toBeInTheDocument();
+  });
+
+  test('calls setAvatarOptions when selecting a hair color', () => {
+    fireEvent.click(screen.getByLabelText('hair'));
+    const blueHairButton = screen.getByRole('button', { name: /Blue/i });
+    fireEvent.click(blueHairButton);
+
+    expect(setAvatarOptionsMock).toHaveBeenCalledTimes(1);
+    const updateFn = setAvatarOptionsMock.mock.calls[0][0];
+    const updated = updateFn(defaultAvatarOptions);
+
+    expect(updated).toEqual(expect.objectContaining({
+      hairColor: '605de4',
+    }));
+  });
+
+  test('calls setAvatarOptions when selecting an eye style', () => {
+    fireEvent.click(screen.getByLabelText('eyes'));
+    fireEvent.click(screen.getByRole('button', { name: /cheery/i }));
+
+    expect(setAvatarOptionsMock).toHaveBeenCalledTimes(1);
+    const updateFn = setAvatarOptionsMock.mock.calls[0][0];
+    const updated = updateFn(defaultAvatarOptions);
+
+    expect(updated).toEqual(expect.objectContaining({
+      eyes: 'cheery',
+    }));
+  });
 });
