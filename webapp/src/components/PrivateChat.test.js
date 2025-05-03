@@ -178,6 +178,61 @@ describe('PrivateChat', () => {
     consoleErrorSpy.mockRestore();
   });
   
+  test('Test 7: hace scroll al fondo cuando se actualizan los mensajes', async () => {
+    const scrollSpy = jest.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollSpy;
   
+    axios.get
+      .mockResolvedValueOnce({ data: { userId: '1' } }) // user ID
+      .mockResolvedValueOnce({ data: { userId: '2' } }) // friend ID
+      .mockResolvedValueOnce({
+        data: [{ _id: '1', sender: { username: 'testuser' }, content: 'Hola' }],
+      });
+  
+    render(
+      <MemoryRouter initialEntries={['/chat/friend']}>
+        <Routes>
+          <Route path="/chat/:friendUsername" element={<PrivateChat />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  
+    await waitFor(() => {
+      expect(screen.getByText('Hola')).toBeInTheDocument();
+      expect(scrollSpy).toHaveBeenCalled();
+    });
+  });
+  
+  test('Test 8: no falla si no hay usuario en localStorage', async () => {
+    localStorage.removeItem('user');
+  
+    render(
+      <MemoryRouter initialEntries={['/chat/friend']}>
+        <Routes>
+          <Route path="/chat/:friendUsername" element={<PrivateChat />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  
+    expect(screen.getByText(/Chat con friend/i)).toBeInTheDocument();
+  });
+  
+  
+  test('Test 9: no llama a fetchMessages si friendUsername es undefined', async () => {
+    localStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
+    const spy = jest.spyOn(axios, 'get');
+  
+    render(
+      <MemoryRouter initialEntries={['/otraRuta']}>
+        <Routes>
+          <Route path="/otraRuta" element={<PrivateChat />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  
+    await waitFor(() => {
+      expect(spy).not.toHaveBeenCalled();
+    });
+  });
   
 });
