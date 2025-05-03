@@ -1,12 +1,17 @@
 # wichat_es2a
 
-[![Actions Status](https://github.com/arquisoft/wichat_es2a/workflows/CI%20for%20wichat_es2a/badge.svg)](https://github.com/arquisoft/wichat_es2a/actions)
+[![Actions Status](https://github.com/arquisoft/wichat_es2a/workflows/Build/badge.svg)](https://github.com/arquisoft/wichat_es2a/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es2a&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es2a)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es2a&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es2a)
+[![GitHub issues](https://img.shields.io/github/issues/arquisoft/wichat_es2a)](https://github.com/arquisoft/wichat_es2a/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed/arquisoft/wichat_es2a)](https://github.com/Arquisoft/wichat_es2a/issues?q=is%3Aissue%20state%3Aclosed)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/arquisoft/wichat_es2a)](https://github.com/arquisoft/wichat_es2a/pulls)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/arquisoft/wichat_es2a)](https://github.com/Arquisoft/wichat_es2a/pulls?q=is%3Apr+is%3Aclosed)
+
+
 
 <p float="left">
-<img src="https://blog.wildix.com/wp-content/uploads/2020/06/react-logo.jpg" height="100">
-<img src="https://miro.medium.com/max/365/1*Jr3NFSKTfQWRUyjblBSKeg.png" height="100">
+<img src="https://github.com/Arquisoft/wichat_es2a/blob/master/webapp/src/media/logoWiChat.svg" height="200">
 </p>
 
 ## Development Team 👥💻🛠️
@@ -25,6 +30,9 @@ This is a base project for the Software Architecture course in 2024/2025. It is 
 - **User service**. Express service that handles the insertion of new users in the system.
 - **Auth service**. Express service that handles the authentication of users.
 - **LLM service**. Express service that handles the communication with the LLM.
+- **Wikidata service**: Express service that handles teh core game logic by retrieving and processing questions data from Wikidata
+- **Math Game service**: Express service that offers a math-based mini-game, generating and validating math questions
+- **Group service**: express service responsible for group creation, group messaging and user membership in groups.
 - **Gateway service**. Express service that is exposed to the public and serves as a proxy to the two previous ones.
 - **Webapp**. React web application that uses the gateway service to allow basic login and new user features.
 

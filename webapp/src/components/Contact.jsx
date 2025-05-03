@@ -7,11 +7,11 @@ import imageW from '../media/women.jpg';
 import imageM from '../media/men.jpg';
 
 const teamMembers = [
-    { name: 'Natalia Blanco Agudín', role: 'Desarrolladora Fronted', email: 'UO295340@uniovi.com', github: 'https://github.com/NataliaBlancoAgudin', avatar: imageW },
+    { name: 'Natalia Blanco Agudín', role: 'Desarrolladora Frontend', email: 'UO295340@uniovi.com', github: 'https://github.com/NataliaBlancoAgudin', avatar: imageW },
+    { name: 'Marcos Llanos Vega', role: 'Desarrollador Frontend', email: 'UO218982@uniovi.com', github: 'https://github.com/softwaremarcos', avatar: imageM },
     { name: 'David Covián Gómez', role: 'Desarrollador Backend', email: 'UO295168@uniovi.com', github: 'https://github.com/DavidCG-27', avatar: imageM },
     { name: 'Darío Cristóbal González', role: 'Diseñador Backend', email: 'UO294401@uniovi.com', github: 'https://github.com/daariio92', avatar: imageM },
-    { name: 'Hugo Fernández Rogríguez', role: 'Diseñador LLM', email: 'UO289157@uniovi.com', github: 'https://github.com/hugo-fdez', avatar: imageM },
-    { name: 'Marcos Llanos Vega', role: 'Diseñador Frontend', email: 'UO218982@uniovi.com', github: 'https://github.com/softwaremarcos', avatar: imageM },
+    { name: 'Hugo Fernández Rogríguez', role: 'Diseñador LLM y despliegue', email: 'UO289157@uniovi.com', github: 'https://github.com/hugo-fdez', avatar: imageM },
     { name: 'Hugo Prendes Menéndez', role: 'Diseñador LLM', email: 'UO288294@uniovi.com', github: 'https://github.com/prendess', avatar: imageM },
 ];
 
