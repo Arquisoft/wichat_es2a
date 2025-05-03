@@ -7,9 +7,19 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 * The registration diagram in an application describes the flow that a user follows to create an account. It begins with the entry of data (such as name, email and password), followed by the validation of the information. If the data is correct, it is stored in a database. Finally, the user can log in and access the application. This process ensures security and accuracy in account creation.
 
-image::diagrama_runview_signup.png["Signup Diagram", align="center"]
+image::06_runview_signup.svg["Signup Diagram", align="center"]
 
 === Log In
 * The login diagram in an application describes the flow that a user follows to access their account. It begins with the entry of data (such as email and password), followed by the validation of the information. If the data is correct, the user is redirected to the application's home page. This process ensures security and accuracy in account access.
 
-image::diagrama_runview_login.png["Login Diagram", align="center"]
+image::06_runview_login.svg["Login Diagram", align="center"]
+
+== Game play
+* The game play diagram in an application describes the flow that a user follows to play a game. It begins with the selection of a game category (such as multiple types of categories) and level (such as easy, medium and hard). The game begins by displaying a series of questions, where the user must choose between four options. After choosing an option, the user will move on to the next question. During a question, the user can ask questions in an interactive chat. Upon completion of the game, a summary will be displayed and the option to restart will be provided. This process ensures a smooth and engaging gaming experience.
+
+image::06_runview_game.svg["Game Play Diagram", align="center"]
+
+== Ranking View
+* The history diagram in an application describes the flow that a user follows to view their history of gameplays. It begins when user decudes to view their history. The application retrieves the user's history data from the database and displays it on the screen. This process ensures that the user can easily access their history information.
+
+image::06_runview_history.svg["History Diagram", align="center"]
