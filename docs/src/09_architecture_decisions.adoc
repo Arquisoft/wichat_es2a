@@ -112,3 +112,21 @@ Decision accepted.
 
 ==== Consequences
 DiceBear will be used in our project to allow users to create their own avatars.
+
+[[ADR-06]]
+=== ADR 06: App Deployed in ARM Oracle VM
+*_Date: 2025-04-06_*
+
+image::oracle.jpg["Oracle", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+The application deployment requires a robust, scalable, and cost-effective platform to meet quality standards. Oracle offers the possibility of deploying the application for free in a basic ARM Virtual Machine (VM), which is a good option for our needs.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+A Oracle ARM VM will be used for the deployment of the application.
