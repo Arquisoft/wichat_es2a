@@ -1,14 +1,50 @@
+
 const request = require('supertest');
 const axios = require('axios');
-const server = require('./gateway-service'); 
+const server = require('./gateway-service');
 const fs = require('fs');
 const crypto = require('crypto');
 
 jest.mock('axios');
 
 afterAll(() => {
-  server.close(); 
+  server.close();
 });
+
+// --- Helpers for deduplication ---
+function mockAxiosMethod(method, resolved, rejected) {
+  if (rejected) {
+    // Si rejected ya tiene .response, pásalo tal cual para que el handler lo detecte correctamente
+    if (rejected && typeof rejected === 'object' && 'response' in rejected) {
+      axios[method].mockRejectedValueOnce(rejected);
+    } else {
+      axios[method].mockRejectedValueOnce(new Error(rejected));
+    }
+  } else {
+    axios[method].mockResolvedValueOnce({ data: resolved });
+  }
+}
+
+function testEndpoint({
+  method = 'get',
+  url,
+  send,
+  query,
+  expectedStatus,
+  expectedBody,
+  axiosResolved,
+  axiosRejected
+}) {
+  return async () => {
+    mockAxiosMethod(method, axiosResolved, axiosRejected);
+    let req = request(server)[method](url);
+    if (query) req = req.query(query);
+    if (send) req = req.send(send);
+    const res = await req;
+    expect(res.statusCode).toBe(expectedStatus);
+    expect(res.body).toEqual(expectedBody);
+  };
+}
 
 describe('Gateway API - First 5 endpoints', () => {
   test('GET /health should return status OK', async () => {
@@ -17,22 +53,25 @@ describe('Gateway API - First 5 endpoints', () => {
     expect(res.body).toEqual({ status: 'OK' });
   });
 
+
   describe('POST /login', () => {
     test.each([
       [200, { token: 'abc123' }, { username: 'test', password: 'psw' }, undefined],
       [401, { error: 'Unauthorized' }, { username: 'fail', password: 'psw' }, { response: { status: 401, data: { error: 'Unauthorized' } } }],
       [500, { error: 'Internal error' }, { username: 'fail', password: 'psw' }, new Error('fail')],
     ])('should handle status %i', async (status, expected, body, error) => {
-      if (error) {
-        axios.post.mockRejectedValueOnce(error);
-      } else {
-        axios.post.mockResolvedValueOnce({ data: expected });
-      }
-      const res = await request(server).post('/login').send(body);
-      expect(res.statusCode).toBe(status === 500 ? 500 : status);
-      expect(res.body).toEqual(expected);
+      await testEndpoint({
+        method: 'post',
+        url: '/login',
+        send: body,
+        expectedStatus: status === 500 ? 500 : status,
+        expectedBody: expected,
+        axiosResolved: error ? undefined : expected,
+        axiosRejected: error
+      })();
     });
   });
+
 
   describe('POST /adduser', () => {
     test.each([
@@ -40,16 +79,18 @@ describe('Gateway API - First 5 endpoints', () => {
       [400, { error: 'Bad Request' }, {}, { response: { status: 400, data: { error: 'Bad Request' } } }],
       [500, { error: 'Internal error' }, { name: 'fail' }, new Error('fail')],
     ])('should handle status %i', async (status, expected, body, error) => {
-      if (error) {
-        axios.post.mockRejectedValueOnce(error);
-      } else {
-        axios.post.mockResolvedValueOnce({ data: expected });
-      }
-      const res = await request(server).post('/adduser').send(body);
-      expect(res.statusCode).toBe(status === 500 ? 500 : status);
-      expect(res.body).toEqual(expected);
+      await testEndpoint({
+        method: 'post',
+        url: '/adduser',
+        send: body,
+        expectedStatus: status === 500 ? 500 : status,
+        expectedBody: expected,
+        axiosResolved: error ? undefined : expected,
+        axiosRejected: error
+      })();
     });
   });
+
 
   describe('POST /askllm', () => {
     test.each([
@@ -57,16 +98,18 @@ describe('Gateway API - First 5 endpoints', () => {
       [500, { error: 'LLM failed' }, { question: 'Fail test', category: '', answer: '', language: 'en' }, { response: { status: 500, data: { error: 'LLM failed' } } }],
       [500, { error: 'An error occurred while communicating with the LLM service' }, { question: 'fail', category: '', answer: '', language: 'en' }, new Error('fail')],
     ])('should handle status %i', async (status, expected, body, error) => {
-      if (error) {
-        axios.post.mockRejectedValueOnce(error);
-      } else {
-        axios.post.mockResolvedValueOnce({ data: expected });
-      }
-      const res = await request(server).post('/askllm').send(body);
-      expect(res.statusCode).toBe(status);
-      expect(res.body).toEqual(expected);
+      await testEndpoint({
+        method: 'post',
+        url: '/askllm',
+        send: body,
+        expectedStatus: status,
+        expectedBody: expected,
+        axiosResolved: error ? undefined : expected,
+        axiosRejected: error
+      })();
     });
   });
+
 
   describe('GET /conversations/:userId', () => {
     test.each([
@@ -74,14 +117,14 @@ describe('Gateway API - First 5 endpoints', () => {
       [404, { error: 'Not found' }, 'unknownUser', { response: { status: 404, data: { error: 'Not found' } } }],
       [500, { error: 'An error occurred while retrieving conversation history' }, 'fail', new Error('fail')],
     ])('should handle status %i', async (status, expected, userId, error) => {
-      if (error) {
-        axios.get.mockRejectedValueOnce(error);
-      } else {
-        axios.get.mockResolvedValueOnce({ data: expected });
-      }
-      const res = await request(server).get(`/conversations/${userId}`);
-      expect(res.statusCode).toBe(status);
-      expect(res.body).toEqual(expected);
+      await testEndpoint({
+        method: 'get',
+        url: `/conversations/${userId}`,
+        expectedStatus: status,
+        expectedBody: expected,
+        axiosResolved: error ? undefined : expected,
+        axiosRejected: error
+      })();
     });
   });
 });
