@@ -20,28 +20,6 @@ function createQuery(whereParameter, category, statement, outerLimit) {
     sparql: baseQuery
   };
 }
-function createQuery(whereParameter, category, statement, outerLimit) {
-  const baseQuery = `
-    SELECT DISTINCT ?itemLabel ?image (?itemLabel AS ?answerLabel) WHERE {
-      {
-        SELECT ?item ?itemLabel ?image WHERE {
-          ${whereParameter}
-          SERVICE wikibase:label {
-            bd:serviceParam wikibase:language "es".
-          }
-        } LIMIT 200
-      }
-    }
-    ORDER BY RAND()
-    LIMIT ${outerLimit}
-  `;
-
-  return {
-    category,
-    statement,
-    sparql: baseQuery
-  };
-}
 
 function getQueries(outerLimit) {
   return [
