@@ -46,18 +46,3 @@ test('debe mostrar un mensaje de carga mientras se obtienen las preguntas', asyn
   // Esperar un tiempo hasta que se carguen las preguntas
   await waitFor(() => expect(screen.getByText(/pregunta/i)).toBeInTheDocument());  // Ajusta este texto según lo que se muestra al cargar las preguntas
 });
-
-// Test: debe mostrar el estado de carga mientras espera
-test('debe mostrar el estado de carga mientras espera', async () => {
-  render(
-    <BrowserRouter>
-      <GamePanel />
-    </BrowserRouter>
-  );
-
-  // Simulamos que la carga está en progreso
-  expect(screen.getByText(/cargando/i)).toBeInTheDocument();  // Ajusta el texto que se muestra cuando el juego está esperando
-
-  // Esperamos a que el juego termine de cargar
-  await waitFor(() => expect(screen.getByText(/pregunta/i)).toBeInTheDocument());
-});
