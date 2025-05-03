@@ -15,7 +15,7 @@ services:
     image: ghcr.io/arquisoft/wichat_es2a/mathgame:latest
     profiles: ["dev", "prod"]
     build: 
-      context: ./mathgame
+      context: ./mathGame
       platforms:
         - linux/amd64
         - linux/arm64
