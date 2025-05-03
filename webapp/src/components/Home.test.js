@@ -3,6 +3,14 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Home from './Home';
 
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => jest.fn(),
+  };
+});
+
 describe('Home component', () => {
   it('renders main title and description', () => {
     render(

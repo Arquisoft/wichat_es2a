@@ -45,7 +45,7 @@ app.post('/adduser', async (req, res) => {
     // Verificar si el nombre de usuario ya existe
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.status(400).json({ error: "El nombre de usuario ya existe." });
+      return res.status(400).json({ error: "El nombre de usuario ya existe" });
     }
 
     // Validación de longitud de password
@@ -378,7 +378,7 @@ app.get('/getUserId', async (req, res) => {
     if (!username) {
       return res.status(400).json({ error: 'Username is required' });
     }
-    console.log("Username:", username);
+    //console.log("Username:", username);
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -394,7 +394,7 @@ app.get('/getUserId', async (req, res) => {
 app.get('/getUsername', async (req, res) => {
   try {
     const { userId } = req.query;
-    console.log("User ID:", userId);
+    //console.log("User ID:", userId);
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
