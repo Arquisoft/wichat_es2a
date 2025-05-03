@@ -528,33 +528,7 @@ paths:
                   error:
                     type: string
                     example: "Error verifying the answer"
-
-  /wikidata/clear:
-    get:
-      summary: Clear all Wikidata questions
-      operationId: clearWikidataQuestions
-      responses:
-        '200':
-          description: Questions cleared successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Questions cleared successfully"
-        '500':
-          description: Error clearing questions
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: "Error clearing questions"
-
+  
   /game/start:
     post:
       summary: Start a new game session

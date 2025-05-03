@@ -203,27 +203,6 @@ describe('Gateway API - Endpoints 6 al 10', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: 'Invalid answer' });
   });
-
-  test('GET /wikidata/clear should clear questions', async () => {
-    const mockData = { cleared: true };
-    axios.get.mockResolvedValueOnce({ data: mockData });
-
-    const res = await request(server).get('/wikidata/clear');
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(mockData);
-  });
-
-  test('GET /wikidata/clear should handle error', async () => {
-    axios.get.mockRejectedValueOnce({
-      response: { status: 500, data: { error: 'Could not clear' } }
-    });
-
-    const res = await request(server).get('/wikidata/clear');
-
-    expect(res.statusCode).toBe(500);
-    expect(res.body).toEqual({ error: 'Could not clear' });
-  });
 });
 
 describe('Gateway API - Endpoints 11 al 15', () => {

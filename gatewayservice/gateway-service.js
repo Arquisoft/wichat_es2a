@@ -135,15 +135,6 @@ app.post('/wikidata/verify', async (req, res) => {
   }
 });
 
-app.get('/wikidata/clear', async (req, res) => {
-  try {
-    const response = await axios.get(`${wikidataServiceUrl}/wikidata/clear`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error clearing questions' });
-  }
-});
-
 app.post('/game/start', async (req, res) => {
   try {
     console.log("Starting game with body:", req.body);
@@ -169,6 +160,17 @@ app.get('/game/statistics', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game statistics' });
+  }
+});
+
+app.get('/game/ranking', async (req, res) => {
+  try {
+    
+    const response = await axios.get(`${wikidataServiceUrl}/game/ranking`, { params: req.query });
+    
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game ranking' });
   }
 });
 

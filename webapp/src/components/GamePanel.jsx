@@ -50,7 +50,7 @@ const GamePanel = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [userId, setUserId] = useState(null);
-
+  
   const [countdownKey, setCountdownKey] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
 
@@ -117,7 +117,6 @@ const GamePanel = () => {
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 >= TOTAL_QUESTIONS) {
       setGameEnded(true);
-      endGame();
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
@@ -168,8 +167,7 @@ const GamePanel = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    // await endGame(); // Asegurarse de que endGame se complete antes de continuar
-    startGame(); // Iniciar un nuevo juego después de finalizar el anterior
+    startGame(); 
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -202,6 +200,24 @@ const GamePanel = () => {
     }
 };
 
+const getUserData = () => {
+  try {
+      const userDataStr = window.localStorage.getItem('user');
+      if (!userDataStr) return {};
+      const userData = JSON.parse(userDataStr);
+      const token = userData?.token;
+      let userId = null, username = null;
+      if (token) {
+          const decoded = JSON.parse(atob(token.split('.')[1]));
+          userId = decoded?.userId;
+          username = userData?.username || decoded?.username;
+      }
+      return { userId, username };
+  } catch {
+      return {};
+  }
+};
+
   const startGame = async () => {
     try {
         const userId = getUserId();
@@ -214,10 +230,13 @@ const GamePanel = () => {
 const endGame = async () => {
     try {
         const userId = getUserId();
+        const { id, username } = getUserData();
+        console.log("username: " + username);
         if (userId) {
             await axios.post(`${apiEndpoint}/game/end`, 
               { 
                 userId, 
+                username,
                 category: category,
                 level: level,
                 totalQuestions: TOTAL_QUESTIONS,
@@ -280,7 +299,7 @@ useEffect(() => {
 
   // Vista resumen al finalizar el juego
   if (gameEnded) {
-    // endGame();
+    endGame();
     const performanceMessage =
       correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (

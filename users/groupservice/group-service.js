@@ -14,12 +14,15 @@ const apiEndpoint = process.env.GATEWAY_URL || 'http://localhost:8000';
 
 mongoose.connect(mongoUri);
 
-const port = 8004;
-const server=app.listen(port, () => {
-    console.log(`Server listening in port http://localhost:${port}`);
-});
+const PORT = 8004;
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server listening in port http://localhost:${PORT}`);
+    });
+}
 
-// Function to validate required fields in the request body
+module.exports = app;
+
 function validateRequiredFields(req, requiredFields) {
     for (const field of requiredFields) {
       if (!(field in req.body)) {
@@ -32,11 +35,11 @@ app.post('/createGroup', async (req, res) => {
     try {
         validateRequiredFields(req, ['groupName', 'userId']);
 
-        const { groupName, userId } = req.body;
-
-        if (groupName.length > 20) {
+        let { groupName, userId } = req.body;
+        if (typeof groupName !== 'string' || groupName.length === 0 || groupName.length > 20) {
             return res.status(400).json({ error: 'El nombre del grupo no puede superar los 20 caracteres.' });
         }
+        groupName = groupName.trim();
 
         const existingGroup = await Group.findOne({ groupName });
         if (existingGroup) {
@@ -63,7 +66,11 @@ app.post('/addUserToGroup', async (req, res) => {
   try {
     validateRequiredFields(req, ['groupName', 'userId']);
 
-    const { groupName, userId } = req.body;
+    let { groupName, userId } = req.body;
+    if (typeof groupName !== 'string' || groupName.length === 0 || groupName.length > 50) {
+      return res.status(400).json({ error: 'Invalid groupName' });
+    }
+    groupName = groupName.trim();
 
     const group = await Group.findOne({ groupName });
     if (!group) {
@@ -86,11 +93,15 @@ app.post('/addUserToGroup', async (req, res) => {
 
 app.get('/listGroupUsers', async (req, res) => {
     try {
-        const { groupName } = req.query;
+        let { groupName } = req.query;
 
         if (!groupName) {
             return res.status(400).json({ error: 'Group name is required' });
         }
+        if (typeof groupName !== 'string' || groupName.length === 0 || groupName.length > 50) {
+            return res.status(400).json({ error: 'Invalid groupName' });
+        }
+        groupName = groupName.trim();
 
         const group = await Group.findOne({ groupName });
         if (!group) {
@@ -142,6 +153,10 @@ app.get('/listGroups', async (req, res) => {
             return res.status(400).json({ error: "userId is required" });
         }
 
+        if (typeof userId !== 'string' || userId.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+            return res.status(400).json({ error: 'Invalid userId' });
+        }
+
         const groups = await Group.find({
             'users.user': userId
         });
@@ -151,7 +166,7 @@ app.get('/listGroups', async (req, res) => {
         }
 
         const statistics = groups.map(group => ({
-            _id: group._id, // <-- Añadir el _id del grupo
+            _id: group._id, 
             groupName: group.groupName,
             memberCount: group.memberCount,
             createdAt: group.createdAt,
@@ -161,16 +176,25 @@ app.get('/listGroups', async (req, res) => {
         res.json(statistics);
     } catch (error) {
         console.error("Error al obtener los grupos:", error);
-        res.json([]); // En caso de error, devolver array vacío
+        res.json([]); 
     }
 });
 
 app.post('/group/sendMessage', async (req, res) => {
     try {
         validateRequiredFields(req, ['groupName', 'username', 'message']);
-        const { groupName, username, message } = req.body;
+        let { groupName, username, message } = req.body;
+
+        if (typeof groupName !== 'string' || groupName.length === 0 || groupName.length > 50) {
+            return res.status(400).json({ error: 'Invalid groupName' });
+        }
+        groupName = groupName.trim();
 
         const group = await Group.findOne({ groupName });
+
+        if (!group) {
+            return res.status(404).json({ error: 'No existe un grupo con ese nombre' });
+        }
 
         const memberUsernames = await Promise.all(
             group.users.map(async (member) => {
@@ -195,8 +219,12 @@ app.post('/group/sendMessage', async (req, res) => {
 
 app.get('/group/messages', async (req, res) => {
     try {
-        const { groupName } = req.query;
-        const messages = await GroupMessage.find({ groupName }).sort({ createdAt: 1 });
+        let { groupName } = req.query;
+        if (typeof groupName !== 'string' || groupName.length === 0 || groupName.length > 50) {
+            return res.status(400).json({ error: 'Invalid groupName' });
+        }
+        groupName = groupName.trim();
+        const messages = await GroupMessage.find({ groupName: groupName }).sort({ createdAt: 1 });
         res.json(messages);
     } catch (error) {
         console.error('Error obteniendo mensajes grupales:', error);
@@ -204,5 +232,5 @@ app.get('/group/messages', async (req, res) => {
     }
 });
 
-module.exports = server;
+
 
