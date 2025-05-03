@@ -6,6 +6,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Inherited ADRs
 Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
 
+[.red]#Deprecated. See <<ADR-07>>.#
+
 [[ADR-01]]
 === ADR 01: Mistral 7B as LLM Service
 *_Date: 2025-02-17_*
@@ -130,3 +132,52 @@ Decision accepted.
 
 ==== Consequences
 A Oracle ARM VM will be used for the deployment of the application.
+
+[[ADR-07]]
+=== ADR 07: Start from Scratch vs Use Previous Project
+*_Date: 2025-03-10_*
+
+==== Status
+Accepted.
+
+==== Context
+Although initially we considered the possibility of using a previous project as a base for our development, we finally decided to start from scratch. We believe that starting from scratch will allow us to have a cleaner and more maintainable codebase, and to implement functionalities faster, as we'll be more familiar with our own code. It will also allow us to define our own architecture and design decisions, without being constrained by the decisions made in the previous project.
+
+However, we will still be able to use the previous project as a reference for some functionalities and design decisions, and we will also be able to use some of the code from the previous project if we find it useful.
+
+In that sense, some ADRs (not all of them) from the previous project will be inherited:
+
+- JavaScript
+- Microservice Architecture
+- Docker
+- React
+- MongoDB
+- ExpressJS
+
+These can be deeply consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[previous project's wiki].
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+Development will start from scratch, but some ADRs from the previous project will be inherited. The previous project will be used as a reference for some functionalities and design decisions, and some of the code from the previous project might be used if found useful.
+
+[[ADR-08]]
+=== ADR 08: Use of Material UI component library
+*_Date: 2025-03-10_*
+
+image::mui.png["Material UI", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+Material UI (MUI) is a popular React component library that implements Google's Material Design guidelines. It provides a set of pre-built, customizable UI components—like buttons, forms, and layouts—that help developers build consistent, responsive, and visually appealing user interfaces quickly and efficiently.
+
+As we wanted to use a component library that would allow us to create a clean and appealing user interface, we considered several options. MUI stood out as a strong candidate due to its popularity, ease of use, and extensive documentation.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+Material UI will be used in our project as the main component library for the user interface.
