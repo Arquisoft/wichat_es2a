@@ -112,7 +112,8 @@ app.post('/game/start', async (req, res) => {
         }
 
         await Game.create({
-            userId,
+            userId: userId.toString(),
+            username: "",
             correct: 0,
             wrong: 0,
             duration: 0,

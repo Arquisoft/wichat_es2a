@@ -163,11 +163,12 @@ const GamePanel = () => {
     return {};
   };
 
-  const resetGame = () => {
+  const resetGame = async () => {
     setCorrectCount(0);
     setIncorrectCount(0);
     setCurrentQuestionIndex(0);
-    startGame(); 
+    setNumberOfQuestionsAnswered(0);
+    await startGame(); 
     setGameEnded(false);
     setSelectedAnswer(null);
     setQuestions([]);
@@ -348,7 +349,7 @@ useEffect(() => {
           variant="h6" 
           style={{ fontSize: '0.9rem' }}
           >
-          Puntuacion: {scoreRef.current.getTotalScore()}
+          Puntuacion: {scorePoints}
         </Typography>
         {correctCount < 4 ? (
           <img src={img0_4} alt="Nivel 0-4" style={{ width: '100%', maxWidth: '400px' }} />
