@@ -20,159 +20,111 @@ const groupServiceUrl = process.env.GROUP_SERVICE_URL || 'http://localhost:8004'
 app.use(cors());
 app.use(express.json());
 
+
 //Prometheus configuration
 const metricsMiddleware = promBundle({ includeMethod: true });
 app.use(metricsMiddleware);
+
+// Helper to proxy requests and handle errors in a DRY way
+async function handleProxyRequest(res, axiosFn, args, errorMsg = 'Internal error', statusOverride) {
+  try {
+    const response = await axiosFn(...args);
+    res.json(response.data);
+  } catch (error) {
+    if (error && error.response && typeof error.response.status === 'number') {
+      const errMsg = error.response.data && typeof error.response.data.error === 'string'
+        ? error.response.data.error
+        : errorMsg;
+      res.status(statusOverride || error.response.status).json({ error: errMsg });
+    } else {
+      res.status(statusOverride || 500).json({ error: errorMsg });
+    }
+  }
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
-app.post('/login', async (req, res) => {
-  try {
-    // Forward the login request to the authentication service
-    const authResponse = await axios.post(authServiceUrl + '/login', req.body);
-    res.json(authResponse.data);
-  } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data.error });
-  }
-});
+app.post('/login', (req, res) =>
+  handleProxyRequest(res, axios.post, [authServiceUrl + '/login', req.body], 'Internal error')
+);
 
-app.post('/adduser', async (req, res) => {
-  try {
-    // Forward the add user request to the user service
-    const userResponse = await axios.post(userServiceUrl + '/adduser', req.body);
-    res.json(userResponse.data);
-  } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data.error });
-  }
-});
+app.post('/adduser', (req, res) =>
+  handleProxyRequest(res, axios.post, [userServiceUrl + '/adduser', req.body], 'Internal error')
+);
 
-app.post('/askllm', async (req, res) => {
-  try {
-    // Log the request parameters
-    console.log("Gateway: Solicitud LLM recibida con params:", {
-      question: req.body.question,
-      category: req.body.category,
-      answer: req.body.answer,
-      language: req.body.language || 'en'
-    });
-    
-    // Forward the LLM question request to the LLM service
-    const llmResponse = await axios.post(llmServiceUrl + '/ask', req.body);
-    res.json(llmResponse.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while communicating with the LLM service'
-    });
-  }
+app.post('/askllm', (req, res) => {
+  console.log("Gateway: Solicitud LLM recibida con params:", {
+    question: req.body.question,
+    category: req.body.category,
+    answer: req.body.answer,
+    language: req.body.language || 'en'
+  });
+  handleProxyRequest(
+    res,
+    axios.post,
+    [llmServiceUrl + '/ask', req.body],
+    'An error occurred while communicating with the LLM service'
+  );
 });
 
 // Get conversation history for a user
-app.get('/conversations/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const llmResponse = await axios.get(`${llmServiceUrl}/conversations/${userId}`);
-    res.json(llmResponse.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while retrieving conversation history'
-    });
-  }
-});
+app.get('/conversations/:userId', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${llmServiceUrl}/conversations/${req.params.userId}`], 'An error occurred while retrieving conversation history')
+);
 
 // Clear conversation history for a user
-app.delete('/conversations/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { preservePrePrompt } = req.query;
-
-    const llmResponse = await axios.delete(
-      `${llmServiceUrl}/conversations/${userId}`,
-      { params: { preservePrePrompt } }
-    );
-
-    res.json(llmResponse.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while clearing conversation history'
-    });
-  }
-});
+app.delete('/conversations/:userId', (req, res) =>
+  handleProxyRequest(
+    res,
+    axios.delete,
+    [`${llmServiceUrl}/conversations/${req.params.userId}`, { params: { preservePrePrompt: req.query.preservePrePrompt } }],
+    'An error occurred while clearing conversation history'
+  )
+);
 
 // Update conversation settings
-app.put('/conversations/:userId/settings', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const llmResponse = await axios.put(`${llmServiceUrl}/conversations/${userId}/settings`, req.body);
-    res.json(llmResponse.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while updating conversation settings'
-    });
-  }
+app.put('/conversations/:userId/settings', (req, res) =>
+  handleProxyRequest(
+    res,
+    axios.put,
+    [`${llmServiceUrl}/conversations/${req.params.userId}/settings`, req.body],
+    'An error occurred while updating conversation settings'
+  )
+);
+
+app.get('/wikidata/question/:category/:number', (req, res) => {
+  console.log("Requesting questions from Wikidata");
+  handleProxyRequest(
+    res,
+    axios.get,
+    [`${wikidataServiceUrl}/wikidata/question/${req.params.category}/${req.params.number}`],
+    'Error getting the questions from Wikidata'
+  );
 });
 
-app.get('/wikidata/question/:category/:number', async (req, res) => {
-  try {
-    console.log("Requesting questions from Wikidata");
-    const category = req.params.category;
-    const number = req.params.number;
-    const response = await axios.get(`${wikidataServiceUrl}/wikidata/question/${category}/${number}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error getting the questions from Wikidata' });
-  }
+app.post('/wikidata/verify', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${wikidataServiceUrl}/wikidata/verify`, req.body], 'Error verifying the answer')
+);
+
+app.post('/game/start', (req, res) => {
+  console.log("Starting game with body:", req.body);
+  handleProxyRequest(res, axios.post, [`${wikidataServiceUrl}/game/start`, req.body], 'Error starting the game');
 });
 
-app.post('/wikidata/verify', async (req, res) => {
-  try {
-    const response = await axios.post(`${wikidataServiceUrl}/wikidata/verify`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error verifying the answer' });
-  }
-});
+app.post('/game/end', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${wikidataServiceUrl}/game/end`, req.body], 'Error ending the game')
+);
 
-app.post('/game/start', async (req, res) => {
-  try {
-    console.log("Starting game with body:", req.body);
-    const response = await axios.post(`${wikidataServiceUrl}/game/start`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error starting the game' });
-  }
-});
+app.get('/game/statistics', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${wikidataServiceUrl}/game/statistics`, { params: req.query }], 'Error fetching game statistics')
+);
 
-app.post('/game/end', async (req, res) => {
-  try {
-    const response = await axios.post(`${wikidataServiceUrl}/game/end`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error ending the game' });
-  }
-});
-
-app.get('/game/statistics', async (req, res) => {
-  try {
-    const response = await axios.get(`${wikidataServiceUrl}/game/statistics`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game statistics' });
-  }
-});
-
-app.get('/game/ranking', async (req, res) => {
-  try {
-    
-    const response = await axios.get(`${wikidataServiceUrl}/game/ranking`, { params: req.query });
-    
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game ranking' });
-  }
-});
+app.get('/game/ranking', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${wikidataServiceUrl}/game/ranking`, { params: req.query }], 'Error fetching game ranking')
+);
 
 
 // Read the OpenAPI YAML file synchronously
@@ -190,117 +142,53 @@ if (fs.existsSync(openapiPath)) {
 } else {
   console.log("Not configuring OpenAPI. Configuration file not present.")
 }
-app.get('/group/listGroups', async (req, res) => {
-  try {
-    const response = await axios.get(`${groupServiceUrl}/listGroups`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching groups' });
-  }
-});
-app.post('/group/createGroup', async (req, res) => {
-  try {
-    const response = await axios.post(`${groupServiceUrl}/createGroup`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error creating group' });
-  }
-});
-app.post('/group/addUserToGroup', async (req, res) => {
-  try {
-    const response = await axios.post(`${groupServiceUrl}/addUserToGroup`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error add user to group' });
-  }
-});
-app.get('/group/listGroupUsers', async (req, res) => {
-  try {
-    const response = await axios.get(`${groupServiceUrl}/listGroupUsers`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
-  }
-});
-app.get('/getUserId', async (req, res) => {
-  try {
-    const response = await axios.get(`${userServiceUrl}/getUserId`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
-  }
-});
-app.get('/getUsername', async (req, res) => {
-  try {
-    const response = await axios.get(`${userServiceUrl}/getUsername`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
-  }
-});
-app.get('/users/:id', async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const response = await axios.get(`${userServiceUrl}/users/${userId}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching user by id' });
-  }
-});
-app.put('/users/:id', async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const response = await axios.put(`${userServiceUrl}/users/${userId}`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
-  }
-});
-app.post('/group/sendMessage', async (req, res) => {
-  try {
-    const response = await axios.post(`${groupServiceUrl}/group/sendMessage`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error sending group message' });
-  }
-});
-app.get('/group/messages', async (req, res) => {
-  try {
-    const response = await axios.get(`${groupServiceUrl}/group/messages`, { params: req.query });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group messages' });
-  }
+app.get('/group/listGroups', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${groupServiceUrl}/listGroups`, { params: req.query }], 'Error fetching groups')
+);
+app.post('/group/createGroup', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${groupServiceUrl}/createGroup`, req.body], 'Error creating group')
+);
+app.post('/group/addUserToGroup', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${groupServiceUrl}/addUserToGroup`, req.body], 'Error add user to group')
+);
+app.get('/group/listGroupUsers', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${groupServiceUrl}/listGroupUsers`, { params: req.query }], 'Error fetching group users')
+);
+app.get('/getUserId', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/getUserId`, { params: req.query }], 'Error fetching group users')
+);
+app.get('/getUsername', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/getUsername`, { params: req.query }], 'Error fetching group users')
+);
+app.get('/users/:id', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/users/${req.params.id}`], 'Error fetching user by id')
+);
+app.put('/users/:id', (req, res) =>
+  handleProxyRequest(res, axios.put, [`${userServiceUrl}/users/${req.params.id}`, req.body], 'Error updating user')
+);
+app.post('/group/sendMessage', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${groupServiceUrl}/group/sendMessage`, req.body], 'Error sending group message')
+);
+app.get('/group/messages', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${groupServiceUrl}/group/messages`, { params: req.query }], 'Error fetching group messages')
+);
+
+app.get('/mathgame/question/:base?', (req, res) => {
+  const raw = req.params.base;
+  const suffix = raw != null && !Number.isNaN(parseInt(raw, 10))
+    ? `?base=${parseInt(raw, 10)}`
+    : '';
+  handleProxyRequest(
+    res,
+    axios.get,
+    [`${mathGameServiceUrl}/mathgame/question${suffix}`],
+    'Error fetching math question'
+  );
 });
 
-app.get('/mathgame/question/:base?', async (req, res) => {
-  try {
-    const raw = req.params.base;
-    const suffix = raw != null && !Number.isNaN(parseInt(raw, 10))
-      ? `?base=${parseInt(raw, 10)}`
-      : '';
-    const response = await axios.get(`${mathGameServiceUrl}/mathgame/question${suffix}`);
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error getting math question:', error);
-    res
-      .status(error.response?.status || 500)
-      .json({ error: error.response?.data?.error || 'Error fetching math question' });
-  }
-});
-
-app.post('/mathgame/verify', async (req, res) => {
-  try {
-    const response = await axios.post(`${mathGameServiceUrl}/mathgame/verify`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error verifying math answer:', error);
-    res
-      .status(error.response?.status || 500)
-      .json({ error: error.response?.data?.error || 'Error verifying math answer' });
-  }
-});
+app.post('/mathgame/verify', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${mathGameServiceUrl}/mathgame/verify`, req.body], 'Error verifying math answer')
+);
 
 
 // Start the gateway service
