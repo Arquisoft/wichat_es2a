@@ -127,26 +127,31 @@ Important Interfaces::
 |The user interacts with the Browser to answer questions(for the main game or math mini-game), request hints, manage their profile and join or create groups.
 
 |**Frontend to Backend Gateway** (Browser ↔ GatewayService)
-|The Browser sends all requests (game logic, hints, user info, etc.) to the GatewayService using HTTP/REST. 
+|The Browser sends all requests (game logic, hints, user info, etc.) to the `GatewayService` using HTTP/REST. 
 The Gateway routes these request to the appropriate backend services.
 
-|**HTTP/REST Inteface** (Gateway ↔ WIChat)
-|The Gateway forwards game-related request (e.g., answer validation, new questions, ect.) to WiChat
+|**Game Logic** (GatewayService ↔ WikidataService)
+|Routes game-related request (e.g., get question, submit answer) from the frontend to the `WikidataService`.
 
-|**Hints Requests API** (Gateway ↔ LLMService)
-| The Gateway send hint request to the LLMService which may request additional data from WIChat.
+|**Wikidata Query Interface** (WikidataService ↔ Wikidata)
+|The `WikidataService` comunicates with the public Wikidata knowledge base to retrieve data for generating questions.
 
-|**Query for Additional Information** (LLM ↔ WIChat)
-|The LLM queries WIChat when additional information is needed to provide hints.
+|**Hints Requests** (Gateway ↔ LLMService)
+|Routes hint request to the `LLMService`, which enrich response by querying `WikidataService`
 
-|**REST Inteface** (WIChat ↔ Wikidata)
-|WIChat interacts with Wikidata via REST requests to retrieve data for generating questions.
+|**Math Game** (GatewayService ↔ MathGame)
+|Routes math-game specific request (new question, validate answer) to the `MathGame` service.
 
-|**Response in HTML/JSON** (WIChat ↔ Browser)
-|WIChat sends the processed information to the browser in HTML or JSON format to be presented to the user.
+|**Authentication** (GatewayService ↔ AuthService)
+|Handles login and authentication logic via secure requests through the Gateway.
 
-|**Sending Hints** (LLM ↔ Browser)
-|The LLM sends hints to the browser to be displayed to the user.
+|**User Management** (GatewayService ↔ UserService)
+|Routes requests for user profiles, friendships, and messages to the `UserService`.
 
+|**Group Management** (GatewayService ↔ GroupService)
+|Routes group-related operations (create group, join, chat) to the `GroupService`.
+
+|**External API Interface** (APIService ↔ External Systems)
+|Allows external clients to consume parts of the system’s functionality securely.
 |===
 
