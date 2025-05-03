@@ -35,7 +35,11 @@ app.post('/login', async (req, res) => {
     const authResponse = await axios.post(authServiceUrl + '/login', req.body);
     res.json(authResponse.data);
   } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data.error });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Internal error' });
+    }
   }
 });
 
@@ -45,7 +49,11 @@ app.post('/adduser', async (req, res) => {
     const userResponse = await axios.post(userServiceUrl + '/adduser', req.body);
     res.json(userResponse.data);
   } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data.error });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Internal error' });
+    }
   }
 });
 
@@ -58,14 +66,15 @@ app.post('/askllm', async (req, res) => {
       answer: req.body.answer,
       language: req.body.language || 'en'
     });
-    
     // Forward the LLM question request to the LLM service
     const llmResponse = await axios.post(llmServiceUrl + '/ask', req.body);
     res.json(llmResponse.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while communicating with the LLM service'
-    });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'An error occurred while communicating with the LLM service' });
+    }
   }
 });
 
@@ -76,9 +85,11 @@ app.get('/conversations/:userId', async (req, res) => {
     const llmResponse = await axios.get(`${llmServiceUrl}/conversations/${userId}`);
     res.json(llmResponse.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while retrieving conversation history'
-    });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'An error occurred while retrieving conversation history' });
+    }
   }
 });
 
@@ -87,17 +98,17 @@ app.delete('/conversations/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const { preservePrePrompt } = req.query;
-
     const llmResponse = await axios.delete(
       `${llmServiceUrl}/conversations/${userId}`,
       { params: { preservePrePrompt } }
     );
-
     res.json(llmResponse.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while clearing conversation history'
-    });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'An error occurred while clearing conversation history' });
+    }
   }
 });
 
@@ -108,9 +119,11 @@ app.put('/conversations/:userId/settings', async (req, res) => {
     const llmResponse = await axios.put(`${llmServiceUrl}/conversations/${userId}/settings`, req.body);
     res.json(llmResponse.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error || 'An error occurred while updating conversation settings'
-    });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'An error occurred while updating conversation settings' });
+    }
   }
 });
 
@@ -122,7 +135,11 @@ app.get('/wikidata/question/:category/:number', async (req, res) => {
     const response = await axios.get(`${wikidataServiceUrl}/wikidata/question/${category}/${number}`);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error getting the questions from Wikidata' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error getting the questions from Wikidata' });
+    }
   }
 });
 
@@ -131,7 +148,11 @@ app.post('/wikidata/verify', async (req, res) => {
     const response = await axios.post(`${wikidataServiceUrl}/wikidata/verify`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error verifying the answer' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error verifying the answer' });
+    }
   }
 });
 
@@ -141,7 +162,11 @@ app.post('/game/start', async (req, res) => {
     const response = await axios.post(`${wikidataServiceUrl}/game/start`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error starting the game' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error starting the game' });
+    }
   }
 });
 
@@ -150,7 +175,11 @@ app.post('/game/end', async (req, res) => {
     const response = await axios.post(`${wikidataServiceUrl}/game/end`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error ending the game' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error ending the game' });
+    }
   }
 });
 
@@ -159,7 +188,11 @@ app.get('/game/statistics', async (req, res) => {
     const response = await axios.get(`${wikidataServiceUrl}/game/statistics`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching game statistics' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching game statistics' });
+    }
   }
 });
 
@@ -195,7 +228,11 @@ app.get('/group/listGroups', async (req, res) => {
     const response = await axios.get(`${groupServiceUrl}/listGroups`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching groups' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching groups' });
+    }
   }
 });
 app.post('/group/createGroup', async (req, res) => {
@@ -203,7 +240,11 @@ app.post('/group/createGroup', async (req, res) => {
     const response = await axios.post(`${groupServiceUrl}/createGroup`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error creating group' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error creating group' });
+    }
   }
 });
 app.post('/group/addUserToGroup', async (req, res) => {
@@ -211,7 +252,11 @@ app.post('/group/addUserToGroup', async (req, res) => {
     const response = await axios.post(`${groupServiceUrl}/addUserToGroup`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error add user to group' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error add user to group' });
+    }
   }
 });
 app.get('/group/listGroupUsers', async (req, res) => {
@@ -219,7 +264,11 @@ app.get('/group/listGroupUsers', async (req, res) => {
     const response = await axios.get(`${groupServiceUrl}/listGroupUsers`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching group users' });
+    }
   }
 });
 app.get('/getUserId', async (req, res) => {
@@ -227,7 +276,11 @@ app.get('/getUserId', async (req, res) => {
     const response = await axios.get(`${userServiceUrl}/getUserId`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching group users' });
+    }
   }
 });
 app.get('/getUsername', async (req, res) => {
@@ -235,7 +288,11 @@ app.get('/getUsername', async (req, res) => {
     const response = await axios.get(`${userServiceUrl}/getUsername`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group users' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching group users' });
+    }
   }
 });
 app.get('/users/:id', async (req, res) => {
@@ -244,7 +301,11 @@ app.get('/users/:id', async (req, res) => {
     const response = await axios.get(`${userServiceUrl}/users/${userId}`);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching user by id' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching user by id' });
+    }
   }
 });
 app.put('/users/:id', async (req, res) => {
@@ -253,7 +314,11 @@ app.put('/users/:id', async (req, res) => {
     const response = await axios.put(`${userServiceUrl}/users/${userId}`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error updating user' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error updating user' });
+    }
   }
 });
 app.post('/group/sendMessage', async (req, res) => {
@@ -261,7 +326,11 @@ app.post('/group/sendMessage', async (req, res) => {
     const response = await axios.post(`${groupServiceUrl}/group/sendMessage`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error sending group message' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error sending group message' });
+    }
   }
 });
 app.get('/group/messages', async (req, res) => {
@@ -269,7 +338,11 @@ app.get('/group/messages', async (req, res) => {
     const response = await axios.get(`${groupServiceUrl}/group/messages`, { params: req.query });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.response?.data?.error || 'Error fetching group messages' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching group messages' });
+    }
   }
 });
 
@@ -280,13 +353,14 @@ app.get('/mathgame/question/:base?', async (req, res) => {
       ? `?base=${parseInt(raw, 10)}`
       : '';
     const response = await axios.get(`${mathGameServiceUrl}/mathgame/question${suffix}`);
-
     res.json(response.data);
   } catch (error) {
     console.error('Error getting math question:', error);
-    res
-      .status(error.response?.status || 500)
-      .json({ error: error.response?.data?.error || 'Error fetching math question' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error fetching math question' });
+    }
   }
 });
 
@@ -296,9 +370,11 @@ app.post('/mathgame/verify', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error('Error verifying math answer:', error);
-    res
-      .status(error.response?.status || 500)
-      .json({ error: error.response?.data?.error || 'Error verifying math answer' });
+    if (error.response && error.response.status && error.response.data && error.response.data.error) {
+      res.status(error.response.status).json({ error: error.response.data.error });
+    } else {
+      res.status(500).json({ error: 'Error verifying math answer' });
+    }
   }
 });
 
