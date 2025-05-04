@@ -14,3 +14,5 @@ EXPOSE 3002
 
 # Start the service
 CMD ["npm", "start"]
+
+USER node

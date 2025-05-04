@@ -7,6 +7,8 @@ const Message = require('./message-model');
 const PrivateMessage = require('./private-message-model');
 
 const app = express();
+app.disable('x-powered-by');
+
 const port = 8001;
 
 // Middleware to parse JSON in request body
