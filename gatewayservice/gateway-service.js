@@ -172,6 +172,45 @@ app.post('/group/sendMessage', (req, res) =>
 app.get('/group/messages', (req, res) =>
   handleProxyRequest(res, axios.get, [`${groupServiceUrl}/group/messages`, { params: req.query }], 'Error fetching group messages')
 );
+app.post('/addFriend', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/addFriend`, req.body], 'Error adding friend')
+);
+app.get('/listUsers', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/listUsers`, { params: req.query }], 'Error fetching users')
+);
+app.get('/user/:username', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/user/${req.params.username}`, { params: req.query }], 'Error fetching user')
+);
+app.get('/searchUsers', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/searchUsers`, { params: req.query }], 'Error fetching users')
+);
+app.post('/removeFriend', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/removeFriend`, req.body], 'Error removing friend')
+);
+app.post('/acceptFriendRequest', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/acceptFriendRequest`, req.body], 'Error accepting request')
+);
+app.post('/rejectFriendRequest', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/rejectFriendRequest`, req.body], 'Error rejecting request')
+);
+app.get('/listRequests', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/listRequests`, { params: req.query }], 'Error fetching requests')
+);
+app.post('/sendFriendRequest', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/sendFriendRequest`, req.body], 'Error sending request')
+);
+app.post('/sendMessage', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/sendMessage`, req.body], 'Error sending public message')
+);
+app.get('/getMessages', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/getMessages`, { params: req.query }], 'Error fetching public messages')
+);
+app.post('/sendPrivateMessage', (req, res) =>
+  handleProxyRequest(res, axios.post, [`${userServiceUrl}/sendPrivateMessage`, req.body], 'Error sending private message')
+);
+app.get('/getPrivateMessages/:user1/:user2', (req, res) =>
+  handleProxyRequest(res, axios.get, [`${userServiceUrl}/getPrivateMessages/${req.params.user1}/${req.params.user2}`, { params: req.query }], 'Error fetching private messages')
+);
 
 app.get('/mathgame/question/:base?', (req, res) => {
   const raw = req.params.base;

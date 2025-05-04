@@ -50,7 +50,7 @@ function FriendList({ friends, user }) {
         if (!friendToRemove) return;
 
         try {
-            const response = await axios.post(`${apiEndpoint2}/removeFriend`, {
+            const response = await axios.post(`${apiEndpoint}/removeFriend`, {
                 username: user.username,
                 friendUsername: friendToRemove.username
             });
