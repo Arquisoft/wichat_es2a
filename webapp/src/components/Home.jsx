@@ -29,7 +29,6 @@ const Home = () => {
     "Filosofos": "🧠",
     "Actores": "🎬",
     "Científicos": "🔬",
-    "Deportistas Españoles": "🏅",
     "Lugares": "🌍",
     "Banderas": "🏳️‍🌈",
   };
