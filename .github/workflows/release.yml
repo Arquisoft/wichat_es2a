@@ -339,13 +339,15 @@ jobs:
           echo "EMPATHY_API_KEY=${{ secrets.EMPATHY_API_KEY }}" >> .env
           echo "DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}" >> .env
           docker image prune -f
-          # Configurar para usar la versión específica del release
-          sed -i 's|ghcr.io/arquisoft/wichat_es2a/webapp:latest|ghcr.io/arquisoft/wichat_es2a/webapp:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+          # Configurar para usar la versión específica del release          sed -i 's|ghcr.io/arquisoft/wichat_es2a/webapp:latest|ghcr.io/arquisoft/wichat_es2a/webapp:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sed -i 's|ghcr.io/arquisoft/wichat_es2a/authservice:latest|ghcr.io/arquisoft/wichat_es2a/authservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sed -i 's|ghcr.io/arquisoft/wichat_es2a/userservice:latest|ghcr.io/arquisoft/wichat_es2a/userservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sed -i 's|ghcr.io/arquisoft/wichat_es2a/llmservice:latest|ghcr.io/arquisoft/wichat_es2a/llmservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sed -i 's|ghcr.io/arquisoft/wichat_es2a/gatewayservice:latest|ghcr.io/arquisoft/wichat_es2a/gatewayservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sed -i 's|ghcr.io/arquisoft/wichat_es2a/wikidata:latest|ghcr.io/arquisoft/wichat_es2a/wikidata:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+          sed -i 's|ghcr.io/arquisoft/wichat_es2a/mathgame:latest|ghcr.io/arquisoft/wichat_es2a/mathgame:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+          sed -i 's|ghcr.io/arquisoft/wichat_es2a/apiservice:latest|ghcr.io/arquisoft/wichat_es2a/apiservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
+          sed -i 's|ghcr.io/arquisoft/wichat_es2a/groupservice:latest|ghcr.io/arquisoft/wichat_es2a/groupservice:${{ steps.get_version.outputs.VERSION }}|g' docker-compose.yml
           sudo docker logout ghcr.io
           docker logout ghcr
           docker compose --profile dev down
