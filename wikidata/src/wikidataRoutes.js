@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.disable('x-powered-by');
 const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
