@@ -87,7 +87,7 @@ services:
       - mynetwork
     environment:
       MONGODB_URI: mongodb://mongodb:27017/userdb
-      GATEWAY_URL: http://gatewayservice:8000
+      GATEWAY_URL: http://${DEPLOY_HOST:-localhost}:8000
     restart: always
 
   llmservice:
