@@ -4,7 +4,7 @@ import FriendSearch from './FriendSearch';
 import { Box, Snackbar, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 function Friends() {
     const theme = useTheme();

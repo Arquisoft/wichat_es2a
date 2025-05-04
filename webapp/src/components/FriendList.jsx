@@ -8,7 +8,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useNavigate } from 'react-router-dom';
 import HistoryIcon from '@mui/icons-material/History';
 
-const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
 
