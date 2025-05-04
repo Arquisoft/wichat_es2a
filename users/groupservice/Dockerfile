@@ -18,3 +18,5 @@ EXPOSE 8004
 
 # Define the command to run your app
 CMD ["node", "group-service.js"]
+
+USER node

@@ -6,6 +6,7 @@ const fs = require("fs");
 const YAML = require('yaml');
 
 const app = express();
+app.disable('x-powered-by');
 
 const authServiceUrl = process.env.AUTH_SERVICE_URL || 'http://localhost:8002';
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:8001';
