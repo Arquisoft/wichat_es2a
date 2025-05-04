@@ -5,10 +5,10 @@ describe('getQueries', () => {
     expect(typeof getQueries).toBe('function');
   });
 
-  it('should return an array with 10 queries', () => {
+  it('should return an array with 9 queries', () => {
     const queries = getQueries(50);
     expect(Array.isArray(queries)).toBe(true);
-    expect(queries.length).toBe(10);
+    expect(queries.length).toBe(9);
   });
 
   it('should return queries with correct structure', () => {
