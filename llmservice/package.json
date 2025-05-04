@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node llm-service.js",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test jest llm-service.test.js",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage llm-service.test.js",
+    "test:all": "cross-env NODE_ENV=test jest"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +21,20 @@
     "mongoose": "^8.1.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
   }
 }

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.disable('x-powered-by');
 const mongoose = require("mongoose");
 const repository = require("./repositories/wikidataRepository");
 const service = require("./services/wikidataService");
@@ -112,7 +113,8 @@ app.post('/game/start', async (req, res) => {
         }
 
         await Game.create({
-            userId,
+            userId: userId.toString(),
+            username: "",
             correct: 0,
             wrong: 0,
             duration: 0,

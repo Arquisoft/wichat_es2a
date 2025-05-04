@@ -10,10 +10,10 @@ const questionSchema = new mongoose.Schema({
 
 const gameSchema = new mongoose.Schema({
     userId: { type: String, required: true },
-    username: { type: String, required: true },
-    correct: { type: Number, required: true },
-    wrong: { type: Number, required: true },
-    duration: { type: Number, required: true },
+    username: { type: String, default: "" },
+    correct: { type: Number, default: 0 },
+    wrong: { type: Number, default: 0 },
+    duration: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
     isCompleted: { type: Boolean, default: false },
     category: { type: String, default: "" },

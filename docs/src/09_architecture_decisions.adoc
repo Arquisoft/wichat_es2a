@@ -6,6 +6,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Inherited ADRs
 Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[wiki of the base project].
 
+[.red]#Deprecated. See <<ADR-07>>.#
+
 [[ADR-01]]
 === ADR 01: Mistral 7B as LLM Service
 *_Date: 2025-02-17_*
@@ -60,7 +62,7 @@ The chosen option will be the way to work from now on in the project (TBD).
 image::neobrutalism.png["Neobrutalism Components", align="center"]
 
 ==== Status
-Proposed.
+Declined.
 
 ==== Context
 React components are essentially the building blocks of a React application. They are the visual elements that make up the user interface of the application. https://www.neobrutalism.dev/[Neobrutalism] components are a collection of neobrutalism-styled React Tailwind components. They are a mix of regular brutalism in web design and more modern typography, illustration, and animation standards.
@@ -68,10 +70,10 @@ React components are essentially the building blocks of a React application. The
 As part of our design decisions, we need to decide whether to use Neobrutalism components in our project.
 
 ==== Decision
-Decision pending.
+Decision declined.
 
 ==== Consequences
-Neobrutalism components will be used in our project.
+Neobrutalism components will not be used in our project.
 
 [[ADR-04]]
 === ADR 04: Gemini 1.5 Flash as LLM Service
@@ -92,3 +94,90 @@ Decision accepted.
 
 ==== Consequences
 Gemini 1.5 Flash substitutes Mistral 7B as the chosen LLM service for our system.
+
+[[ADR-05]]
+=== ADR 05: DiceBear Avatar Library
+*_Date: 2025-04-20_*
+
+image::DiceBear.png["DiceBear", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+DiceBear is a JavaScript library that allows you to create unique avatars for your applications in no time. It provides a wide range of customizable avatars, which can be generated on the fly. This library is particularly useful for applications that require user avatars, as it allows for easy integration and customization.
+
+As we wanted our users to be able to create their own avatars, and not use a default one, we needed to find a library that would allow us to do so. DiceBear is a good candidate for this purpose, and will enhance the user experience giving the application a more personalized touch.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+DiceBear will be used in our project to allow users to create their own avatars.
+
+[[ADR-06]]
+=== ADR 06: App Deployed in ARM Oracle VM
+*_Date: 2025-04-06_*
+
+image::oracle.jpg["Oracle", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+The application deployment requires a robust, scalable, and cost-effective platform to meet quality standards. Oracle offers the possibility of deploying the application for free in a basic ARM Virtual Machine (VM), which is a good option for our needs.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+A Oracle ARM VM will be used for the deployment of the application.
+
+[[ADR-07]]
+=== ADR 07: Start from Scratch vs Use Previous Project
+*_Date: 2025-03-10_*
+
+==== Status
+Accepted.
+
+==== Context
+Although initially we considered the possibility of using a previous project as a base for our development, we finally decided to start from scratch. We believe that starting from scratch will allow us to have a cleaner and more maintainable codebase, and to implement functionalities faster, as we'll be more familiar with our own code. It will also allow us to define our own architecture and design decisions, without being constrained by the decisions made in the previous project.
+
+However, we will still be able to use the previous project as a reference for some functionalities and design decisions, and we will also be able to use some of the code from the previous project if we find it useful.
+
+In that sense, some ADRs (not all of them) from the previous project will be inherited:
+
+- JavaScript
+- Microservice Architecture
+- Docker
+- React
+- MongoDB
+- ExpressJS
+
+These can be deeply consulted in the https://github.com/Arquisoft/wiq_es05b/wiki/ADRS[previous project's wiki].
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+Development will start from scratch, but some ADRs from the previous project will be inherited. The previous project will be used as a reference for some functionalities and design decisions, and some of the code from the previous project might be used if found useful.
+
+[[ADR-08]]
+=== ADR 08: Use of Material UI component library
+*_Date: 2025-03-10_*
+
+image::mui.png["Material UI", align="center"]
+
+==== Status
+Accepted.
+
+==== Context
+Material UI (MUI) is a popular React component library that implements Google's Material Design guidelines. It provides a set of pre-built, customizable UI components—like buttons, forms, and layouts—that help developers build consistent, responsive, and visually appealing user interfaces quickly and efficiently.
+
+As we wanted to use a component library that would allow us to create a clean and appealing user interface, we considered several options. MUI stood out as a strong candidate due to its popularity, ease of use, and extensive documentation.
+
+==== Decision
+Decision accepted.
+
+==== Consequences
+Material UI will be used in our project as the main component library for the user interface.

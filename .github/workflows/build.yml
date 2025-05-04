@@ -269,7 +269,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
-        workdir: mathgame
+        workdir: mathGame
         platforms: linux/amd64,linux/arm64
         tags: "latest,${{ github.sha }}"
 

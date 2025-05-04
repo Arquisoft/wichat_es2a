@@ -3,7 +3,7 @@ import { Box, Typography, TextField, Button, List, ListItem, ListItemText } from
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 
-const apiEndpoint = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 function FriendSearch({ onAddFriend }) {
     const theme = useTheme();

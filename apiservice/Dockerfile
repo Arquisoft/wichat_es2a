@@ -18,3 +18,5 @@ EXPOSE 8008
 
 # Define the command to run your app
 CMD ["node", "server.js"]
+
+USER node

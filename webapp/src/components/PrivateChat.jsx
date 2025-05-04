@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const apiEndpoint = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 function PrivateChat() {
   const theme = useTheme();

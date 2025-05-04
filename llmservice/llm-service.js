@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const app = express();
 app.disable('x-powered-by');
+
 const port = 8003;
 
 // Middleware to parse JSON in request body
@@ -343,6 +344,17 @@ process.on('SIGTERM', () => {
   mongoose.connection.close();
   server.close();
 });
+
+// Exportar las funciones para pruebas unitarias
+// Solo en entorno de prueba
+if (process.env.NODE_ENV === 'test') {
+  global.sendQuestionToLLM = sendQuestionToLLM;
+  global.buildConversationContext = buildConversationContext;
+  global.getOrCreateConversation = getOrCreateConversation;
+  global.addMessageToConversation = addMessageToConversation;
+  global.validateRequiredFields = validateRequiredFields;
+  global.safeUserId = safeUserId;
+}
 
 module.exports = server
 
