@@ -15,9 +15,7 @@ const port = 8001;
 app.use(express.json());
 
 // Configurar CORS: Permite solicitudes desde localhost:3000 (frontend)
-app.use(cors({
-  origin: 'http://localhost:3000',
-}));
+app.use(cors());
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
