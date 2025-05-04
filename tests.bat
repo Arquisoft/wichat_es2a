@@ -1,3 +1,0 @@
-@echo off
-
-start cmd /k "cd apiservice && npm install && npm test && cd .. && cd gatewayservice && npm install && npm test && cd .. && cd llmservice && npm install && npm test && cd .. && cd users\userservice && npm install && npm test && cd .. && cd authservice && npm install && npm test && cd .. && cd .. && cd wikidata && npm install && npm test && cd .. && cd mathGame && npm install && npm test && cd .. && cd llmservice && npm install && npm test && cd .. && cd webapp && npm install && npm test && a"
