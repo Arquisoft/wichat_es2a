@@ -476,6 +476,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
+<li><a href="#_whitebox_overall_system_final">5.2. Whitebox Overall System Final</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
@@ -484,47 +485,49 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_log_in">6.2. Log In</a></li>
 </ul>
 </li>
-<li><a href="#section-deployment-view">7. Deployment View</a>
+<li><a href="#_game_play">7. Game play</a></li>
+<li><a href="#_ranking_view">8. Ranking View</a></li>
+<li><a href="#section-deployment-view">9. Deployment View</a>
 <ul class="sectlevel2">
-<li><a href="#_infrastructure_level_1">7.1. Infrastructure Level 1</a></li>
+<li><a href="#_infrastructure_level_1">9.1. Infrastructure Level 1</a></li>
 </ul>
 </li>
-<li><a href="#section-concepts">8. Cross-cutting Concepts</a>
+<li><a href="#section-concepts">10. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_model">8.1. Domain Model</a></li>
-<li><a href="#_user_experience">8.2. User experience</a></li>
-<li><a href="#_usability">8.3. Usability</a></li>
-<li><a href="#_security">8.4. Security</a></li>
-<li><a href="#_testing">8.5. Testing</a></li>
-<li><a href="#_maintainability">8.6. Maintainability</a></li>
+<li><a href="#_domain_model">10.1. Domain Model</a></li>
+<li><a href="#_user_experience">10.2. User experience</a></li>
+<li><a href="#_usability">10.3. Usability</a></li>
+<li><a href="#_security">10.4. Security</a></li>
+<li><a href="#_testing">10.5. Testing</a></li>
+<li><a href="#_maintainability">10.6. Maintainability</a></li>
 </ul>
 </li>
-<li><a href="#section-design-decisions">9. Architecture Decision Records (ADRs)</a>
+<li><a href="#section-design-decisions">11. Architecture Decision Records (ADRs)</a>
 <ul class="sectlevel2">
-<li><a href="#_inherited_adrs">9.1. Inherited ADRs</a></li>
-<li><a href="#ADR-01">9.2. ADR 01: Mistral 7B as LLM Service</a></li>
-<li><a href="#ADR-02">9.3. ADR 02: Gitflow vs Trunk-Based Development</a></li>
-<li><a href="#ADR-03">9.4. ADR 03: Use of Neobrutalism components</a></li>
-<li><a href="#ADR-04">9.5. ADR 04: Gemini 1.5 Flash as LLM Service</a></li>
-<li><a href="#ADR-05">9.6. ADR 05: DiceBear Avatar Library</a></li>
-<li><a href="#ADR-06">9.7. ADR 06: App Deployed in ARM Oracle VM</a></li>
-<li><a href="#ADR-07">9.8. ADR 07: Start from Scratch vs Use Previous Project</a></li>
-<li><a href="#ADR-08">9.9. ADR 08: Use of Material UI component library</a></li>
+<li><a href="#_inherited_adrs">11.1. Inherited ADRs</a></li>
+<li><a href="#ADR-01">11.2. ADR 01: Mistral 7B as LLM Service</a></li>
+<li><a href="#ADR-02">11.3. ADR 02: Gitflow vs Trunk-Based Development</a></li>
+<li><a href="#ADR-03">11.4. ADR 03: Use of Neobrutalism components</a></li>
+<li><a href="#ADR-04">11.5. ADR 04: Gemini 1.5 Flash as LLM Service</a></li>
+<li><a href="#ADR-05">11.6. ADR 05: DiceBear Avatar Library</a></li>
+<li><a href="#ADR-06">11.7. ADR 06: App Deployed in ARM Oracle VM</a></li>
+<li><a href="#ADR-07">11.8. ADR 07: Start from Scratch vs Use Previous Project</a></li>
+<li><a href="#ADR-08">11.9. ADR 08: Use of Material UI component library</a></li>
 </ul>
 </li>
-<li><a href="#section-quality-scenarios">10. Quality Requirements</a>
+<li><a href="#section-quality-scenarios">12. Quality Requirements</a>
 <ul class="sectlevel2">
-<li><a href="#_quality_tree">10.1. Quality Tree</a></li>
-<li><a href="#_quality_scenarios">10.2. Quality Scenarios</a></li>
+<li><a href="#_quality_tree">12.1. Quality Tree</a></li>
+<li><a href="#_quality_scenarios">12.2. Quality Scenarios</a></li>
 </ul>
 </li>
-<li><a href="#section-technical-risks">11. Risks and Technical Debts</a>
+<li><a href="#section-technical-risks">13. Risks and Technical Debts</a>
 <ul class="sectlevel2">
-<li><a href="#_technical_risks">11.1. Technical risks</a></li>
-<li><a href="#_technical_debts">11.2. Technical debts</a></li>
+<li><a href="#_technical_risks">13.1. Technical risks</a></li>
+<li><a href="#_technical_debts">13.2. Technical debts</a></li>
 </ul>
 </li>
-<li><a href="#section-glossary">12. Glossary</a></li>
+<li><a href="#section-glossary">14. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -620,10 +623,16 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <p>Question and answer generation</p>
 </li>
 <li>
-<p>Implementation of a chat to give clues</p>
+<p>Implementation of a IA chat to give clues</p>
 </li>
 <li>
 <p>User registration and their previous results</p>
+</li>
+<li>
+<p>Implementation of users groups</p>
+</li>
+<li>
+<p>Implementation of chat between different users</p>
 </li>
 </ul>
 </div>
@@ -641,6 +650,12 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <p>A web frontend that will display the images of the game along with the question and its possible answers, which must be answered in a given time.</p>
 </li>
 <li>
+<p>Questions topic will be choose by users from a list of topics (footballers, painters, scientists, etc.).</p>
+</li>
+<li>
+<p>Game will have a time limit to answer the questions in function of the difficulty level.</p>
+</li>
+<li>
 <p>Both images and answers will be generated from Wikidata data and will be accessible through an API.</p>
 </li>
 <li>
@@ -648,6 +663,12 @@ For documentation of your own system you use better the <em>plain</em> version.<
 </li>
 <li>
 <p>User registration system to save their previous results, which will be accessible through an API.</p>
+</li>
+<li>
+<p>Users will be able to create new groups or join existing ones.</p>
+</li>
+<li>
+<p>Users will be able to chat with each other.</p>
 </li>
 </ul>
 </div>
@@ -940,63 +961,8 @@ Responsive design techniques and best practices will be implemented to optimize 
 <div class="sect1">
 <h2 id="section-context-and-scope">3. Context and Scope</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.</p>
-</div>
-<div class="paragraph">
-<p>If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>The domain interfaces and technical interfaces to communication partners are among your system&#8217;s most critical aspects. Make sure that you completely understand them.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Various options:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Context diagrams</p>
-</li>
-<li>
-<p>Lists of communication partners and their interfaces.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-3/">Context and Scope</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_business_context">3.1. Business Context</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Specification of <strong>all</strong> communication partners (users, IT-systems, &#8230;&#8203;) with explanations of domain specific inputs and outputs or interfaces.
-Optionally you can add domain specific formats or communication protocols.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>All stakeholders should understand which data are exchanged with the environment of the system.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively (or additionally) you can use a table.
-The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.</p>
-</div>
-</div>
-</div>
 <div class="paragraph">
 <p><strong>Business Context Table</strong></p>
 </div>
@@ -1058,23 +1024,6 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 <div class="sect2">
 <h3 id="_technical_context">3.2. Technical Context</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.</p>
-</div>
-</div>
-</div>
 <div class="paragraph">
 <p><strong>Technical Context Table</strong></p>
 </div>
@@ -1219,7 +1168,7 @@ Many of them have been based on the project template provided by the teachers, a
 <p><strong>Docker</strong>: Tool that allows you to create, deploy and run applications in containers, testing that the application works in different environments.</p>
 </li>
 <li>
-<p><strong>Mistral / Qwen</strong>: One of this AI tools to implement the LLM for the chat service in the game.</p>
+<p><strong>Google Gemini</strong>: One of this AI tools to implement the LLM for the chat service in the game.</p>
 </li>
 </ul>
 </div>
@@ -1227,33 +1176,39 @@ Many of them have been based on the project template provided by the teachers, a
 <div class="sect2">
 <h3 id="_top_level_decomposition_of_the_system">4.2. Top-level decomposition of the system</h3>
 <div class="paragraph">
-<p>An architecture using microservices has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:</p>
+<p>An architecture using services has been chosen for this project, so that each module focuses on a specific task. Some of the modules will be the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>User management service</strong>: It will manage the creation of new users, their login, store their game history &#8230;&#8203;</p>
+<p><strong>Gateway service</strong>: It will manage different services of the application (users, game, chat, etc).</p>
 </li>
 <li>
-<p><strong>Game service</strong>: It will generate questions and possible answers from the chosen image.</p>
+<p><strong>User service</strong>: It will manage the creation of new users, store their information &#8230;&#8203;</p>
 </li>
 <li>
-<p><strong>Chat service</strong>: It will use the LLM to help the user with hints to facilitate the game.</p>
+<p><strong>Authentication service</strong>: It will manage the authentication of users when they log in.</p>
 </li>
 <li>
-<p><strong>Wikidata connection service</strong>: It will get the image and the necessary information from Wikidata.</p>
+<p><strong>Groups service</strong>: It will manage the creation of new groups, the addition of users to them and the chat between users.</p>
 </li>
 <li>
-<p><strong>Service to export user information</strong>: It will allow access to user information stored in the system through an API.</p>
+<p><strong>Wikidata service</strong>: It will connect with Wikidata API to get the image and the necessary information for the game.</p>
 </li>
 <li>
-<p><strong>Service to export the information of the questions</strong>: It will allow access to the information of the questions through an API.</p>
+<p><strong>Web app</strong>: It will contain the game and other functionabilities of the application.</p>
+</li>
+<li>
+<p><strong>LLM service</strong>: It will use Google Gemini to generate a chat to help the user with hints to facilitate the game.</p>
+</li>
+<li>
+<p><strong>API service</strong>: It will allow access to information stored in data base of the system (questions, users, etc) through an API.</p>
 </li>
 </ul>
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/services_connection.svg" alt="Interaction between services" width="700" height="500">
+<img src="./images/services_connection_v2.svg" alt="Interaction between services" width="700" height="500">
 </div>
 <div class="title">Figure 1. Interaction between services</div>
 </div>
@@ -1438,6 +1393,148 @@ game information</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_whitebox_overall_system_final">5.2. Whitebox Overall System Final</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Building_Block_View_Final.svg" alt="Building Block View Final">
+</div>
+<div class="title">Figure 3. Building Block View.</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Motivation</dt>
+<dd>
+<p>The goal of this system (WIChat) is to offer a question and answer game based on images, where participants can answer questions automatically generated from Wikidata.
+Additionally, a Large Language Model (LLM) provides hints to participants when requested, enhancing the game experience.
+The system also includes features for user management, group interactions and a math-based mini-game.</p>
+</dd>
+<dt class="hdlist1">Contained Building Blocks</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the participants of the game. They can answer questions of the main game or the math mini-game,
+request hints, join groups and interacts with other users.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Browser</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interface (frontend) where the user interacts with the game. It sends request to the backend via the Gateway.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GatewayService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Acts as a central single entry point for frontend requests.
+It routes them to the appropriate backend service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WikidataService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Handles the core game logic. It retrieves questions and answers from the external Wikidata repository
+and process them for the game</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Wikidata</strong> (external)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External semantic knowledge base. The WikidataService queries this to obtain data for generating questions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>LLM (Large Language Model)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides hints based on user requests. It may contact the WikidataService to obtaing context or clarigy game-related
+data before responding</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MathGame</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A backend service that generate math-based questions and evaluates answer, providing an additional mini-game experience.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>AuthService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Handles user authentication, including login and token generation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>UserService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Manages user data, including profile information, friend requests and private messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GroupService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Handles group-related functionalities, such as creating groups, adding users to groups, and managing group messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>APIService</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides a REST API for external integrations and serves as a bridge between the GatewayService and other services.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Important Interfaces</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User interface</strong> (User ↔ Browser)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user interacts with the Browser to answer questions(for the main game or math mini-game), request hints, manage their profile and join or create groups.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Frontend to Backend Gateway</strong> (Browser ↔ GatewayService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Browser sends all requests (game logic, hints, user info, etc.) to the <code>GatewayService</code> using HTTP/REST.
+The Gateway routes these request to the appropriate backend services.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Game Logic</strong> (GatewayService ↔ WikidataService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Routes game-related request (e.g., get question, submit answer) from the frontend to the <code>WikidataService</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Wikidata Query Interface</strong> (WikidataService ↔ Wikidata)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>WikidataService</code> comunicates with the public Wikidata knowledge base to retrieve data for generating questions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Hints Requests</strong> (Gateway ↔ LLMService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Routes hint request to the <code>LLMService</code>, which enrich response by querying <code>WikidataService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Math Game</strong> (GatewayService ↔ MathGame)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Routes math-game specific request (new question, validate answer) to the <code>MathGame</code> service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication</strong> (GatewayService ↔ AuthService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Handles login and authentication logic via secure requests through the Gateway.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User Management</strong> (GatewayService ↔ UserService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Routes requests for user profiles, friendships, and messages to the <code>UserService</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Group Management</strong> (GatewayService ↔ GroupService)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Routes group-related operations (create group, join, chat) to the <code>GroupService</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>External API Interface</strong> (APIService ↔ External Systems)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows external clients to consume parts of the system’s functionality securely.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1445,68 +1542,6 @@ game information</p></td>
 <div class="sect1">
 <h2 id="section-runtime-view">6. Runtime View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>important use cases or features: how do building blocks execute them?</p>
-</li>
-<li>
-<p>interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?</p>
-</li>
-<li>
-<p>operation and administration: launch, start-up, stop</p>
-</li>
-<li>
-<p>error and exception scenarios</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their <strong>architectural relevance</strong>. It is <strong>not</strong> important to describe a large number of scenarios. You should rather document a representative selection.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>There are many notations for describing scenarios, e.g.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>numbered list of steps (in natural language)</p>
-</li>
-<li>
-<p>activity diagrams or flow charts</p>
-</li>
-<li>
-<p>sequence diagrams</p>
-</li>
-<li>
-<p>BPMN or EPCs (event process chains)</p>
-</li>
-<li>
-<p>state machines</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-6/">Runtime View</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_sign_up">6.1. Sign Up</h3>
 <div class="ulist">
@@ -1518,7 +1553,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/diagrama_runview_signup.png" alt="Signup Diagram">
+<img src="./images/06_runview_signup.svg" alt="Signup Diagram">
 </div>
 </div>
 </div>
@@ -1533,15 +1568,49 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/diagrama_runview_login.png" alt="Login Diagram">
+<img src="./images/06_runview_login.svg" alt="Login Diagram">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_game_play">7. Game play</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The game play diagram in an application describes the flow that a user follows to play a game. It begins with the selection of a game category (such as multiple types of categories) and level (such as easy, medium and hard). The game begins by displaying a series of questions, where the user must choose between four options. After choosing an option, the user will move on to the next question. During a question, the user can ask questions in an interactive chat. Upon completion of the game, a summary will be displayed and the option to restart will be provided. This process ensures a smooth and engaging gaming experience.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/06_runview_game.svg" alt="Game Play Diagram">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ranking_view">8. Ranking View</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The history diagram in an application describes the flow that a user follows to view their history of gameplays. It begins when user decudes to view their history. The application retrieves the user&#8217;s history data from the database and displays it on the screen. This process ensures that the user can easily access their history information.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/06_runview_history.svg" alt="History Diagram">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="section-deployment-view">7. Deployment View</h2>
+<h2 id="section-deployment-view">9. Deployment View</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1601,7 +1670,7 @@ when your infrastructure is more complex.</p>
 <p>Our system infrastructure consists of a single virtual machine running Ubuntu 22.04 LTS. This server hosts a Node.js application inside a Docker container and includes a MongoDB database to store application data. The application also interacts with the Wikidata API to generate dynamic content. Additionally, we use a Large Language Model (LLM) that leverages context from the application to provide user hints.</p>
 </div>
 <div class="sect2">
-<h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
+<h3 id="_infrastructure_level_1">9.1. Infrastructure Level 1</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1700,10 +1769,10 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-concepts">8. Cross-cutting Concepts</h2>
+<h2 id="section-concepts">10. Cross-cutting Concepts</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_domain_model">8.1. Domain Model</h3>
+<h3 id="_domain_model">10.1. Domain Model</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/08_domainModel.drawio.svg" alt="08 domainModel.drawio">
@@ -1711,7 +1780,7 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_experience">8.2. User experience</h3>
+<h3 id="_user_experience">10.2. User experience</h3>
 <div class="paragraph">
 <p>Our application is designed as an engaging quiz game. Players answer questions from a variety of categories, each with multiple
 choices and only one correct answer. The main challenge is to guess a location based on a displayed photo. To enhance learning and
@@ -1719,26 +1788,26 @@ fun, users can request hints from a Large Language Model (LLM) at any time.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_usability">8.3. Usability</h3>
+<h3 id="_usability">10.3. Usability</h3>
 <div class="paragraph">
 <p>Usability is a critical factor for any application, as it directly influences how efficiently users can interact with it.
 To ensure our app’s usability, we will adhere to design standards and conduct testing with a diverse group of users, who will provide feedback on how intuitive the interface feels.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_security">8.4. Security</h3>
+<h3 id="_security">10.4. Security</h3>
 <div class="paragraph">
 <p>Since we prioritize the security of user information, it is a key focus for our app.We will encrypt user passwords and limit the amount of data we collect from them. For LLM interactions we ensure that no personally identifiable information is shared with external services.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_testing">8.5. Testing</h3>
+<h3 id="_testing">10.5. Testing</h3>
 <div class="paragraph">
 <p>To ensure the app functions correctly, we have chosen to implement unit tests and conduct manual testing. Additionally, we will perform the usability tests mentioned earlier to further enhance the user experience.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_maintainability">8.6. Maintainability</h3>
+<h3 id="_maintainability">10.6. Maintainability</h3>
 <div class="paragraph">
 <p>We have committed to following best practices to ensure the app is easy to maintain and update. We aim to simplify future enhancements and ensure we can work efficiently.</p>
 </div>
@@ -1747,10 +1816,10 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-design-decisions">9. Architecture Decision Records (ADRs)</h2>
+<h2 id="section-design-decisions">11. Architecture Decision Records (ADRs)</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_inherited_adrs">9.1. Inherited ADRs</h3>
+<h3 id="_inherited_adrs">11.1. Inherited ADRs</h3>
 <div class="paragraph">
 <p>Since we start from an initial project that is already functional and that we will be expanding, many architectural decisions have been inherited from it. These can be consulted in the <a href="https://github.com/Arquisoft/wiq_es05b/wiki/ADRS">wiki of the base project</a>.</p>
 </div>
@@ -1759,7 +1828,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-01">9.2. ADR 01: Mistral 7B as LLM Service</h3>
+<h3 id="ADR-01">11.2. ADR 01: Mistral 7B as LLM Service</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-02-17</em></strong></p>
 </div>
@@ -1769,13 +1838,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status">9.2.1. Status</h4>
+<h4 id="_status">11.2.1. Status</h4>
 <div class="paragraph">
 <p><span class="red">Deprecated. See <a href="#ADR-04">ADR 04: Gemini 1.5 Flash as LLM Service</a>.</span></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context">9.2.2. Context</h4>
+<h4 id="_context">11.2.2. Context</h4>
 <div class="paragraph">
 <p>The LLM is the main feature added to the system, and is responsible for generating the hints the user will have available during each game in relation to the questions asked. An LLM service is required to provide the necessary functionality, and Mistral 7B, LLM developed by Mistral AI, shows the following aspects to consider as a potential candidate:</p>
 </div>
@@ -1797,7 +1866,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision">9.2.3. Decision</h4>
+<h4 id="_decision">11.2.3. Decision</h4>
 <div class="paragraph">
 <p>The Mistral 7B LLM Service will be used as the LLM service for the system.</p>
 </div>
@@ -1806,7 +1875,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences">9.2.4. Consequences</h4>
+<h4 id="_consequences">11.2.4. Consequences</h4>
 <div class="paragraph">
 <p>Mistral 7B will be implemented in our application as the external LLM hint generator.</p>
 </div>
@@ -1816,7 +1885,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-02">9.3. ADR 02: Gitflow vs Trunk-Based Development</h3>
+<h3 id="ADR-02">11.3. ADR 02: Gitflow vs Trunk-Based Development</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-02-17</em></strong></p>
 </div>
@@ -1826,13 +1895,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_2">9.3.1. Status</h4>
+<h4 id="_status_2">11.3.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_2">9.3.2. Context</h4>
+<h4 id="_context_2">11.3.2. Context</h4>
 <div class="paragraph">
 <p>We need to establish a way to work as a team using Git, and determine the use to be made of branches. Among all possible approaches, two stand out: Gitflow and Trunk-Based Development.</p>
 </div>
@@ -1841,20 +1910,20 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_2">9.3.3. Decision</h4>
+<h4 id="_decision_2">11.3.3. Decision</h4>
 <div class="paragraph">
 <p>TBD chosen as our git strategy for the project.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_2">9.3.4. Consequences</h4>
+<h4 id="_consequences_2">11.3.4. Consequences</h4>
 <div class="paragraph">
 <p>The chosen option will be the way to work from now on in the project (TBD).</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-03">9.4. ADR 03: Use of Neobrutalism components</h3>
+<h3 id="ADR-03">11.4. ADR 03: Use of Neobrutalism components</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-03-03</em></strong></p>
 </div>
@@ -1864,13 +1933,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_3">9.4.1. Status</h4>
+<h4 id="_status_3">11.4.1. Status</h4>
 <div class="paragraph">
 <p>Declined.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_3">9.4.2. Context</h4>
+<h4 id="_context_3">11.4.2. Context</h4>
 <div class="paragraph">
 <p>React components are essentially the building blocks of a React application. They are the visual elements that make up the user interface of the application. <a href="https://www.neobrutalism.dev/">Neobrutalism</a> components are a collection of neobrutalism-styled React Tailwind components. They are a mix of regular brutalism in web design and more modern typography, illustration, and animation standards.</p>
 </div>
@@ -1879,20 +1948,20 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_3">9.4.3. Decision</h4>
+<h4 id="_decision_3">11.4.3. Decision</h4>
 <div class="paragraph">
 <p>Decision declined.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_3">9.4.4. Consequences</h4>
+<h4 id="_consequences_3">11.4.4. Consequences</h4>
 <div class="paragraph">
 <p>Neobrutalism components will not be used in our project.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-04">9.5. ADR 04: Gemini 1.5 Flash as LLM Service</h3>
+<h3 id="ADR-04">11.5. ADR 04: Gemini 1.5 Flash as LLM Service</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-03-10</em></strong></p>
 </div>
@@ -1902,13 +1971,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_4">9.5.1. Status</h4>
+<h4 id="_status_4">11.5.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_4">9.5.2. Context</h4>
+<h4 id="_context_4">11.5.2. Context</h4>
 <div class="paragraph">
 <p>Gemini 1.5 Flash is a variant of Google&#8217;s Gemini 1.5 AI model, designed to be lighter and faster. It is a model that has been optimized for speed and efficiency, making it ideal for applications that require quick responses and low latency.</p>
 </div>
@@ -1917,20 +1986,20 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_4">9.5.3. Decision</h4>
+<h4 id="_decision_4">11.5.3. Decision</h4>
 <div class="paragraph">
 <p>Decision accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_4">9.5.4. Consequences</h4>
+<h4 id="_consequences_4">11.5.4. Consequences</h4>
 <div class="paragraph">
 <p>Gemini 1.5 Flash substitutes Mistral 7B as the chosen LLM service for our system.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-05">9.6. ADR 05: DiceBear Avatar Library</h3>
+<h3 id="ADR-05">11.6. ADR 05: DiceBear Avatar Library</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-04-20</em></strong></p>
 </div>
@@ -1940,13 +2009,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_5">9.6.1. Status</h4>
+<h4 id="_status_5">11.6.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_5">9.6.2. Context</h4>
+<h4 id="_context_5">11.6.2. Context</h4>
 <div class="paragraph">
 <p>DiceBear is a JavaScript library that allows you to create unique avatars for your applications in no time. It provides a wide range of customizable avatars, which can be generated on the fly. This library is particularly useful for applications that require user avatars, as it allows for easy integration and customization.</p>
 </div>
@@ -1955,20 +2024,20 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_5">9.6.3. Decision</h4>
+<h4 id="_decision_5">11.6.3. Decision</h4>
 <div class="paragraph">
 <p>Decision accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_5">9.6.4. Consequences</h4>
+<h4 id="_consequences_5">11.6.4. Consequences</h4>
 <div class="paragraph">
 <p>DiceBear will be used in our project to allow users to create their own avatars.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-06">9.7. ADR 06: App Deployed in ARM Oracle VM</h3>
+<h3 id="ADR-06">11.7. ADR 06: App Deployed in ARM Oracle VM</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-04-06</em></strong></p>
 </div>
@@ -1978,43 +2047,43 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_6">9.7.1. Status</h4>
+<h4 id="_status_6">11.7.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_6">9.7.2. Context</h4>
+<h4 id="_context_6">11.7.2. Context</h4>
 <div class="paragraph">
 <p>The application deployment requires a robust, scalable, and cost-effective platform to meet quality standards. Oracle offers the possibility of deploying the application for free in a basic ARM Virtual Machine (VM), which is a good option for our needs.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_6">9.7.3. Decision</h4>
+<h4 id="_decision_6">11.7.3. Decision</h4>
 <div class="paragraph">
 <p>Decision accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_6">9.7.4. Consequences</h4>
+<h4 id="_consequences_6">11.7.4. Consequences</h4>
 <div class="paragraph">
 <p>A Oracle ARM VM will be used for the deployment of the application.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-07">9.8. ADR 07: Start from Scratch vs Use Previous Project</h3>
+<h3 id="ADR-07">11.8. ADR 07: Start from Scratch vs Use Previous Project</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-03-10</em></strong></p>
 </div>
 <div class="sect3">
-<h4 id="_status_7">9.8.1. Status</h4>
+<h4 id="_status_7">11.8.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_7">9.8.2. Context</h4>
+<h4 id="_context_7">11.8.2. Context</h4>
 <div class="paragraph">
 <p>Although initially we considered the possibility of using a previous project as a base for our development, we finally decided to start from scratch. We believe that starting from scratch will allow us to have a cleaner and more maintainable codebase, and to implement functionalities faster, as we&#8217;ll be more familiar with our own code. It will also allow us to define our own architecture and design decisions, without being constrained by the decisions made in the previous project.</p>
 </div>
@@ -2051,20 +2120,20 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_7">9.8.3. Decision</h4>
+<h4 id="_decision_7">11.8.3. Decision</h4>
 <div class="paragraph">
 <p>Decision accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_7">9.8.4. Consequences</h4>
+<h4 id="_consequences_7">11.8.4. Consequences</h4>
 <div class="paragraph">
 <p>Development will start from scratch, but some ADRs from the previous project will be inherited. The previous project will be used as a reference for some functionalities and design decisions, and some of the code from the previous project might be used if found useful.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ADR-08">9.9. ADR 08: Use of Material UI component library</h3>
+<h3 id="ADR-08">11.9. ADR 08: Use of Material UI component library</h3>
 <div class="paragraph">
 <p><strong><em>Date: 2025-03-10</em></strong></p>
 </div>
@@ -2074,13 +2143,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_status_8">9.9.1. Status</h4>
+<h4 id="_status_8">11.9.1. Status</h4>
 <div class="paragraph">
 <p>Accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_context_8">9.9.2. Context</h4>
+<h4 id="_context_8">11.9.2. Context</h4>
 <div class="paragraph">
 <p>Material UI (MUI) is a popular React component library that implements Google&#8217;s Material Design guidelines. It provides a set of pre-built, customizable UI components—like buttons, forms, and layouts—that help developers build consistent, responsive, and visually appealing user interfaces quickly and efficiently.</p>
 </div>
@@ -2089,13 +2158,13 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_decision_8">9.9.3. Decision</h4>
+<h4 id="_decision_8">11.9.3. Decision</h4>
 <div class="paragraph">
 <p>Decision accepted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_consequences_8">9.9.4. Consequences</h4>
+<h4 id="_consequences_8">11.9.4. Consequences</h4>
 <div class="paragraph">
 <p>Material UI will be used in our project as the main component library for the user interface.</p>
 </div>
@@ -2105,7 +2174,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-quality-scenarios">10. Quality Requirements</h2>
+<h2 id="section-quality-scenarios">12. Quality Requirements</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -2148,7 +2217,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_quality_tree">10.1. Quality Tree</h3>
+<h3 id="_quality_tree">12.1. Quality Tree</h3>
 <div class="imageblock text-center">
 <div class="content">
 <img src="./images/QualityRequirements.png" alt="Quality Requirements">
@@ -2156,7 +2225,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
+<h3 id="_quality_scenarios">12.2. Quality Scenarios</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -2246,7 +2315,7 @@ To ensure our app’s usability, we will adhere to design standards and conduct 
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
+<h2 id="section-technical-risks">13. Risks and Technical Debts</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The "Technical Risks and Debts" section outlines potential challenges and issues that may emerge during the project&#8217;s development and maintenance.
@@ -2254,7 +2323,7 @@ These risks and debts must be carefully assessed and addressed to ensure the pro
 The subsections below detail both internal and external technical risks, along with the technical debts to consider.</p>
 </div>
 <div class="sect2">
-<h3 id="_technical_risks">11.1. Technical risks</h3>
+<h3 id="_technical_risks">13.1. Technical risks</h3>
 <div class="paragraph">
 <p>A technical risk is defined as a potential event that could jeopardize the project&#8217;s successful completion, cause delays, increase costs, or even result in failure if not effectively managed. The subsections below outline the internal and external technical risks identified for the project.</p>
 </div>
@@ -2305,7 +2374,7 @@ The subsections below detail both internal and external technical risks, along w
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_external">11.1.1. External</h4>
+<h4 id="_external">13.1.1. External</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 14.2857%;">
@@ -2340,7 +2409,7 @@ The subsections below detail both internal and external technical risks, along w
 </div>
 </div>
 <div class="sect2">
-<h3 id="_technical_debts">11.2. Technical debts</h3>
+<h3 id="_technical_debts">13.2. Technical debts</h3>
 <div class="paragraph">
 <p>Not yet documented.</p>
 </div>
@@ -2349,7 +2418,7 @@ The subsections below detail both internal and external technical risks, along w
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-glossary">12. Glossary</h2>
+<h2 id="section-glossary">14. Glossary</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
