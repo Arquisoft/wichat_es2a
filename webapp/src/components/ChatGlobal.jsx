@@ -5,7 +5,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 
-const apiEndpoint = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000';
 
 function ChatGlobal() {
   const theme = useTheme();
