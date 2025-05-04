@@ -1208,7 +1208,7 @@ Many of them have been based on the project template provided by the teachers, a
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/services_connection_v2.svg" alt="Interaction between services" width="700" height="500">
+<img src="./images/services_connection_v3.svg" alt="Interaction between services" width="700" height="500">
 </div>
 <div class="title">Figure 1. Interaction between services</div>
 </div>
@@ -2352,11 +2352,6 @@ The subsections below detail both internal and external technical risks, along w
 <td class="tableblock halign-left valign-top"><p class="tableblock">The team has experience in GitHub but has not collaborated in such a large group before. This could lead to difficulties in task distribution, communication, and version control conflicts. Establishing clear workflows and communication channels will be essential to mitigate these issues.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Working on a legacy project</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">As a group we decided to continue a project from the previous course of the asignature. Familiarizing ourselves with the project can take time, and therefore slow down development.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integration of a Large Language Model (LLM) chat system</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Adding an AI-driven chat system for user hints introduces complexities such as model selection, API integration, and performance optimization. Ensuring precision in the chat responses will require careful planning.</p></td>
@@ -2410,9 +2405,57 @@ The subsections below detail both internal and external technical risks, along w
 </div>
 <div class="sect2">
 <h3 id="_technical_debts">13.2. Technical debts</h3>
-<div class="paragraph">
-<p>Not yet documented.</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Priority</th>
+<th class="tableblock halign-left valign-top">Considerations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices deployment limitations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Despite the project&#8217;s adoption of a microservices architecture, the current deployment setup lacks proper load balancing and auto-scaling capabilities. This creates a significant bottleneck when handling increased user traffic, particularly during peak usage times. Performance degradation becomes noticeable even with moderate user loads, making the application unsuitable for production environments without these enhancements. Implementation of container orchestration with Kubernetes or advanced Docker Swarm configurations would be necessary to fully leverage the microservices architecture&#8217;s scalability benefits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code reuse issues and structural patterns duplication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Significant code duplication exists across microservices in the form of identical utility functions (validateRequiredFields, MongoDB connection setup) implemented independently in each service. This undermines the modularity benefits of the microservices architecture and creates maintenance challenges when common functionality needs to be updated. Additionally, error handling patterns are inconsistent across services, with varying approaches to validation and error responses. Similar test setup code is also duplicated across test files, with each service reimplementing MongoDB memory server configuration. A systematic refactoring effort to extract common utilities into shared libraries, standardize error handling patterns, and create reusable test fixtures would significantly reduce maintenance complexity and improve code quality.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wikidata API performance limitations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Wikidata service experiences performance issues, particularly with slow response times when fetching questions. This affects the game experience as users may experience delays while waiting for questions to load. Performance optimizations, caching mechanisms, and potentially preloading questions are required to improve user experience.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM service scalability constraints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current LLM service implementation can only handle approximately 3 simultaneous connections and has token limitations due to using a personal-use API key. This severely restricts the scalability of the application in a production environment with multiple users. A production-ready API key with higher rate limits or implementing a queuing system would be necessary to scale the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limited internationalization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The question system currently only supports English or Spanish, limiting the accessibility for the people which can speak neither languages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lack of robust error handling</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Many API endpoints have basic error handling that returns generic error messages rather than providing specific information to help diagnose issues. This makes troubleshooting more difficult, especially in production environments. More comprehensive error handling with appropriate logging would improve system reliability and maintenance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment variable management</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project relies on numerous environment variables for configuration with inconsistent handling across services. This creates potential for configuration errors and complicates deployment. A standardized approach to environment variable management and validation would improve system reliability.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
