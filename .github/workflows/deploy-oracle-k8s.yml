@@ -3,7 +3,7 @@ name: Deploy to Oracle K8s Cluster
 on:
   push:
     branches:
-      - main  # o la rama que quieras utilizar para despliegues
+      - Deployment-Kubernetes  # o la rama que quieras utilizar para despliegues
 
 jobs:
   build-and-deploy:
@@ -88,7 +88,6 @@ jobs:
 
       # Configurar worker si está definido
       - name: Configure worker node
-        if: ${{ vars.SETUP_WORKER == 'true' }}
         env:
           WORKER_IP: ${{ secrets.WORKER_IP }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
