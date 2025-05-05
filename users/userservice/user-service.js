@@ -54,7 +54,10 @@ app.post('/adduser', async (req, res) => {
     }
 
     // Validación de complejidad del password (una letra mayuscula, una minuscula, un numero y un caracter especial)
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/;
+    // Ahora tambien admite otros caracteres especiales como _
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$/
+
     if (!passwordRegex.test(password)) {
       return res.status(400).json({ error: "La contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un caracter especial" })
     }

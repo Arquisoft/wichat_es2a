@@ -595,9 +595,12 @@ describe('User Service', () => {
       const hashedPassword = await bcrypt.hash('securepassword', 10);
       let user = await User.create({ username: 'user1', password: hashedPassword, avatarOptions: {} });
       await Message.create({ content: 'Primer mensaje', sender: user._id });
+      await new Promise(res => setTimeout(res, 10)); // Simulamos un pequeño retraso para que los mensajes tengan diferentes timestamps
       await Message.create({ content: 'Segundo mensaje', sender: user._id });
+      await new Promise(res => setTimeout(res, 10));
       await Message.create({ content: 'Tercer mensaje', sender: user._id });
-
+      await new Promise(res => setTimeout(res, 10));
+      
       const res = await request(app).get('/getMessages');
 
       expect(Array.isArray(res.body)).toBe(true);

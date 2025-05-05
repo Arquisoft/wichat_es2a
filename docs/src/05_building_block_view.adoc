@@ -71,7 +71,7 @@ game information
 === Whitebox Overall System Final
 
 .Building Block View.
-image::Building_Block_View_Final.svg["Building Block View Final"]
+image::Building_Block_View_Final_Fix.svg["Building Block View Final"]
 
 Motivation::
 
