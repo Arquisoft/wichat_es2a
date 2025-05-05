@@ -796,6 +796,94 @@ describe('User Service', () => {
       expect(response.body.error).toBe('Las contraseñas no coinciden.');
     });
 
-    // Tests for updating user
+
+    // --- TESTS ANTI-INYECCIÓN Y VALIDACIÓN ESTRICTA ---
+    describe('Anti-inyección y validación estricta de username/query', () => {
+      const maliciousUsernames = [
+        { value: { $ne: '' }, desc: 'objeto $ne' },
+        { value: { $gt: '' }, desc: 'objeto $gt' },
+        { value: ["array"], desc: 'array' },
+        { value: 'user; drop table', desc: 'caracteres especiales' },
+        { value: 'user$', desc: 'caracteres no permitidos' },
+        { value: 'a'.repeat(25), desc: 'demasiado largo' },
+        { value: '', desc: 'vacío' },
+      ];
+
+      maliciousUsernames.forEach(({ value, desc }) => {
+        it(`rechaza registro con username malicioso (${desc})`, async () => {
+          const res = await request(app)
+            .post('/adduser')
+            .send({ username: value, password: 'Password1!', confirmPassword: 'Password1!' });
+          expect(res.status).toBe(400);
+          expect(res.body.error).toMatch(/usuario/i);
+        });
+
+        it(`rechaza búsqueda de ID con username malicioso (${desc})`, async () => {
+          const res = await request(app)
+            .get('/getUserId')
+            .query({ username: value });
+          expect(res.status).toBe(404);
+          expect(res.body.error).toMatch(/usuario/i);
+        });
+
+        it(`rechaza /listRequests con username malicioso (${desc})`, async () => {
+          const res = await request(app)
+            .get('/listRequests')
+            .query({ username: value });
+          expect(res.status).toBe(404);
+          expect(res.body.error).toMatch(/usuario/i);
+        });
+      });
+
+      const maliciousFriends = [
+        { username: 'testuser', friendUsername: { $ne: '' }, desc: 'friendUsername objeto $ne' },
+        { username: { $ne: '' }, friendUsername: 'testuser', desc: 'username objeto $ne' },
+        { username: 'testuser', friendUsername: 'user$', desc: 'friendUsername caracteres no permitidos' },
+      ];
+
+      maliciousFriends.forEach(({ username, friendUsername, desc }) => {
+        it(`rechaza addFriend con datos maliciosos (${desc})`, async () => {
+          await User.create({ username: 'testuser', password: await bcrypt.hash('Password1!', 10) });
+          const res = await request(app)
+            .post('/addFriend')
+            .send({ username, friendUsername });
+          expect(res.status).toBe(400);
+          expect(res.body.error).toMatch(/usuario/i);
+        });
+
+        it(`rechaza removeFriend con datos maliciosos (${desc})`, async () => {
+          await User.create({ username: 'testuser', password: await bcrypt.hash('Password1!', 10) });
+          const res = await request(app)
+            .post('/removeFriend')
+            .send({ username, friendUsername });
+          expect(res.status).toBe(400);
+          expect(res.body.error).toMatch(/usuario/i);
+        });
+      });
+
+      it('rechaza /searchUsers con query malicioso (objeto)', async () => {
+        const res = await request(app)
+          .get('/searchUsers')
+          .query({ query: JSON.stringify({ $ne: '' }) });
+        expect(res.status).toBe(400);
+        expect(res.body.error).toMatch(/búsqueda/i);
+      });
+
+      it('rechaza /searchUsers con query malicioso (caracteres especiales)', async () => {
+        const res = await request(app)
+          .get('/searchUsers')
+          .query({ query: 'user$' });
+        expect(res.status).toBe(400);
+        expect(res.body.error).toMatch(/búsqueda/i);
+      });
+
+      it('rechaza /searchUsers con query demasiado largo', async () => {
+        const res = await request(app)
+          .get('/searchUsers')
+          .query({ query: 'a'.repeat(25) });
+        expect(res.status).toBe(400);
+        expect(res.body.error).toMatch(/búsqueda/i);
+      });
+    });
 
 });
