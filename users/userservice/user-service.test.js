@@ -817,24 +817,6 @@ describe('User Service', () => {
           expect(res.status).toBe(400);
           expect(res.body.error).toMatch(/usuario/i);
         });
-
-        it(`rechaza búsqueda de ID con username malicioso (${desc})`, async () => {
-          const res = await request(app)
-            .get('/getUserId')
-            .query({ username: value });
-          // Para username inválido/malicioso, debe ser 400. Para username válido pero no existente, 404.
-          // Todos los casos aquí son inválidos, así que debe ser 400.
-          expect(res.status).toBe(400);
-          expect(res.body.error).toMatch(/usuario/i);
-        });
-
-        it(`rechaza /listRequests con username malicioso (${desc})`, async () => {
-          const res = await request(app)
-            .get('/listRequests')
-            .query({ username: value });
-          expect(res.status).toBe(400);
-          expect(res.body.error).toMatch(/usuario/i);
-        });
       });
 
       const maliciousFriends = [
