@@ -3,7 +3,7 @@ name: Deploy to Oracle K8s Cluster
 on:
   push:
     branches:
-      - Deployment-Kubernetes  # o la rama que quieras utilizar para despliegues
+      - Deployment-Kubernetes
 
 jobs:
   build-and-deploy:
@@ -13,122 +13,245 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2      # Configurar acceso a las máquinas Oracle
+        uses: docker/setup-buildx-action@v2
+
+      # Setup SSH keys for Oracle VMs
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa_master
           chmod 600 ~/.ssh/id_rsa_master
           
-          # Si hay una clave específica para el worker, configurarla también
-          if [ ! -z "${{ secrets.WORKER_DEPLOY_KEY }}" ]; then
+          if [ -n "${{ secrets.WORKER_DEPLOY_KEY }}" ]; then
             echo "${{ secrets.WORKER_DEPLOY_KEY }}" > ~/.ssh/id_rsa_worker
             chmod 600 ~/.ssh/id_rsa_worker
           fi
           
-          # Deshabilitar la verificación de host conocidos para mayor facilidad
           echo "StrictHostKeyChecking no" > ~/.ssh/config
 
-      # Construir imágenes Docker y enviarlas al registro 
-      # (puedes usar GitHub Container Registry u otro servicio)
+      # Login to GitHub Container Registry
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          
+      # Generate lowercase repository name
+      - name: Generate lowercase repo name
+        id: repo-name
+        run: |
+          echo "name=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      # Construir y publicar la imagen de mathgame
+      # Build and push MathGame image
       - name: Build and push MathGame image
         uses: docker/build-push-action@v4
         with:
           context: ./mathGame
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wichat-mathgame:latest
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-mathgame:latest
 
-      # Construir y publicar la imagen de userservice
+      # Build and push UserService image
       - name: Build and push UserService image
         uses: docker/build-push-action@v4
         with:
           context: ./users/userservice
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wichat-userservice:latest
-      
-      # Añadir más pasos similares para construir los demás servicios
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-userservice:latest
 
-      # Modificar los archivos YAML para usar las imágenes del registro
+      # Build and push AuthService image
+      - name: Build and push AuthService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./users/authservice
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-authservice:latest
+          
+      # Build and push GroupService image
+      - name: Build and push GroupService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./users/groupservice
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-groupservice:latest
+      
+      # Build and push GatewayService image
+      - name: Build and push GatewayService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./gatewayservice
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-gatewayservice:latest
+          
+      # Build and push WebApp image
+      - name: Build and push WebApp image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./webapp
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-webapp:latest
+          
+      # Build and push WikiData image
+      - name: Build and push WikiData image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./wikidata
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-wikidata:latest
+          
+      # Build and push LLM service image
+      - name: Build and push LLMService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./llmservice
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-llmservice:latest
+          
+      # Build and push API service image
+      - name: Build and push APIService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./apiservice
+          push: true
+          tags: ghcr.io/${{ steps.repo-name.outputs.name }}/wichat-apiservice:latest
+      
+      # Update Kubernetes YAML files
       - name: Update Kubernetes YAML files
         run: |
-          sed -i 's|image: wichat-mathgame:latest|image: ghcr.io/${{ github.repository_owner }}/wichat-mathgame:latest|g' k8s/mathgame.yaml
+          LOWERCASE_REPO="${{ steps.repo-name.outputs.name }}"
+          
+          # Update MathGame image
+          sed -i "s|image: wichat-mathgame:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-mathgame:latest|g" k8s/mathgame.yaml
           sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/mathgame.yaml
           
-          sed -i 's|image: wichat-userservice:latest|image: ghcr.io/${{ github.repository_owner }}/wichat-userservice:latest|g' k8s/userservice.yaml
+          # Update UserService image
+          sed -i "s|image: wichat-userservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-userservice:latest|g" k8s/userservice.yaml
           sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/userservice.yaml
           
-          # Continuar con los demás archivos YAML
+          # Update AuthService image
+          sed -i "s|image: wichat-authservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-authservice:latest|g" k8s/authservice.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/authservice.yaml
+          
+          # Update GroupService image
+          sed -i "s|image: wichat-groupservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-groupservice:latest|g" k8s/groupservice.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/groupservice.yaml
+          
+          # Update GatewayService image
+          sed -i "s|image: wichat-gatewayservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-gatewayservice:latest|g" k8s/gatewayservice.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/gatewayservice.yaml
+          
+          # Update WebApp image
+          sed -i "s|image: wichat-webapp:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-webapp:latest|g" k8s/webapp.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/webapp.yaml
+          
+          # Update WikiData image
+          sed -i "s|image: wichat-wikidata:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-wikidata:latest|g" k8s/wikidata.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/wikidata.yaml
+          
+          # Update LLM service image
+          sed -i "s|image: wichat-llmservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-llmservice:latest|g" k8s/llm-mathgame.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/llm-mathgame.yaml
+          
+          # Update API service image if it exists
+          if [ -f "k8s/api-gateway.yaml" ]; then
+            sed -i "s|image: wichat-apiservice:latest|image: ghcr.io/${LOWERCASE_REPO}/wichat-apiservice:latest|g" k8s/api-gateway.yaml
+            sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/api-gateway.yaml
+          fi
 
-      # Copiar los archivos al nodo maestro
+      # Copy files to master node
       - name: Copy files to master node
         run: |
-          scp -o StrictHostKeyChecking=no -r k8s/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/${{ secrets.DEPLOY_USER }}/wichat_k8s/
+          scp -i $HOME/.ssh/id_rsa_master -r k8s/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/${{ secrets.DEPLOY_USER }}/wichat_k8s/
 
-      # Aplicar configuraciones en el clúster Kubernetes
+      # Deploy to Kubernetes cluster
       - name: Deploy to Kubernetes cluster
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+          ssh -i $HOME/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
             cd /home/${{ secrets.DEPLOY_USER }}/wichat_k8s
+            
+            # Apply base configurations
             kubectl apply -f namespace.yaml
             kubectl apply -f secrets.yaml
             kubectl apply -f mongodb.yaml
+            
+            # Apply all service configurations
             kubectl apply -f mathgame.yaml
             kubectl apply -f userservice.yaml
-            # Continuar con los demás servicios
+            kubectl apply -f authservice.yaml
+            kubectl apply -f groupservice.yaml
+            kubectl apply -f gatewayservice.yaml
+            kubectl apply -f webapp.yaml
+            kubectl apply -f wikidata.yaml
+            kubectl apply -f llm-mathgame.yaml
+            
+            # Apply external services and ingress
+            if [ -f "api-gateway.yaml" ]; then
+              kubectl apply -f api-gateway.yaml
+            fi
+            
+            # Apply ingress last
             kubectl apply -f ingress.yaml
           '
 
-      # Configurar worker si está definido
+      # Configure worker node if worker IP is provided
       - name: Configure worker node
-        env:
-          WORKER_IP: ${{ secrets.WORKER_IP }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          WORKER_DEPLOY_USER: ${{ secrets.WORKER_DEPLOY_USER }}
+        continue-on-error: false
         run: |
-          # Determinar qué clave SSH usar para el worker
-          SSH_KEY_PATH="~/.ssh/id_rsa_master"
-          if [ -f "~/.ssh/id_rsa_worker" ]; then
-            SSH_KEY_PATH="~/.ssh/id_rsa_worker"
+          # Check if worker IP is provided
+          if [ -z "${{ secrets.WORKER_IP }}" ]; then
+            echo "No worker IP provided, skipping worker configuration"
+            exit 0
           fi
           
-          # Obtener el comando join desde el nodo master
-          JOIN_COMMAND=$(ssh -i ~/.ssh/id_rsa_master $DEPLOY_USER@$DEPLOY_HOST "sudo cat /root/join-command.sh")
+          echo "Configuring worker node at ${{ secrets.WORKER_IP }}"
           
-          # Configurar el worker
-          WORKER_USER=${WORKER_DEPLOY_USER:-$DEPLOY_USER}
-          scp -i $SSH_KEY_PATH scripts/setup-k8s.sh $WORKER_USER@$WORKER_IP:/tmp/
-          ssh -i $SSH_KEY_PATH $WORKER_USER@$WORKER_IP "sudo bash /tmp/setup-k8s.sh && sudo $JOIN_COMMAND"
+          # Determine which SSH key to use
+          SSH_KEY_PATH="$HOME/.ssh/id_rsa_master"
+          if [ -f "$HOME/.ssh/id_rsa_worker" ]; then
+            SSH_KEY_PATH="$HOME/.ssh/id_rsa_worker"
+          fi
+          
+          # Get join command from master node
+          JOIN_COMMAND=$(ssh -i $HOME/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "sudo cat /root/join-command.sh")
+          
+          # Determine worker user
+          if [ -n "${{ secrets.WORKER_DEPLOY_USER }}" ]; then
+            WORKER_USER="${{ secrets.WORKER_DEPLOY_USER }}"
+          else
+            WORKER_USER="${{ secrets.DEPLOY_USER }}"
+          fi
+          
+          # Configure worker node
+          scp -i $SSH_KEY_PATH scripts/setup-k8s.sh $WORKER_USER@${{ secrets.WORKER_IP }}:/tmp/
+          ssh -i $SSH_KEY_PATH $WORKER_USER@${{ secrets.WORKER_IP }} "sudo bash /tmp/setup-k8s.sh && sudo $JOIN_COMMAND"
 
-      # Configurar port-forwards necesarios
+      # Configure port forwarding
       - name: Configure port forwarding
         run: |
-          ssh -i ~/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
-            # Instalar nohup para mantener los procesos en segundo plano
+          ssh -i $HOME/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
             sudo apt-get install -y nohup
             
-            # Eliminar cualquier port-forward existente
+            # Kill any existing port-forwards
             pkill -f "kubectl port-forward" || true
             
-            # Configurar nuevos port-forwards en segundo plano
+            # Set up port forwards for all services
             nohup kubectl port-forward -n wichat-es2a service/gatewayservice 8000:8000 --address=0.0.0.0 > /tmp/gateway.log 2>&1 &
             nohup kubectl port-forward -n wichat-es2a service/mathgame 3002:3002 --address=0.0.0.0 > /tmp/mathgame.log 2>&1 &
             nohup kubectl port-forward -n wichat-es2a service/webapp 3000:3000 --address=0.0.0.0 > /tmp/webapp.log 2>&1 &
-            # Añadir más port-forwards según sea necesario
+            nohup kubectl port-forward -n wichat-es2a service/userservice 3001:3001 --address=0.0.0.0 > /tmp/userservice.log 2>&1 &
+            nohup kubectl port-forward -n wichat-es2a service/authservice 3003:3003 --address=0.0.0.0 > /tmp/authservice.log 2>&1 &
+            nohup kubectl port-forward -n wichat-es2a service/groupservice 3004:3004 --address=0.0.0.0 > /tmp/groupservice.log 2>&1 &
+            nohup kubectl port-forward -n wichat-es2a service/wikidata 3005:3005 --address=0.0.0.0 > /tmp/wikidata.log 2>&1 &
+            
+            # Check if port-forwards are running
+            sleep 2
+            ps aux | grep "kubectl port-forward" | grep -v grep
           '
 
-      # Comprobar el estado del despliegue
+      # Check deployment status
       - name: Check deployment status
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+          ssh -i $HOME/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
             kubectl get pods -n wichat-es2a
             kubectl get services -n wichat-es2a
           '
