@@ -822,7 +822,9 @@ describe('User Service', () => {
           const res = await request(app)
             .get('/getUserId')
             .query({ username: value });
-          expect(res.status).toBe(404);
+          // Para username inválido/malicioso, debe ser 400. Para username válido pero no existente, 404.
+          // Todos los casos aquí son inválidos, así que debe ser 400.
+          expect(res.status).toBe(400);
           expect(res.body.error).toMatch(/usuario/i);
         });
 
@@ -830,7 +832,7 @@ describe('User Service', () => {
           const res = await request(app)
             .get('/listRequests')
             .query({ username: value });
-          expect(res.status).toBe(404);
+          expect(res.status).toBe(400);
           expect(res.body.error).toMatch(/usuario/i);
         });
       });
