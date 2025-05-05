@@ -8,8 +8,8 @@ app.use(express.json());
 const PORT = process.env.MATHGAME_PORT || 3002;
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`MathGame service listening at http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`MathGame service listening on port ${PORT}`);
   });
 }
 

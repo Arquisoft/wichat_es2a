@@ -1,0 +1,135 @@
+name: Deploy to Oracle K8s Cluster
+
+on:
+  push:
+    branches:
+      - main  # o la rama que quieras utilizar para despliegues
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2      # Configurar acceso a las máquinas Oracle
+      - name: Setup SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa_master
+          chmod 600 ~/.ssh/id_rsa_master
+          
+          # Si hay una clave específica para el worker, configurarla también
+          if [ ! -z "${{ secrets.WORKER_DEPLOY_KEY }}" ]; then
+            echo "${{ secrets.WORKER_DEPLOY_KEY }}" > ~/.ssh/id_rsa_worker
+            chmod 600 ~/.ssh/id_rsa_worker
+          fi
+          
+          # Deshabilitar la verificación de host conocidos para mayor facilidad
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+
+      # Construir imágenes Docker y enviarlas al registro 
+      # (puedes usar GitHub Container Registry u otro servicio)
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Construir y publicar la imagen de mathgame
+      - name: Build and push MathGame image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./mathGame
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/wichat-mathgame:latest
+
+      # Construir y publicar la imagen de userservice
+      - name: Build and push UserService image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./users/userservice
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/wichat-userservice:latest
+      
+      # Añadir más pasos similares para construir los demás servicios
+
+      # Modificar los archivos YAML para usar las imágenes del registro
+      - name: Update Kubernetes YAML files
+        run: |
+          sed -i 's|image: wichat-mathgame:latest|image: ghcr.io/${{ github.repository_owner }}/wichat-mathgame:latest|g' k8s/mathgame.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/mathgame.yaml
+          
+          sed -i 's|image: wichat-userservice:latest|image: ghcr.io/${{ github.repository_owner }}/wichat-userservice:latest|g' k8s/userservice.yaml
+          sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' k8s/userservice.yaml
+          
+          # Continuar con los demás archivos YAML
+
+      # Copiar los archivos al nodo maestro
+      - name: Copy files to master node
+        run: |
+          scp -o StrictHostKeyChecking=no -r k8s/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/${{ secrets.DEPLOY_USER }}/wichat_k8s/
+
+      # Aplicar configuraciones en el clúster Kubernetes
+      - name: Deploy to Kubernetes cluster
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+            cd /home/${{ secrets.DEPLOY_USER }}/wichat_k8s
+            kubectl apply -f namespace.yaml
+            kubectl apply -f secrets.yaml
+            kubectl apply -f mongodb.yaml
+            kubectl apply -f mathgame.yaml
+            kubectl apply -f userservice.yaml
+            # Continuar con los demás servicios
+            kubectl apply -f ingress.yaml
+          '
+
+      # Configurar worker si está definido
+      - name: Configure worker node
+        if: ${{ vars.SETUP_WORKER == 'true' }}
+        env:
+          WORKER_IP: ${{ secrets.WORKER_IP }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          WORKER_DEPLOY_USER: ${{ secrets.WORKER_DEPLOY_USER }}
+        run: |
+          # Determinar qué clave SSH usar para el worker
+          SSH_KEY_PATH="~/.ssh/id_rsa_master"
+          if [ -f "~/.ssh/id_rsa_worker" ]; then
+            SSH_KEY_PATH="~/.ssh/id_rsa_worker"
+          fi
+          
+          # Obtener el comando join desde el nodo master
+          JOIN_COMMAND=$(ssh -i ~/.ssh/id_rsa_master $DEPLOY_USER@$DEPLOY_HOST "sudo cat /root/join-command.sh")
+          
+          # Configurar el worker
+          WORKER_USER=${WORKER_DEPLOY_USER:-$DEPLOY_USER}
+          scp -i $SSH_KEY_PATH scripts/setup-k8s.sh $WORKER_USER@$WORKER_IP:/tmp/
+          ssh -i $SSH_KEY_PATH $WORKER_USER@$WORKER_IP "sudo bash /tmp/setup-k8s.sh && sudo $JOIN_COMMAND"
+
+      # Configurar port-forwards necesarios
+      - name: Configure port forwarding
+        run: |
+          ssh -i ~/.ssh/id_rsa_master ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+            # Instalar nohup para mantener los procesos en segundo plano
+            sudo apt-get install -y nohup
+            
+            # Eliminar cualquier port-forward existente
+            pkill -f "kubectl port-forward" || true
+            
+            # Configurar nuevos port-forwards en segundo plano
+            nohup kubectl port-forward -n wichat-es2a service/gatewayservice 8000:8000 --address=0.0.0.0 > /tmp/gateway.log 2>&1 &
+            nohup kubectl port-forward -n wichat-es2a service/mathgame 3002:3002 --address=0.0.0.0 > /tmp/mathgame.log 2>&1 &
+            nohup kubectl port-forward -n wichat-es2a service/webapp 3000:3000 --address=0.0.0.0 > /tmp/webapp.log 2>&1 &
+            # Añadir más port-forwards según sea necesario
+          '
+
+      # Comprobar el estado del despliegue
+      - name: Check deployment status
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+            kubectl get pods -n wichat-es2a
+            kubectl get services -n wichat-es2a
+          '

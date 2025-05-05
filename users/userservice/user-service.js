@@ -499,20 +499,36 @@ app.post('/sendPrivateMessage', async (req, res) => {
 app.get('/getPrivateMessages/:user1/:user2', async (req, res) => {
   try {
     const { user1, user2 } = req.params;
+    
+    console.log(`Fetching messages between users ${user1} and ${user2}`);
+    
+    // Convertir IDs a ObjectId de MongoDB si son válidos
+    const mongoose = require('mongoose');
+    let user1Id, user2Id;
+    
+    try {
+      user1Id = mongoose.Types.ObjectId.createFromHexString(user1);
+      user2Id = mongoose.Types.ObjectId.createFromHexString(user2);
+    } catch (err) {
+      console.error('Error converting IDs to ObjectId:', err);
+      return res.status(400).json({ error: 'Invalid user IDs format' });
+    }
 
     const messages = await PrivateMessage.find({
       $or: [
-        { sender: user1, receiver: user2 },
-        { sender: user2, receiver: user1 }
+        { sender: user1Id, receiver: user2Id },
+        { sender: user2Id, receiver: user1Id }
       ]
     })
     .sort({ createdAt: 1 }) // Ordenar por fecha de creación ascendente
     .populate('sender', 'username')
     .populate('receiver', 'username')
     .exec();
-
+    
+    console.log(`Found ${messages.length} messages`);
     res.json(messages);
   } catch (error) {
+    console.error('Error in getPrivateMessages:', error);
     res.status(500).json({ error: error.message });
   }
 });

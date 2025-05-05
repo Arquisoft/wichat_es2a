@@ -37,18 +37,33 @@ module.exports = app;
 // This route will return n questions from the database based on the specified category and delete them from the database.
 // Example: http://localhost:3001/wikidata/question/Lugares/10
 app.get("/wikidata/question/:category/:number", async (req, res) => {
-    const category= req.params.category;
+    const category = req.params.category;
     const raw = parseInt(req.params.number, 10);
     // si no es un entero válido, usar tu valor por defecto
     const n = Number.isNaN(raw) || raw < 1 
       ? require('./utils/config').defaultConfig.numQuestions 
-      : raw;    
-      try {
+      : raw;
+      
+    console.log(`Received request for ${n} questions in category: ${category}`);
+    try {
         const questions = await service.getQuestions(category, n);
+        
+        if (!questions || questions.length === 0) {
+            console.warn(`No questions available for category: ${category}`);
+            return res.status(404).json({ 
+                error: "No questions available for this category", 
+                message: "Try a different category or try again later."
+            });
+        }
+        
+        console.log(`Returning ${questions.length} questions for category: ${category}`);
         res.json(questions);
     } catch (error) {
         console.error("Error getting the questions:", error);
-        res.status(500).json({ error: "Error getting the questions from Wikidata" });
+        res.status(500).json({ 
+            error: "Error getting the questions", 
+            message: "An error occurred while retrieving questions. Please try again later."
+        });
     }
 });
 
@@ -240,6 +255,7 @@ app.get('/game/statistics', async (req, res) => {
 // Example: http://localhost:3001/game/ranking
 app.get('/game/ranking', async (req, res) => {
     try {
+        console.log("Fetching ranking data");
         
         const filter = { isCompleted: true };
         const sort = { points: -1 };
@@ -247,11 +263,25 @@ app.get('/game/ranking', async (req, res) => {
         const options = { sort, limit };
         const projection = null;
         
-        const games = await Game.find(filter, projection, options);
+        // Use a try-catch to handle potential MongoDB connection issues
+        let games;
+        try {
+            games = await Game.find(filter, projection, options).maxTimeMS(5000); // Add timeout
+        } catch (dbError) {
+            console.error("Database error when fetching ranking:", dbError);
+            return res.status(503).json({ 
+                error: "Database error", 
+                message: "Unable to retrieve ranking data. Please try again later." 
+            });
+        }
         
         if (!games || games.length === 0) {
+            console.log("No ranking data found");
+            // Return an empty array with HTTP 200 as this isn't necessarily an error
             return res.json([]);
         }
+        
+        console.log(`Found ${games.length} entries for ranking`);
         
         const ranking = games.map(game => {
             const createdAt = new Date(game.createdAt);
@@ -259,23 +289,26 @@ app.get('/game/ranking', async (req, res) => {
             
             return {
                 userId: game.userId,
-                username : game.username,
+                username: game.username || "Unknown Player",
                 correct: game.correct,
                 wrong: game.wrong,
                 duration: game.duration,
                 createdAt: formattedDate,
-                category: game.category,
-                level: game.level,
-                totalQuestions: game.totalQuestions,
-                answered: game.answered,
-                points: game.points
+                category: game.category || "Mixed",
+                level: game.level || "Standard",
+                totalQuestions: game.totalQuestions || 10,
+                answered: game.answered || 0,
+                points: game.points || 0
             };
         });
 
         res.json(ranking);
     } catch (error) {
         console.error("Error al obtener el ranking del juego:", error);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ 
+            error: "Internal server error",
+            message: "An unexpected error occurred. Please try again later."
+        });
     }
 });
 

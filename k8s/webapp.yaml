@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  namespace: wichat-es2a
+  labels:
+    app: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: webapp
+        image: wichat-webapp:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_GATEWAY_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gateway-config
+              key: REACT_APP_GATEWAY_URL
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+  namespace: wichat-es2a
+  annotations:
+    # Estas anotaciones ayudan al balanceo de carga
+    service.beta.kubernetes.io/external-traffic: "OnlyLocal"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  selector:
+    app: webapp
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+  # Mantenemos el tipo LoadBalancer para tener ambas opciones
+  type: LoadBalancer
+  # Aseguramos que la IP externa se mantenga estable
+  externalTrafficPolicy: Local
+  # Mejorar el balanceo de carga entre pods
+  sessionAffinity: None
+  # Evita que las conexiones se cierren prematuramente
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+

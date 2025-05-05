@@ -230,7 +230,6 @@ app.post('/mathgame/verify', (req, res) =>
   handleProxyRequest(res, axios.post, [`${mathGameServiceUrl}/mathgame/verify`, req.body], 'Error verifying math answer')
 );
 
-
 // Start the gateway service
 const server = app.listen(port, () => {
   console.log(`Gateway Service listening at http://localhost:${port}`);

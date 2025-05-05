@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-load-balancer-conf
+  namespace: ingress-nginx
+data:
+  proxy-body-size: "0"
+  proxy-connect-timeout: "300"
+  proxy-read-timeout: "300"
+  proxy-send-timeout: "300"
+  keep-alive: "75"
+  keep-alive-requests: "100"
+  upstream-keepalive-connections: "10000"
+  upstream-keepalive-time: "1h"
+  upstream-keepalive-timeout: "60s"
+  # Configuración para balanceo de carga
+  load-balance: "round_robin"
+  upstream-max-fails: "3"
+  upstream-fail-timeout: "30s"
+  client-max-body-size: "50m"
+  # Buffer de cliente aumentado para conexiones lentas
+  client-header-buffer-size: "1k"
+  large-client-header-buffers: "4 8k"
+  # Configuración para mejor rendimiento
+  worker-processes: "auto"
+  worker-connections: "20000"

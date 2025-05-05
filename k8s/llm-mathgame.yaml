@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llmservice-config
+  namespace: wichat-es2a
+data:
+  MONGODB_URI: "mongodb://mongodb-service:27017/llmdb"
+  DEPLOY_HOST: "wichat-es2a.local"
+  WEBAPP_PORT: "3000"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llmservice
+  namespace: wichat-es2a
+  labels:
+    app: llmservice
+spec:
+  replicas: 1  # Servicio que puede requerir más recursos, menos réplicas
+  selector:
+    matchLabels:
+      app: llmservice
+  template:
+    metadata:
+      labels:
+        app: llmservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: llmservice
+        image: wichat-llmservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8003
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            configMapKeyRef:
+              name: llmservice-config
+              key: MONGODB_URI
+        - name: DEPLOY_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: llmservice-config
+              key: DEPLOY_HOST
+        - name: WEBAPP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: llmservice-config
+              key: WEBAPP_PORT
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-keys
+              key: GEMINI_API_KEY
+        - name: EMPATHY_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-keys
+              key: EMPATHY_API_KEY
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llmservice
+  namespace: wichat-es2a
+spec:
+  selector:
+    app: llmservice
+  ports:
+  - port: 8003
+    targetPort: 8003
+  type: ClusterIP
+
+
+
+

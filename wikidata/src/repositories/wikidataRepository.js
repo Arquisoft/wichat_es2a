@@ -72,24 +72,37 @@ const repository = {
       throw new Error(`Error inserting questions: ${error.message}`);
     }
   },
-
   /**
    * Get a random set of questions from the database based on the specified category.
    * @param {String} category - Question category
    * @param {int} n - Number of questions to retrieve
    * @throws {Error} Throws an error if the database connection check fails or if there is an error during the retrieval process.
-   * @returns A random set of questions from the database based on the specified category
+   * @returns A random set of questions from the database based on the specified category, or an empty array if none found
    */
   getQuestions: async function (category, n = 10) {
     try {
       await module.exports.checkUp();
+      const count = await Question.countDocuments({ category: category });
+      
+      // If no documents match category, return empty array
+      if (count === 0) {
+        console.log(`No questions found in database for category: ${category}`);
+        return [];
+      }
+      
+      // Limit n to the actual number of documents available
+      const size = Math.min(parseInt(n), count);
+      
       let result = await Question.aggregate([
         { $match: { category: category } },
-        { $sample: { size: parseInt(n) } }
+        { $sample: { size: size } }
       ]);
+      
       return result;
     } catch (error) {
-      throw new Error(`Error getting questions: ${error.message}`);
+      console.error(`Error getting questions from DB: ${error.message}`);
+      // Return empty array instead of throwing, let service handle fallback
+      return [];
     }
   },
 

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: groupservice-config
+  namespace: wichat-es2a
+data:
+  MONGODB_URI: "mongodb://mongodb-service:27017/groupdb"
+  GATEWAY_URL: "http://gatewayservice:8000"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: groupservice
+  namespace: wichat-es2a
+  labels:
+    app: groupservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: groupservice
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: groupservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: groupservice
+        image: wichat-groupservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8004
+
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            configMapKeyRef:
+              name: groupservice-config
+              key: MONGODB_URI
+        - name: GATEWAY_URL
+          valueFrom:
+            configMapKeyRef:
+              name: groupservice-config
+              key: GATEWAY_URL
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+            ephemeral-storage: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: groupservice
+  namespace: wichat-es2a
+spec:
+  selector:
+    app: groupservice
+  ports:
+  - port: 8004
+    targetPort: 8004
+  type: ClusterIP
+
+

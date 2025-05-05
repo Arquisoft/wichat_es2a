@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gatewayservice-external
+  namespace: wichat-es2a
+spec:
+  type: NodePort
+  selector:
+    app: gatewayservice
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 30127  # Este puerto será accesible desde fuera como <minikube-ip>:30080

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: wichat-es2a
+data:
+  REACT_APP_GATEWAY_URL: "http://127.0.0.1:8000"

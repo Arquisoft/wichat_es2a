@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatewayservice-config
+  namespace: wichat-es2a
+data:
+  AUTH_SERVICE_URL: "http://authservice:8002"
+  USER_SERVICE_URL: "http://userservice:8001"
+  LLM_SERVICE_URL: "http://llmservice:8003"
+  WIKIDATA_SERVICE_URL: "http://wikidata:3001"
+  GROUP_SERVICE_URL: "http://groupservice:8004"
+  MATHGAME_SERVICE_URL: "http://mathgame:3002"
+  DEPLOY_HOST: "wichat-es2a.local"
+  WEBAPP_PORT: "3000"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatewayservice
+  namespace: wichat-es2a
+  labels:
+    app: gatewayservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gatewayservice
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: gatewayservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: gatewayservice
+        image: wichat-gatewayservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        env:
+        - name: AUTH_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: AUTH_SERVICE_URL
+        - name: USER_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: USER_SERVICE_URL
+        - name: LLM_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: LLM_SERVICE_URL
+        - name: WIKIDATA_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: WIKIDATA_SERVICE_URL
+        - name: GROUP_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: GROUP_SERVICE_URL
+        - name: MATHGAME_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: MATHGAME_SERVICE_URL
+        - name: DEPLOY_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: DEPLOY_HOST
+        - name: WEBAPP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: gatewayservice-config
+              key: WEBAPP_PORT
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gatewayservice
+  namespace: wichat-es2a
+spec:
+  selector:
+    app: gatewayservice
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: LoadBalancer
