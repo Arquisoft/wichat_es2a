@@ -7,6 +7,7 @@ const Message = require('./message-model');
 const PrivateMessage = require('./private-message-model');
 
 const app = express();
+const usernameRegex = /^[a-zA-Z0-9_\-]{3,20}$/;
 app.disable('x-powered-by');
 
 const port = 8001;
@@ -37,11 +38,18 @@ app.post('/adduser', async (req, res) => {
 
     const { username, password, confirmPassword, avatarOptions } = req.body;
 
-    // Validación de longitud del username
+    // Validar tipo de username
+    if (typeof username !== 'string') {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
+    // Validar longitud de username
     if (username.length < 3 || username.length > 20) {
       return res.status(400).json({ error: "El nombre de usuario debe tener entre 3 y 20 caracteres." });
     }
-
+    // Validar formato de username para evitar NoSQL Injection
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
     // Verificar si el nombre de usuario ya existe
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
@@ -87,11 +95,12 @@ app.put('/users/:id', async (req, res) => {
   try {
     const { username, avatarOptions } = req.body;
 
-    // Validación de longitud del username
-    if (username.length < 3 || username.length > 20) {
-      return res.status(400).json({ error: "El nombre de usuariio debe tener entre 3 y 20 caracteres." });
+    if (typeof username !== 'string' || username.length < 3 || username.length > 20) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
     }
-
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
     // Verificar si el nombre de usuario ya existe
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser && existingUser._id.toString() !== req.params.id) {
@@ -120,33 +129,31 @@ app.post('/addFriend', async (req, res) => {
     // Verificar que los campos requeridos estén presentes
     validateRequiredFields(req, ['username', 'friendUsername']);
     const { username, friendUsername } = req.body;
-    
+    // Validar tipo y formato de username y friendUsername
+    if (typeof username !== 'string' || typeof friendUsername !== 'string' ||
+        !usernameRegex.test(username) || !usernameRegex.test(friendUsername)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
     // Verificar que el usuario no intente agregarse a sí mismo como amigo
     if (username === friendUsername) {
       return res.status(400).json({ error: "No puedes agregarte a ti mismo como amigo" });
     }
-    
     // Buscar al usuario y al amigo
     const user = await User.findOne({ username });
     const friend = await User.findOne({ username: friendUsername });
-    
     if (!friend) {
       return res.status(404).json({ error: "El usuario no fue encontrado" });
     }
-    
     // Verificar que no sean ya amigos
     if (user.friends.includes(friend._id)) {
       return res.status(400).json({ error: "Ya tienes a este usuario como amigo." });
     }
-    
     // Agregar la amistad en ambas direcciones
     user.friends.push(friend._id);
     friend.friends.push(user._id);
-    
     // Guardar los cambios
     await user.save();
     await friend.save();
-    
     // Responder con el mensaje de éxito
     res.status(200).json({ message: `Ahora ${username} y ${friendUsername} son amigos.` });
   } catch (error) {
@@ -190,6 +197,10 @@ app.get('/searchUsers', async (req, res) => {
       return res.status(400).json({ error: "Se requiere un término de búsqueda" });
     }
 
+    // Validar el query para evitar NoSQL Injection
+    if (typeof query !== 'string' || query.length < 1 || query.length > 20 || /[^a-zA-Z0-9_\-]/.test(query)) {
+      return res.status(400).json({ error: 'Término de búsqueda inválido' });
+    }
     // Buscar usuarios cuyo 'username' coincida parcialmente con el query
     const users = await User.find({ username: { $regex: query, $options: 'i' } }).limit(10);
 
@@ -205,34 +216,32 @@ app.post('/removeFriend', async (req, res) => {
     // Verificar que los campos requeridos estén presentes
     validateRequiredFields(req, ['username', 'friendUsername']);
     const { username, friendUsername } = req.body;
-
+    // Validar tipo y formato de username y friendUsername
+    if (typeof username !== 'string' || typeof friendUsername !== 'string' ||
+        !usernameRegex.test(username) || !usernameRegex.test(friendUsername)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
     // Verificar que el usuario no intente eliminarse a sí mismo
     if (username === friendUsername) {
       return res.status(400).json({ error: "No puedes eliminarte a ti mismo de la lista de amigos" });
     }
-
     // Buscar al usuario y al amigo
     const user = await User.findOne({ username });
     const friend = await User.findOne({ username: friendUsername });
-
     // Verificar que ambos usuarios existan
     if (!user || !friend) {
       return res.status(404).json({ error: "Usuario o amigo no encontrado" });
     }
-
     // Verificar que sean amigos
     if (!user.friends.includes(friend._id)) {
       return res.status(400).json({ error: "No son amigos" });
     }
-
     // Eliminar la amistad en ambas direcciones
     user.friends = user.friends.filter(friendId => !friendId.equals(friend._id));
     friend.friends = friend.friends.filter(friendId => !friendId.equals(user._id));
-
     // Guardar los cambios
     await user.save();
     await friend.save();
-
     // Responder con un mensaje de éxito
     res.status(200).json({ message: `${friendUsername} ha sido eliminado de tus amigos.` });
 
@@ -245,6 +254,12 @@ app.post('/removeFriend', async (req, res) => {
 app.post('/acceptFriendRequest', async (req, res) => {
   try {
     const { username, friendUsername } = req.body;
+
+    // Validar tipo y formato de username y friendUsername
+    if (typeof username !== 'string' || typeof friendUsername !== 'string' ||
+        !usernameRegex.test(username) || !usernameRegex.test(friendUsername)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
 
     const user = await User.findOne({ username });
     const friend = await User.findOne({ username: friendUsername });
@@ -280,6 +295,12 @@ app.post('/rejectFriendRequest', async (req, res) => {
   try {
     const { username, friendUsername } = req.body;
 
+    // Validar tipo y formato de username y friendUsername
+    if (typeof username !== 'string' || typeof friendUsername !== 'string' ||
+        !usernameRegex.test(username) || !usernameRegex.test(friendUsername)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
+
     const user = await User.findOne({ username });
     const friend = await User.findOne({ username: friendUsername });
 
@@ -309,12 +330,19 @@ app.post('/rejectFriendRequest', async (req, res) => {
 // Endpoint para obtener las solicitudes de amistad de un usuario
 app.get('/listRequests', async (req, res) => {
   const { username } = req.query;  // Usamos query params para recibir el 'username'
-
-  if (!username) {
+  if (username === undefined) {
     return res.status(400).json({ error: 'Se requiere el nombre de usuario' });
+  }
+  // Si username es un array o no es string, rechazar
+  if (typeof username !== 'string' || Array.isArray(username) || !username) {
+    return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
   }
 
   try {
+    // Validar formato de username para evitar NoSQL Injection
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
+    }
     // Buscar al usuario por su nombre de usuario
     const user = await User.findOne({ username });
 
@@ -342,6 +370,11 @@ app.post('/sendFriendRequest', async (req, res) => {
       return res.status(400).json({ error: "No puedes enviarte una solicitud de amistad a ti mismo" });
     }
 
+    // Validar tipo y formato de username y friendUsername
+    if (typeof username !== 'string' || typeof friendUsername !== 'string' ||
+        !usernameRegex.test(username) || !usernameRegex.test(friendUsername)) {
+      return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
+    }
     // Buscar al usuario y al amigo
     const user = await User.findOne({ username });
     const friend = await User.findOne({ username: friendUsername });
@@ -378,8 +411,17 @@ app.get('/getUserId', async (req, res) => {
   try {
     const { username } = req.query;
 
-    if (!username) {
+
+    if (username === undefined) {
       return res.status(400).json({ error: 'Username is required' });
+    }
+    // Si username es un array o no es string, rechazar
+    if (typeof username !== 'string' || Array.isArray(username) || !username) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
+    }
+    // Validar formato de username para evitar NoSQL Injection
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
     }
     //console.log("Username:", username);
     const user = await User.findOne({ username });
@@ -440,6 +482,10 @@ app.post('/sendMessage', async (req, res) => {
       return res.status(400).json({ error: 'Faltan datos requeridos' });
     }
 
+    // Validar formato de username para evitar NoSQL Injection
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
+    }
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -474,8 +520,29 @@ app.post('/sendPrivateMessage', async (req, res) => {
   try {
     const { senderUsername, receiverUsername, content } = req.body;
 
-    if (!senderUsername || !receiverUsername || !content) {
+    if (
+      !senderUsername ||
+      !receiverUsername ||
+      !content ||
+      typeof senderUsername !== 'string' ||
+      typeof receiverUsername !== 'string'
+    ) {
       return res.status(400).json({ error: 'Faltan datos requeridos' });
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_\-]{3,20}$/;
+    if (
+      !usernameRegex.test(senderUsername) ||
+      !usernameRegex.test(receiverUsername)
+    ) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
+    }
+
+    if (
+      !usernameRegex.test(senderUsername) ||
+      !usernameRegex.test(receiverUsername)
+    ) {
+      return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
     }
 
     const sender = await User.findOne({ username: senderUsername });
