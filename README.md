@@ -14,7 +14,7 @@
 <img src="https://github.com/Arquisoft/wichat_es2a/blob/master/webapp/src/media/logoWiChat.svg" height="200">
 </p>
 
-## Development Team 👥💻🛠️
+## Development Team 👥💻
 | 👤 Name                        | 📧 Email                    | 🐱 GitHub                                                                 |
 | :----------------------------: | :------------------------: | :------------------------------------------------------------------------: |
 | Natalia Blanco Agudín          | UO295340@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-NataliaBlancoAgudin-brightgreen)](https://github.com/NataliaBlancoAgudin) |
@@ -24,7 +24,12 @@
 | Marcos Llanos Vega             | UO218982@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-softwaremarcos-brightgreen)](https://github.com/softwaremarcos)        |
 | Hugo Prendes Menéndez          | UO288294@uniovi.es          | [![GitHub](https://img.shields.io/badge/GitHub-prendess-brightgreen)](https://github.com/prendess)              |
 
+## Demo 🎥
 
+[![Demo Video](https://img.youtube.com/vi/KigafFwNIjs/0.jpg)](https://youtu.be/KigafFwNIjs)
+> ▶️ Watch a demo of the project in action by clicking the image above.
+
+## Context 🛠️
 This is a base project for the Software Architecture course in 2024/2025. It is a basic application composed of several components.
 
 - **User service**. Express service that handles the insertion of new users in the system.
@@ -136,11 +141,3 @@ This action uses three secrets that must be configured in the repository:
 - DEPLOY_KEY: key to authenticate the user in the remote machine.
 
 Note that this action logs in the remote machine and downloads the docker-compose file from the repository and launches it. Obviously, previous actions have been executed which have uploaded the docker images to the GitHub Packages repository.
-
-***
-
-# Demo
-
-👉 [Click here to see the demo](https://youtu.be/KigafFwNIjs)
-
-***
