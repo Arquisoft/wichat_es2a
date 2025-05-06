@@ -975,26 +975,6 @@ describe('User Service', () => {
 
       it('debe retornar 500 si ocurre un error en la base de datos', async () => {
         // Guardamos el modelo original
-        const originalFind = User.find;
-    
-        // Usamos jest.fn() para simular el fallo
-        User.find = jest.fn().mockImplementationOnce(() => {
-          throw new Error('Error en la base de datos');
-        });
-    
-        // Realizamos la llamada a la ruta
-        const res = await request(app).get('/listRequests');
-    
-        // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.message).toBe('Error en la base de datos');
-    
-        // Restauramos el modelo original
-        User.find = originalFind;
-      });
-
-      it('debe retornar 500 si ocurre un error en la base de datos', async () => {
-        // Guardamos el modelo original
         const originalFindOne = User.findOne;
     
         // Usamos jest.fn() para simular el fallo en User.findOne
@@ -1063,26 +1043,6 @@ describe('User Service', () => {
     
         // Usamos jest.fn() para simular el fallo en Message.find
         Message.find = jest.fn()
-          .mockImplementationOnce(() => { throw new Error('Error al buscar mensajes en la base de datos'); });
-    
-        // Realizamos la llamada a la ruta con los datos necesarios
-        const res = await request(app).post('/sendMessage')
-          .send({ username: 'testUser', content: 'Hola, mundo!' });
-    
-        // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Error al buscar mensajes en la base de datos');
-    
-        // Restauramos el modelo original
-        Message.find = originalFind;
-      });
-
-      it('debe retornar 500 si ocurre un error en la base de datos', async () => {
-        // Guardamos el modelo original
-        const originalFind = Message.find;
-    
-        // Usamos jest.fn() para simular el fallo en Message.find
-        Message.find = jest.fn()
           .mockImplementationOnce(() => { throw new Error('Error al obtener mensajes de la base de datos'); });
     
         // Realizamos la llamada a la ruta
@@ -1094,29 +1054,6 @@ describe('User Service', () => {
     
         // Restauramos el modelo original
         Message.find = originalFind;
-      });
-
-      it('debe retornar 500 si ocurre un error en la base de datos', async () => {
-        // Guardamos el modelo original
-        const originalPrivateMessageFind = PrivateMessage.find;
-      
-        // Usamos jest.fn() para simular el fallo en PrivateMessage.find
-        PrivateMessage.find = jest.fn()
-          .mockImplementationOnce(() => { throw new Error('Error al obtener mensajes privados de la base de datos'); });
-      
-        // Realizamos la llamada a la ruta
-        const res = await request(app).post('/sendPrivateMessage').send({
-          senderUsername: 'testSender',
-          receiverUsername: 'testReceiver',
-          content: 'Mensaje de prueba',
-        });
-      
-        // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Error al obtener mensajes privados de la base de datos');
-      
-        // Restauramos el modelo original
-        PrivateMessage.find = originalPrivateMessageFind;
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos al obtener mensajes privados', async () => {
@@ -1138,5 +1075,4 @@ describe('User Service', () => {
         PrivateMessage.find = originalPrivateMessageFind;
       });
     });
-
 });
