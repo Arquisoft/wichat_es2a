@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import GameHistoryTable from './GameHistoryTable';
-import { jwtDecode } from 'jwt-decode';
 import { useTheme } from '@mui/material/styles';
-import defaultTheme from "./config/default-Theme.json";
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 

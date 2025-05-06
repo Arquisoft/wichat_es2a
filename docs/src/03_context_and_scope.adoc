@@ -16,6 +16,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 | Wikidata              | Data queries | Images and question-related data
 |===
 
+image::03_context_business.svg["Business Diagram", align="center"]
+
 The business context defines how WIChat interacts with its key stakeholders and systems in terms of domain-specific inputs and outputs. This includes:
 
 - **Users (Contestants)**: Players who interact with the system to answer questions and request hints.
