@@ -906,9 +906,7 @@ describe('User Service', () => {
     
         const res = await request(app).get('/listUsers');
     
-        expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty('error');
-        expect(res.body.error).toBe('Error simulado en la base de datos al listar usuarios');
+        expectDatabaseError(res, 'Error simulado en la base de datos al listar usuarios');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /searchUsers', async () => {
@@ -919,9 +917,7 @@ describe('User Service', () => {
     
         const res = await request(app).get('/searchUsers').query({ query: 'testuser' });
     
-        expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty('error');
-        expect(res.body.error).toBe('Error simulado en la base de datos al buscar usuarios');
+        expectDatabaseError(res, 'Error simulado en la base de datos al buscar usuarios');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /removeFriend', async () => {
@@ -937,9 +933,7 @@ describe('User Service', () => {
             friendUsername: 'usuario2'
           });
     
-        expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty('error');
-        expect(res.body.error).toBe('Error simulado en la base de datos al eliminar amigo');
+        expectDatabaseError(res, 'Error simulado en la base de datos al eliminar amigo');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /acceptFriendRequest', async () => {
@@ -955,9 +949,7 @@ describe('User Service', () => {
             friendUsername: 'usuario2'
           });
     
-        expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty('error');
-        expect(res.body.error).toBe('Error simulado en la base de datos al aceptar solicitud');
+        expectDatabaseError(res, 'Error simulado en la base de datos al aceptar solicitud');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /rejectFriendRequest', async () => {
@@ -973,9 +965,7 @@ describe('User Service', () => {
             friendUsername: 'usuario2'
           });
     
-        expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty('error');
-        expect(res.body.error).toBe('Error simulado en la base de datos al rechazar solicitud');
+        expectDatabaseError(res, 'Error simulado en la base de datos al rechazar solicitud');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /sendFriendRequest', async () => {
@@ -992,8 +982,7 @@ describe('User Service', () => {
           });
     
         // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Error en la base de datos al enviar solicitud');
+        expectDatabaseError(res, 'Error en la base de datos al enviar solicitud');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /getUserId', async () => {
@@ -1006,8 +995,7 @@ describe('User Service', () => {
           .query({ username: 'testUser' });
     
         // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Internal server error');
+        expectDatabaseError(res, 'Error en la base de datos');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /getUsername', async () => {
@@ -1020,8 +1008,7 @@ describe('User Service', () => {
           .query({ userId: '12345' });
     
         // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Internal server error');
+        expectDatabaseError(res, 'Error en la base de datos');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /getMessages', async () => {
@@ -1033,8 +1020,7 @@ describe('User Service', () => {
         const res = await request(app).get('/getMessages');
     
         // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Error al obtener mensajes de la base de datos');
+        expectDatabaseError(res, 'Error al obtener mensajes de la base de datos');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos al obtener mensajes privados /getPrivateMessages', async () => {
@@ -1046,8 +1032,14 @@ describe('User Service', () => {
         const res = await request(app).get('/getPrivateMessages/user1/user2');
       
         // Verificamos que la respuesta tenga un código de error 500
-        expect(res.status).toBe(500);
-        expect(res.body.error).toBe('Error al obtener mensajes privados de la base de datos');
+        expectDatabaseError(res, 'Error al obtener mensajes privados de la base de datos');
       });
     });
+
+    function expectDatabaseError(res, errorMessage) {
+      expect(res.status).toBe(500);
+      expect(res.body).toHaveProperty('error');
+      expect(res.body).toHaveProperty('error', errorMessage);
+      expect(res.body.error).toBe(errorMessage);
+    }
 });
