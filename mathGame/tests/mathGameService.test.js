@@ -1,26 +1,22 @@
 const { generateExpression, generateOptions } = require('../service/mathGameService.js');
 
 describe('mathGameService', () => {
+  // Auxiliar para evitar duplicación de lógica
+  function calculateExpected(a, op, b) {
+    switch (op) {
+      case '+': return Number(a) + Number(b);
+      case '-': return Number(a) - Number(b);
+      case '*': return Number(a) * Number(b);
+      default: throw new Error('Unexpected operator: ' + op);
+    }
+  }
   describe('generateExpression', () => {
     it('should generate a valid expression for the first question', () => {
       const { expr, result } = generateExpression(null);
       expect(typeof expr).toBe('string');
       expect(expr).toMatch(/^\d+ [+\-*] \d+$/);
       const [a, op, b] = expr.split(' ');
-      let expected;
-      switch (op) {
-        case '+':
-          expected = Number(a) + Number(b);
-          break;
-        case '-':
-          expected = Number(a) - Number(b);
-          break;
-        case '*':
-          expected = Number(a) * Number(b);
-          break;
-        default:
-          throw new Error('Unexpected operator: ' + op);
-      }
+      const expected = calculateExpected(a, op, b);
       expect(result).toBe(expected);
     });
 
@@ -29,20 +25,7 @@ describe('mathGameService', () => {
       const { expr, result } = generateExpression(base);
       expect(expr).toMatch(/^10 [+\-*] \d+$/);
       const [a, op, b] = expr.split(' ');
-      let expected;
-      switch (op) {
-        case '+':
-          expected = Number(a) + Number(b);
-          break;
-        case '-':
-          expected = Number(a) - Number(b);
-          break;
-        case '*':
-          expected = Number(a) * Number(b);
-          break;
-        default:
-          throw new Error('Unexpected operator: ' + op);
-      }
+      const expected = calculateExpected(a, op, b);
       expect(result).toBe(expected);
     });
 
@@ -60,20 +43,7 @@ describe('mathGameService', () => {
       const { expr, result } = generateExpression(0);
       expect(expr).toMatch(/^0 [+\-*] \d+$/);
       const [a, op, b] = expr.split(' ');
-      let expected;
-      switch (op) {
-        case '+':
-          expected = Number(a) + Number(b);
-          break;
-        case '-':
-          expected = Number(a) - Number(b);
-          break;
-        case '*':
-          expected = Number(a) * Number(b);
-          break;
-        default:
-          throw new Error('Unexpected operator: ' + op);
-      }
+      const expected = calculateExpected(a, op, b);
       expect(result).toBe(expected);
     });
 
@@ -82,20 +52,7 @@ describe('mathGameService', () => {
       const { expr, result } = generateExpression(base);
       expect(expr.startsWith('-5 ')).toBe(true);
       const [a, op, b] = expr.split(' ');
-      let expected;
-      switch (op) {
-        case '+':
-          expected = Number(a) + Number(b);
-          break;
-        case '-':
-          expected = Number(a) - Number(b);
-          break;
-        case '*':
-          expected = Number(a) * Number(b);
-          break;
-        default:
-          throw new Error('Unexpected operator: ' + op);
-      }
+      const expected = calculateExpected(a, op, b);
       expect(result).toBe(expected);
     });
 
