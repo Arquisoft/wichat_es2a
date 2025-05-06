@@ -3,19 +3,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   Container, Grid, Typography, TextField,
-  Button, Snackbar, Alert, IconButton, InputAdornment,
-  Box, ToggleButtonGroup, ToggleButton
-} from '@mui/material';
+  Button, Snackbar, Alert, IconButton, InputAdornment} from '@mui/material';
 
 import {
   Visibility, VisibilityOff
 } from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import BrushIcon from '@mui/icons-material/Brush';
-import TagFacesIcon from '@mui/icons-material/TagFaces';
-import PaletteIcon from '@mui/icons-material/Palette';
 import AvatarEditor from './AvatarEditor';
 
 

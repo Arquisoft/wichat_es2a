@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Paper, Typography, Button, CircularProgress, LinearProgress } from '@mui/material';
+import { Box, Grid, Paper, Typography, Button, CircularProgress } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -12,7 +12,7 @@ import img0_4 from '../media/0-4.gif';
 import img4_7 from '../media/4-7.gif';
 import img7_10 from '../media/7-10.gif';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Score from './Score';
 import { useRef } from 'react';
 
@@ -49,7 +49,6 @@ const GamePanel = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [userId, setUserId] = useState(null);
   
   const [countdownKey, setCountdownKey] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -59,7 +58,7 @@ const GamePanel = () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
       const data = response.data;      
-      if (data && data.length == TOTAL_QUESTIONS) {const modifiedData = data.map(question => ({...question,userCategory: category}));setQuestions(data);
+      if (data && data.length === TOTAL_QUESTIONS) {data.map(question => ({...question,userCategory: category}));setQuestions(data);
       } else {getQuestions();}
     } catch (error) {}};
   
@@ -130,14 +129,17 @@ const getUserData = () => {
   const startGame = async () => {
     try {
         const userId = getUserId();
-        const response = await axios.post(`${apiEndpoint}/game/start`, { userId });
+        await axios.post(`${apiEndpoint}/game/start`, { userId });
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
 };
 
 const endGame = async () => {
-  try {const userId = getUserId();const { id, username } = getUserData();if (userId) {await axios.post(`${apiEndpoint}/game/end`, {userId, username,category: category,level: level,totalQuestions: TOTAL_QUESTIONS,answered: numberOfQuestionsAnswered,correct: correctCount, wrong: incorrectCount,points: scorePoints});}
+  try {
+    const userId = getUserId();
+    const { id, username } = getUserData();
+    if (userId) {await axios.post(`${apiEndpoint}/game/end`, {userId, username,category: category,level: level,totalQuestions: TOTAL_QUESTIONS,answered: numberOfQuestionsAnswered,correct: correctCount, wrong: incorrectCount,points: scorePoints});}
 } catch (error) {}};
 
 useEffect(() => {startGame();}, []);

@@ -16,7 +16,6 @@ const GroupDetails = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [groupId, setGroupId] = useState(null);
     const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {

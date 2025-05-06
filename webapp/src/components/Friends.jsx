@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FriendList from './FriendList';
 import FriendSearch from './FriendSearch';
-import { Box, Snackbar, Grid } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
@@ -13,7 +13,6 @@ function Friends() {
     const [errorMessage, setErrorMessage] = useState('');
     
     const user = JSON.parse(localStorage.getItem('user'));
-    const username = user ? user.username : null;
 
     useEffect(() => {
         if (user) {

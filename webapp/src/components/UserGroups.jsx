@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
     Paper, Typography, Button, Dialog, DialogTitle, DialogContent,
     DialogActions, TextField, Box, CircularProgress, Alert, Grid,
-    Card, CardContent, CardActionArea, IconButton, Zoom, Fade
+    Card, CardContent, CardActionArea, Zoom, Fade
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Group, Add, PersonAdd, AdminPanelSettings, Person, Groups } from '@mui/icons-material';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const UserGroups = () => {
