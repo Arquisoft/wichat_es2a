@@ -1,4 +1,4 @@
-const { generateExpression, generateOptions } = require('../service/mathGameService.js');
+const { generateExpression, generateOptions } = require('./mathGameService.js');
 
 // Auxiliar para evitar duplicación de lógica
 function calculateExpected(a, op, b) {
@@ -138,4 +138,3 @@ describe('generateOptions', () => {
       expect(randomOrderDetected).toBe(true);
     });    
   });
-});
