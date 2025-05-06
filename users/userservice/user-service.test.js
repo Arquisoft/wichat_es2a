@@ -995,7 +995,7 @@ describe('User Service', () => {
           .query({ username: 'testUser' });
     
         // Verificamos que la respuesta tenga un código de error 500
-        expectDatabaseError(res, 'Error en la base de datos');
+        expectDatabaseError(res, 'Internal server error');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /getUsername', async () => {
@@ -1008,7 +1008,7 @@ describe('User Service', () => {
           .query({ userId: '12345' });
     
         // Verificamos que la respuesta tenga un código de error 500
-        expectDatabaseError(res, 'Error en la base de datos');
+        expectDatabaseError(res, 'Internal server error');
       });
 
       it('debe retornar 500 si ocurre un error en la base de datos /getMessages', async () => {
