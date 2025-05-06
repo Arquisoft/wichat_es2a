@@ -37,8 +37,8 @@ defineFeature(feature, test => {
             password = "admin"
 
             // Definimos la categoría a seleccionar
-            category = "Lugares"
-            dificulty = "medio"
+            category = "Banderas"
+            dificulty = "facil"
             
             // Introduces los datos de usuario y contraseña
             await expect(page).toFill('[data-testid="username-field"] input', username);
