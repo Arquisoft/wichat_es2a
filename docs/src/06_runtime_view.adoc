@@ -19,7 +19,7 @@ image::06_runview_login.svg["Login Diagram", align="center"]
 
 image::06_runview_game.svg["Game Play Diagram", align="center"]
 
-== Ranking View
+== History View
 * The history diagram in an application describes the flow that a user follows to view their history of gameplays. It begins when user decudes to view their history. The application retrieves the user's history data from the database and displays it on the screen. This process ensures that the user can easily access their history information.
 
 image::06_runview_history.svg["History Diagram", align="center"]
