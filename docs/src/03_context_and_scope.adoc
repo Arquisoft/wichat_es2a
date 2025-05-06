@@ -30,15 +30,15 @@ The business context defines how WIChat interacts with its key stakeholders and 
 [cols="1,1,1", options="header"]
 |===
 | Communication Partner | Channel/Protocol | Input/Output
-| Users (Contestants)   | HTTPS (Web Browser) | Game interactions, hint requests, and responses
-| System Administrator  | HTTPS (Admin Panel) | Platform management commands and logs
+| Users (Contestants)   | HTTP (Web Browser) | Game interactions, hint requests, and responses
+| System Administrator  | HTTP (Admin Panel) | Platform management commands and logs
 | Language Model (LLM)  | API (REST/GraphQL) | Image/question data and hint generation
 | Wikidata              | API (SPARQL)      | Data queries and responses
 |===
 
 The technical context describes the channels and protocols used by WIChat to communicate with its external systems and users. Key aspects include:
 
-- **HTTPS**: Used for secure communication between users, administrators, and the system.
+- **HTTP**: Used for communication between users, administrators, and the system.
 - **Data Flow**: How inputs and outputs are mapped to specific channels for seamless operation.
 
 **Mapping Input/Output to Channels**
@@ -46,14 +46,14 @@ The technical context describes the channels and protocols used by WIChat to com
 [cols="1,1,1", options="header"]
 |===
 | Input/Output | Channel/Protocol | Communication Partner
-| Game responses, hint requests | HTTPS | Users (Contestants)
-| Platform management commands | HTTPS | System Administrator
+| Game responses, hint requests | HTTP | Users (Contestants)
+| Platform management commands | HTTP | System Administrator
 | Image/question data, hint generation | API | Language Model (LLM)
 | Data queries and responses | API | Wikidata
 |===
 
 This mapping clarifies how specific inputs and outputs are transmitted through the system:
 
-- **Users**: Interact via HTTPS to send and receive game-related data.
-- **Administrators**: Use HTTPS to manage the platform and access logs.
+- **Users**: Interact via HTTP to send and receive game-related data.
+- **Administrators**: Use HTTP to manage the platform and access logs.
 - **LLM and Wikidata**: Communicate via APIs to process data and generate hints or questions.

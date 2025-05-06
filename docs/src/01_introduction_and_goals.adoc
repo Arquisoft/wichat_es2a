@@ -91,7 +91,7 @@ a|
 * Marcos Llanos Vega UO218982@uniovi.es
 * Hugo Prendes Menéndez UO288294@uniovi.es
 | To improve their hard skills using different technologies, mainly focused on the web.
-Improve their soft skills such as teamwork skills, communication and time management.v
+Improve their soft skills such as teamwork skills, communication and time management.
 
 | *Teachers*
 a|
