@@ -6,18 +6,44 @@ describe('mathGameService', () => {
       const { expr, result } = generateExpression(null);
       expect(typeof expr).toBe('string');
       expect(expr).toMatch(/^\d+ [+\-*] \d+$/);
-      // eslint-disable-next-line no-eval
       const [a, op, b] = expr.split(' ');
-      // eslint-disable-next-line no-eval
-      expect(result).toBe(eval(`${a}${op}${b}`));
+      let expected;
+      switch (op) {
+        case '+':
+          expected = Number(a) + Number(b);
+          break;
+        case '-':
+          expected = Number(a) - Number(b);
+          break;
+        case '*':
+          expected = Number(a) * Number(b);
+          break;
+        default:
+          throw new Error('Unexpected operator: ' + op);
+      }
+      expect(result).toBe(expected);
     });
 
     it('should generate an expression starting from a given baseValue', () => {
       const base = 10;
       const { expr, result } = generateExpression(base);
       expect(expr).toMatch(/^10 [+\-*] \d+$/);
-      // eslint-disable-next-line no-eval
-      expect(result).toBe(eval(expr));
+      const [a, op, b] = expr.split(' ');
+      let expected;
+      switch (op) {
+        case '+':
+          expected = Number(a) + Number(b);
+          break;
+        case '-':
+          expected = Number(a) - Number(b);
+          break;
+        case '*':
+          expected = Number(a) * Number(b);
+          break;
+        default:
+          throw new Error('Unexpected operator: ' + op);
+      }
+      expect(result).toBe(expected);
     });
 
     it('should use all allowed operators over multiple calls', () => {
@@ -33,16 +59,44 @@ describe('mathGameService', () => {
     it('should handle baseValue = 0 correctly', () => {
       const { expr, result } = generateExpression(0);
       expect(expr).toMatch(/^0 [+\-*] \d+$/);
-      // eslint-disable-next-line no-eval
-      expect(result).toBe(eval(expr));
+      const [a, op, b] = expr.split(' ');
+      let expected;
+      switch (op) {
+        case '+':
+          expected = Number(a) + Number(b);
+          break;
+        case '-':
+          expected = Number(a) - Number(b);
+          break;
+        case '*':
+          expected = Number(a) * Number(b);
+          break;
+        default:
+          throw new Error('Unexpected operator: ' + op);
+      }
+      expect(result).toBe(expected);
     });
 
     it('should handle negative baseValue correctly', () => {
       const base = -5;
       const { expr, result } = generateExpression(base);
       expect(expr.startsWith('-5 ')).toBe(true);
-      // eslint-disable-next-line no-eval
-      expect(result).toBe(eval(expr));
+      const [a, op, b] = expr.split(' ');
+      let expected;
+      switch (op) {
+        case '+':
+          expected = Number(a) + Number(b);
+          break;
+        case '-':
+          expected = Number(a) - Number(b);
+          break;
+        case '*':
+          expected = Number(a) * Number(b);
+          break;
+        default:
+          throw new Error('Unexpected operator: ' + op);
+      }
+      expect(result).toBe(expected);
     });
 
     describe('deterministic behavior when Math.random is stubbed', () => {
