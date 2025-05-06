@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import profilePic from '../media/fotousuario.png';
 import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -28,7 +28,6 @@ const getAvatarUrl = (options) => {
 
 function FriendList({ friends, user }) {
     const theme = useTheme();
-    const username = user ? user.username : '';
     const [gameHistories, setGameHistories] = useState({}); // Estado para almacenar el historial de amigos
     const [openDialog, setOpenDialog] = useState(false); // Controla si el diálogo está abierto
     const [friendToRemove, setFriendToRemove] = useState(null); // El amigo a eliminar

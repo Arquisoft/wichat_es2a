@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';   // Importamos el hook useNavigate
 import {
   Container, Grid, Typography, TextField,
-  Button, Snackbar, Alert, IconButton, InputAdornment
+  Button, Alert, IconButton, InputAdornment
 } from '@mui/material';
 import {
   Visibility, VisibilityOff
@@ -16,10 +16,8 @@ const Login = () => {
   // Estados para manejar la entrada de usuario y la UI
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [createdAt, setCreatedAt] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);  // Estado para manejar la carga
   const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
@@ -78,10 +76,6 @@ const Login = () => {
     }
   };
 
-  // Función para cerrar el Snackbar
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
 
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: 4 }}>
