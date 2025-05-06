@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./index');
+const app = require('./mathGameRoutes');
 const service = require('./service/mathGameService');
 const express = require('express');
 
@@ -108,7 +108,7 @@ describe('MathGame API', () => {
         });
 
     it('should handle internal error correctly in POST /mathgame/verify', async () => {
-        const { app } = require('./index');
+        const { app } = require('./mathGameRoutes');
 
         const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
