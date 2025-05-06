@@ -125,9 +125,8 @@ describe('mathGameService', () => {
     });
 
     it('returns options in random order (mostly)', () => {
-      // Very small chance of flake, but test for shuffle
       const correct = 5;
-      const sorted = [correct, correct+1, correct-1, correct+2].sort().join(',');
+      const sorted = [correct, correct+1, correct-1, correct+2].sort((a, b) => a - b).join(',');
       let randomOrderDetected = false;
       for (let i = 0; i < 5; i++) {
         const opts = generateOptions(correct);
@@ -137,6 +136,6 @@ describe('mathGameService', () => {
         }
       }
       expect(randomOrderDetected).toBe(true);
-    });
+    });    
   });
 });
