@@ -50,8 +50,8 @@ app.post('/adduser', async (req, res) => {
     if (!usernameRegex.test(username)) {
       return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
     }
-    // Verificar si el nombre de usuario ya existe
-    const existingUser = await User.findOne({ username: req.body.username });
+    // Verificar si el nombre de usuario ya existe (usando el valor validado, nunca el body crudo)
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: "El nombre de usuario ya existe" });
     }
@@ -101,8 +101,8 @@ app.put('/users/:id', async (req, res) => {
     if (!usernameRegex.test(username)) {
       return res.status(400).json({ error: "Formato de nombre de usuario inválido" });
     }
-    // Verificar si el nombre de usuario ya existe
-    const existingUser = await User.findOne({ username: req.body.username });
+    // Verificar si el nombre de usuario ya existe (usando el valor validado, nunca el body crudo)
+    const existingUser = await User.findOne({ username });
     if (existingUser && existingUser._id.toString() !== req.params.id) {
       return res.status(400).json({ error: "El nombre de usuario ya existe." });
     }
@@ -482,8 +482,8 @@ app.post('/sendMessage', async (req, res) => {
       return res.status(400).json({ error: 'Faltan datos requeridos' });
     }
 
-    // Validar formato de username para evitar NoSQL Injection
-    if (!usernameRegex.test(username)) {
+    // Validar tipo y formato de username para evitar NoSQL Injection
+    if (typeof username !== 'string' || !usernameRegex.test(username)) {
       return res.status(400).json({ error: 'Formato de nombre de usuario inválido' });
     }
     const user = await User.findOne({ username });
