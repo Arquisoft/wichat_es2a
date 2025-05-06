@@ -24,6 +24,10 @@ The business context defines how WIChat interacts with its key stakeholders and 
 - **Wikidata**: Supplies the data and images used to generate questions.
 
 === Technical Context
+**Technical Context Diagram**
+
+.Technical context.
+image::3_Technical_context.svg["Technical context Diagram"]
 
 **Technical Context Table**
 
