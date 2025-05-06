@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Container, Typography, Box, Avatar, Button, CircularProgress,
+    Container, Typography, Box, Avatar, Button,
     Paper, Grid
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, plugins } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import defaultTheme from "./config/default-Theme.json";
 

@@ -13,9 +13,7 @@ import {
     Box,
 } from '@mui/material';
 import { CheckCircle, Cancel, AccessTime, Event } from '@mui/icons-material';
-import { jwtDecode } from 'jwt-decode';
 import { useTheme } from '@mui/material/styles';
-import defaultTheme from "./config/default-Theme.json";
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
@@ -40,7 +38,6 @@ const GlobalRanking = () => {
         }
     };
     const theme = useTheme();
-    const userId = getUserId();
     // const [gameHistory, setGameHistory] = useState([]);
     const [globalRanking, setGlobalRanking] = useState([]);
     const [error, setError] = useState(null);

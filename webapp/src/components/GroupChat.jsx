@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Typography, TextField, Button, Paper, List, ListItem, ListItemText, IconButton, InputAdornment } from '@mui/material';
+import { Box, Typography, TextField, Paper, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import axios from 'axios';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';

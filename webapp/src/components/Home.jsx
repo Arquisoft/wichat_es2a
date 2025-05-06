@@ -1,7 +1,6 @@
 // src/components/Home.jsx
 import React, { useState } from 'react';
 import { Container, Grid, Typography, Button, Box, Select, MenuItem, InputLabel, FormControl, FormHelperText } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import image from '../media/logoWiChat.svg';
 
