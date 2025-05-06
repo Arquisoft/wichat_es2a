@@ -1,4 +1,4 @@
-const { generateExpression, generateOptions } = require('../service/mathGameService.js');
+const { generateExpression, generateOptions } = require('./mathGameService.js');
 
 // Auxiliar para evitar duplicación de lógica
 function calculateExpected(a, op, b) {
@@ -124,18 +124,17 @@ describe('generateOptions', () => {
     });
   });
 
-  it('returns options in random order (mostly)', () => {
-    // Very small chance of flake, but test for shuffle
-    const correct = 5;
-    const sorted = [correct, correct+1, correct-1, correct+2].sort().join(',');
-    let randomOrderDetected = false;
-    for (let i = 0; i < 5; i++) {
-      const opts = generateOptions(correct);
-      if (opts.join(',') !== sorted) {
-        randomOrderDetected = true;
-        break;
+    it('returns options in random order (mostly)', () => {
+      const correct = 5;
+      const sorted = [correct, correct+1, correct-1, correct+2].sort((a, b) => a - b).join(',');
+      let randomOrderDetected = false;
+      for (let i = 0; i < 5; i++) {
+        const opts = generateOptions(correct);
+        if (opts.join(',') !== sorted) {
+          randomOrderDetected = true;
+          break;
+        }
       }
-    }
-    expect(randomOrderDetected).toBe(true);
+      expect(randomOrderDetected).toBe(true);
+    });    
   });
-});

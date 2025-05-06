@@ -129,9 +129,11 @@ Important Interfaces::
 |**User interface** (User ↔ Browser)
 |The user interacts with the Browser to answer questions(for the main game or math mini-game), request hints, manage their profile and join or create groups.
 
-|**Frontend to Backend Gateway** (Browser ↔ GatewayService)
-|The Browser sends all requests (game logic, hints, user info, etc.) to the `GatewayService` using HTTP/REST. 
-The Gateway routes these request to the appropriate backend services.
+|**Frontend** (Browser ↔ WebAppService)
+|The Browser sends all requests (game logic, hints, user info, etc.) to the `WebAppService` using HTTP/REST.
+
+|**Frontend to Backend Gateway** (WebAppService ↔ GatewayService)
+|The Gateway routes these request of WebApp to the appropriate backend services.
 
 |**Game Logic** (GatewayService ↔ WikidataService)
 |Routes game-related request (e.g., get question, submit answer) from the frontend to the `WikidataService`.

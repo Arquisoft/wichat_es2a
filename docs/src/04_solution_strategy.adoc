@@ -34,6 +34,8 @@ An architecture using services has been chosen for this project, so that each mo
 
 * *Wikidata service*: It will connect with Wikidata API to get the image and the necessary information for the game.
 
+* *MathGame service*: It will manage the mathematical game.
+
 * *Web app*: It will contain the game and other functionabilities of the application.
 
 * *LLM service*: It will use Google Gemini to generate a chat to help the user with hints to facilitate the game.
