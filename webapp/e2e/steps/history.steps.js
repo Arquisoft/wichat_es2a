@@ -106,14 +106,25 @@ when('User navigates to the history page', async () => {
     const links = await page.$$eval('a', els => els.map(e => e.textContent.trim()));
     console.log('Links visibles:', links);
 
-    // Espera a que exista y sea visible el enlace con texto que incluya 'Historial'
-    await page.waitForFunction(
-        () => {
-            const a = Array.from(document.querySelectorAll('a')).find(a => a.textContent && a.textContent.includes('Historial') && a.offsetParent !== null);
-            return !!a;
-        },
-        { timeout: 20000 }
-    );
+    // Si el enlace no está visible, intenta abrir el menú (ejemplo para Material UI Drawer o similar)
+    let found = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('a')).some(a => a.textContent && a.textContent.includes('Historial') && a.offsetParent !== null);
+    });
+    if (!found) {
+        // Intenta hacer click en un botón de menú hamburguesa si existe
+        const menuButton = await page.$('button[aria-label="open drawer"], button[aria-label="menu"], button[aria-label*="Menú"], button[aria-label*="menu"]');
+        if (menuButton) {
+            await menuButton.click();
+            // Espera a que el enlace sea visible tras abrir el menú
+            await page.waitForFunction(
+                () => Array.from(document.querySelectorAll('a')).some(a => a.textContent && a.textContent.includes('Historial') && a.offsetParent !== null),
+                { timeout: 10000 }
+            );
+        }
+    } else {
+        // Si ya está visible, espera un poco para asegurar renderizado
+        await page.waitForTimeout(500);
+    }
     await expect(page).toClick('a', { text: 'Historial' });
 });
 
