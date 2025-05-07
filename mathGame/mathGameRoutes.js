@@ -1,9 +1,9 @@
 const express = require('express');
-const app = express();
-app.disable('x-powered-by');
+const router = express.Router();
 const service = require('./service/mathGameService');
 
-app.use(express.json());
+// Configuración básica
+router.use(express.json());
 
 
 
@@ -23,7 +23,7 @@ app.use(express.json());
  *   correct: 90
  * }
  */
-app.get('/mathgame/question', (req, res) => {
+router.get('/question', (req, res) => {
   try {
     const raw = req.query.base;
     const base = raw != null && !Number.isNaN(parseInt(raw, 10))
@@ -55,7 +55,7 @@ app.get('/mathgame/question', (req, res) => {
  *   isCorrect: boolean
  * }
  */
-app.post('/mathgame/verify', (req, res) => {
+router.post('/verify', (req, res) => {
   try {
     const { choice, correct } = req.body;
     const isCorrect = Number(choice) === Number(correct);
@@ -66,4 +66,4 @@ app.post('/mathgame/verify', (req, res) => {
   }
 });
 
-module.exports = app;
+module.exports = router;

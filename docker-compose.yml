@@ -9,7 +9,6 @@ services:
       - "27017:27017"
     networks:
       - mynetwork
-
   mathgame:
     container_name: mathgame-wichat_es2a
     image: ghcr.io/arquisoft/wichat_es2a/mathgame:latest
@@ -26,6 +25,7 @@ services:
     environment:
       DEPLOY_HOST: ${DEPLOY_HOST:-localhost}
       WEBAPP_PORT: ${WEBAPP_PORT:-3000}
+      MATHGAME_PORT: 3002
     restart: always
 
   authservice:
