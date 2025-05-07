@@ -125,7 +125,19 @@ when('User navigates to the history page', async () => {
         // Si ya está visible, espera un poco para asegurar renderizado
         await page.waitForTimeout(500);
     }
-    await expect(page).toClick('a', { text: 'Historial' });
+    // Click manual sobre el primer enlace visible con 'Historial'
+    const linksHandles = await page.$$('a');
+    let clicked = false;
+    for (const handle of linksHandles) {
+        const text = await page.evaluate(el => el.textContent.trim(), handle);
+        const visible = await handle.evaluate(el => el.offsetParent !== null);
+        if (text.includes('Historial') && visible) {
+            await handle.click();
+            clicked = true;
+            break;
+        }
+    }
+    if (!clicked) throw new Error('No se pudo hacer click en el enlace Historial');
 });
 
         then('User sees a list of past games', async () => {
