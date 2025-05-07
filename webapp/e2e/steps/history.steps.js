@@ -57,12 +57,14 @@ defineFeature(feature, test => {
                     body: JSON.stringify({
                         userId,
                         username: 'NataliaBA',
+                        duration: 20,
+                        correct: 9,
+                        wrong: 1,
+                        isCompleted: true,
                         category: 'Ciencia',
                         level: 'Difícil',
                         totalQuestions: 10,
                         answered: 10,
-                        correct: 9,
-                        wrong: 1,
                         points: 90
                     })
                 });
