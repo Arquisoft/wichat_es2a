@@ -15,9 +15,9 @@ defineFeature(feature, test => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: 'NataliaBA',
-          password: 'Contrasena$1',
-          confirmPassword: 'Contrasena$1',
+          username: 'NataliaBB',
+          password: 'Contrasena$2',
+          confirmPassword: 'Contrasena$2',
           avatarOptions: {
             hair: "short",
             eyes: "happy",
