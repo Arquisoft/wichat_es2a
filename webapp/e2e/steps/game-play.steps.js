@@ -63,42 +63,48 @@ defineFeature(feature, test => {
             dificulty = "medio"
 
             // Introduces los datos de usuario y contraseña
-            await expect(page).toFill('[data-testid="username-field"] input', username);
-            await expect(page).toFill('[data-testid="password-field"] input', password);
+            await page.waitForSelector('[data-testid="username-field"] input', { visible: true, timeout: 60000 });
+            await expect(page).toFill('[data-testid="username-field"] input', username, { timeout: 60000 });
+            await page.waitForSelector('[data-testid="password-field"] input', { visible: true, timeout: 60000 });
+            await expect(page).toFill('[data-testid="password-field"] input', password, { timeout: 60000 });
 
-            await expect(page).toClick("button", { text: "Login" });
+            await page.waitForSelector("button", { visible: true, timeout: 60000 });
+            await expect(page).toClick("button", { text: "Login", timeout: 60000 });
 
         });
 
         when('User choose category, press start button and play', async () => {
-            // Abre el Select para escoger la categoría (Futbolistas)
-            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000  });
-            await expect(page).toClick('[aria-labelledby="category-select-label"]');
+            // Abre el Select para escoger la categoría
+            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000 });
+            await expect(page).toClick('[aria-labelledby="category-select-label"]', { timeout: 60000 });
 
-            // Escoge la categoría "Futbolistas" del menú desplegable
-            await page.click('li[data-value="' + category + '"]');
+            // Escoge la categoría "Banderas" del menú desplegable
+            await page.click('li[data-value="' + category + '"]', { timeout: 60000 });
 
             // Abre el Select para escoger la dificultad
-            await expect(page).toClick('[aria-labelledby="level-select-label"]');
+            await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 100000 });
+            await expect(page).toClick('[aria-labelledby="level-select-label"]', { timeout: 60000 });
 
             // Escoge la dificultad "Medio" del menú desplegable
-            await page.click('li[data-value="' + dificulty + '"]');
+            await page.click('li[data-value="' + dificulty + '"]', { timeout: 60000 });
 
-            // Finalmente, hacer clic en el botón para comenzar el juego.
-            await expect(page).toClick('button', { text: 'Comenzar a jugar' });
+            // Finalmente, hacer clic en el botón para comenzar el juego
+            await page.waitForSelector('button', { text: 'Comenzar a jugar', visible: true, timeout: 60000 });
+            await expect(page).toClick('button', { text: 'Comenzar a jugar', timeout: 60000 });
 
+            // Realiza 10 respuestas durante el juego
             for (let i = 0; i < 10; i++) {
                 // Esperamos que se cargue la imagen
-                await page.waitForSelector('img[alt="Imagen del juego"]', { visible: true, timeout: 100000  });
+                await page.waitForSelector('img[alt="Imagen del juego"]', { visible: true, timeout: 100000 });
 
                 // Esperamos a que las opciones estén disponibles
-                await page.waitForSelector(`[data-testid^="respuesta-"]`, { visible: true, timeout: 100000  });
+                await page.waitForSelector(`[data-testid^="respuesta-"]`, { visible: true, timeout: 100000 });
 
                 // Seleccionamos todas las opciones disponibles
                 const opciones = await page.$$(`[data-testid^="respuesta-"]`);
                 if (opciones.length > 0) {
                     // Hacer clic en la primera opción disponible
-                    await opciones[0].click();
+                    await opciones[0].click({ timeout: 60000 });
                 }
 
                 // Esperar un poco antes de continuar

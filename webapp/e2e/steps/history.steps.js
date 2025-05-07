@@ -95,18 +95,21 @@ defineFeature(feature, test => {
             username = "NataliaBA";
             password = "Contrasena$1";
 
-            await expect(page).toFill('[data-testid="username-field"] input', username);
-            await expect(page).toFill('[data-testid="password-field"] input', password);
-            await expect(page).toClick("button", { text: "Login" });
+            await page.waitForSelector('[data-testid="username-field"] input', { visible: true, timeout: 60000 });
+            await expect(page).toFill('[data-testid="username-field"] input', username, { timeout: 60000 });
+            await page.waitForSelector('[data-testid="password-field"] input', { visible: true, timeout: 60000 });
+            await expect(page).toFill('[data-testid="password-field"] input', password, { timeout: 60000 });
+            await page.waitForSelector("button", { text: "Login", timeout: 60000 });
+            await expect(page).toClick("button", { text: "Login", timeout: 60000 });
         });
 
         when('User navigates to the history page', async () => {
-            await page.waitForSelector('a', { text: 'Historial', timeout: 100000 });
-            await expect(page).toClick('a', {text: 'Historial'});
+            await page.waitForSelector('a', { text: 'Historial', timeout: 60000 });
+            await expect(page).toClick('a', {text: 'Historial', timeout: 60000});
         });
 
         then('User sees a list of past games', async () => {
-            await page.waitForSelector('h4', { text: 'Historial de Partidas', timeout: 100000 });
+            await page.waitForSelector('h4', { text: 'Historial de Partidas', timeout: 60000 });
             const historyHeader = await page.$eval('h4', el => el.textContent);
             expect(historyHeader).toContain('Historial de Partidas');
         });

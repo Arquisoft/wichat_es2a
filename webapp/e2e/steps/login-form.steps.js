@@ -53,17 +53,27 @@ defineFeature(feature, test => {
     const password = "Contrasena$1";
 
     given('A registered user', async () => {
-      await expect(page).toMatchElement('h1', { text: "Log in to your account" });
+      await page.waitForSelector('h1', { visible: true, timeout: 60000 });
+      await expect(page).toMatchElement('h1', { text: "Log in to your account", timeout: 60000 });
     });
 
     when('I fill the login credentials and press submit', async () => {
-      await expect(page).toFill('[data-testid="username-field"] input', username);
-      await expect(page).toFill('[data-testid="password-field"] input', password);
-      await expect(page).toClick('button', { text: 'Login' });
+      await page.waitForSelector('[data-testid="username-field"] input', { visible: true, timeout: 60000 });
+      await expect(page).toFill('[data-testid="username-field"] input', username, { timeout: 60000 });
+
+      await page.waitForSelector('[data-testid="password-field"] input', { visible: true, timeout: 60000 });
+      await expect(page).toFill('[data-testid="password-field"] input', password, { timeout: 60000 });
+
+      await page.waitForSelector('button', { visible: true, timeout: 60000 });
+      await expect(page).toClick('button', { text: 'Login', timeout: 60000 });
     });
 
     then('I should be logged in successfully', async () => {
-      await expect(page).toMatchElement('h1', { text: "WICHAT" });
+      await page.waitForFunction(
+        () => document.body.innerText.includes('WICHAT'),
+        { timeout: 60000 }
+      );
+      await expect(page).toMatchElement('h1', { text: "WICHAT", timeout: 60000 });
     });
   });
 

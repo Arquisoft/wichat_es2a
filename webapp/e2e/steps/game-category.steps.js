@@ -7,7 +7,7 @@ let page;
 let browser;
 
 defineFeature(feature, test => {
-  
+
   beforeAll(async () => {
     // 1. Crear usuario de test si no existe
     try {
@@ -64,47 +64,40 @@ defineFeature(feature, test => {
       dificulty = "medio"
 
       // Introduces los datos de usuario y contraseña
-      await expect(page).toFill('[data-testid="username-field"] input', username);
-      await expect(page).toFill('[data-testid="password-field"] input', password);
+      await page.waitForSelector('[data-testid="username-field"] input', { visible: true, timeout: 60000 });
+      await expect(page).toFill('[data-testid="username-field"] input', username, { timeout: 60000 });
 
-      await expect(page).toClick("button", { text: "Login" });
+      await page.waitForSelector('[data-testid="password-field"] input', { visible: true, timeout: 60000 });
+      await expect(page).toFill('[data-testid="password-field"] input', password, { timeout: 60000 });
+
+      await page.waitForSelector('button', { visible: true, timeout: 60000 });
+      await expect(page).toClick("button", { text: "Login", timeout: 60000 });
 
     });
 
     when('User choose category and press start button', async () => {
+      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 60000 });
+      await expect(page).toClick('[aria-labelledby="category-select-label"]', { timeout: 60000 });
 
-      // Abre el Select para escoger la categoría
-      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000 });
-      await expect(page).toClick('[aria-labelledby="category-select-label"]');
+      await page.waitForSelector(`li[data-value="${category}"]`, { visible: true, timeout: 60000 });
+      await page.click(`li[data-value="${category}"]`, { timeout: 60000 });
 
-      // Escoge la categoría del menú desplegable
-      await page.click('li[data-value="' + category + '"]');
+      await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 60000 });
+      await expect(page).toClick('[aria-labelledby="level-select-label"]', { timeout: 60000 });
 
-      // Abre el Select para escoger la dificultad
-      await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 100000  });
-      await expect(page).toClick('[aria-labelledby="level-select-label"]');
+      await page.waitForSelector(`li[data-value="${dificulty}"]`, { visible: true, timeout: 60000 });
+      await page.click(`li[data-value="${dificulty}"]`, { timeout: 60000 });
 
-      // Escoge la dificultad "Medio" del menú desplegable
-      await page.waitForSelector('li[data-value="' + dificulty + '"]', { visible: true, timeout: 100000  });
-      await page.click('li[data-value="' + dificulty + '"]');
-
-      // Finalmente, hacer clic en el botón para comenzar el juego.
-      await expect(page).toClick('button', { text: 'Comenzar a jugar' });
-
-
-
+      await page.waitForSelector('button', { visible: true, timeout: 60000 });
+      await expect(page).toClick('button', { text: 'Comenzar a jugar', timeout: 60000 });
     });
 
     then('Game start in this category', async () => {
-
-      // Espera a que el div que contiene el texto sea visible.
-      await page.waitForSelector('div', { text: '¿De qué país es esta bandera?', timeout: 100000  });
-
-      // Verifica que el texto esté presente en el div.
-      // Se comprueba el texto de la pregunta que se muestra en el juego.
-      // Ya que cada categoría tiene su propia pregunta.
-      await expect(page).toMatchElement('div', { text: '¿De qué país es esta bandera?' });
-
+      await page.waitForFunction(
+        () => document.body.innerText.includes('¿De qué país es esta bandera?'),
+        { timeout: 60000 }
+      );
+      await expect(page).toMatchElement('div', { text: '¿De qué país es esta bandera?', timeout: 60000 });
     });
   })
 
