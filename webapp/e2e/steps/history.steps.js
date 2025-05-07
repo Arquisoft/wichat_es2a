@@ -77,6 +77,7 @@ defineFeature(feature, test => {
             ? await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] })
             : await puppeteer.launch({ headless: false, slowMo: 100, defaultViewport: { width: 1920, height: 1080 } });
         page = await browser.newPage();
+        await page.setViewport({ width: 1200, height: 800 });
         setDefaultOptions({ timeout: 60000 });
 
         await page
@@ -104,8 +105,8 @@ defineFeature(feature, test => {
         });
 
         when('User navigates to the history page', async () => {
-            await page.waitForSelector('a', { text: 'Historial', timeout: 60000 });
-            await expect(page).toClick('a', {text: 'Historial', timeout: 60000});
+            await page.waitForSelector('[data-testid="nav-history"]', { text: "Historial", timeout: 60000 });
+            await expect(page).toClick('[data-testid="nav-history"]');
         });
 
         then('User sees a list of past games', async () => {
