@@ -868,6 +868,178 @@ describe('User Service', () => {
         expect(res.status).toBe(400);
         expect(res.body.error).toMatch(/búsqueda/i);
       });
+
+      
     });
 
+    describe('User Service internal errors', () => {
+
+      let originalUserFind;
+      let originalMessageFind;
+      let originalPrivateMessageFind;
+      let originalUserFindOne;
+      let originalUserFindById;
+
+      beforeEach(async () => {
+        await User.deleteMany();
+        await Message.deleteMany({});
+        await PrivateMessage.deleteMany({});
+        originalUserFind = User.find;
+        originalMessageFind = Message.find;
+        originalPrivateMessageFind = PrivateMessage.find;
+        originalUserFindOne = User.findOne;
+        originalUserFindById = User.findById;
+      });
+
+      afterEach(() => {
+        User.find = originalUserFind;
+        Message.find = originalMessageFind;
+        PrivateMessage.find = originalPrivateMessageFind;
+        User.findOne = originalUserFindOne;
+        User.findById = originalUserFindById;
+      });
+
+      it('debe retornar 500 si ocurre un error en el servidor /listUsers', async () => {
+        User.find = jest.fn().mockImplementation(() => {
+          throw new Error('Error simulado en la base de datos al listar usuarios');
+        });
+    
+        const res = await request(app).get('/listUsers');
+    
+        expectDatabaseError(res, 'Error simulado en la base de datos al listar usuarios');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /searchUsers', async () => {
+        // Simular que la base de datos falla
+        User.find = jest.fn().mockImplementation(() => {
+          throw new Error('Error simulado en la base de datos al buscar usuarios');
+        });
+    
+        const res = await request(app).get('/searchUsers').query({ query: 'testuser' });
+    
+        expectDatabaseError(res, 'Error simulado en la base de datos al buscar usuarios');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /removeFriend', async () => {
+        // Simular que User.findOne lanza un error (como si fallara la base de datos)
+        User.findOne = jest.fn().mockImplementation(() => {
+          throw new Error('Error simulado en la base de datos al eliminar amigo');
+        });
+    
+        const res = await request(app)
+          .post('/removeFriend')
+          .send({
+            username: 'usuario1',
+            friendUsername: 'usuario2'
+          });
+    
+        expectDatabaseError(res, 'Error simulado en la base de datos al eliminar amigo');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /acceptFriendRequest', async () => {
+        // Simular que la base de datos falla al buscar usuario
+        User.findOne = jest.fn().mockImplementation(() => {
+          throw new Error('Error simulado en la base de datos al aceptar solicitud');
+        });
+    
+        const res = await request(app)
+          .post('/acceptFriendRequest')
+          .send({
+            username: 'usuario1',
+            friendUsername: 'usuario2'
+          });
+    
+        expectDatabaseError(res, 'Error simulado en la base de datos al aceptar solicitud');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /rejectFriendRequest', async () => {
+        // Simular que la base de datos falla al buscar usuario
+        User.findOne = jest.fn().mockImplementation(() => {
+          throw new Error('Error simulado en la base de datos al rechazar solicitud');
+        });
+    
+        const res = await request(app)
+          .post('/rejectFriendRequest')
+          .send({
+            username: 'usuario1',
+            friendUsername: 'usuario2'
+          });
+    
+        expectDatabaseError(res, 'Error simulado en la base de datos al rechazar solicitud');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /sendFriendRequest', async () => {
+        // Usamos jest.fn() para simular el fallo en User.findOne
+        User.findOne = jest.fn()
+          .mockImplementationOnce(() => { throw new Error('Error en la base de datos al enviar solicitud'); }) // Simulamos error en la base de datos
+          .mockResolvedValueOnce({ _id: 'friendId', friendRequests: [] }); // Segundo mock para el amigo
+    
+        // Realizamos la llamada a la ruta con parámetros en el cuerpo de la solicitud
+        const res = await request(app).post('/sendFriendRequest')
+          .send({
+            username: 'testUser',
+            friendUsername: 'friendUser'
+          });
+    
+        // Verificamos que la respuesta tenga un código de error 500
+        expectDatabaseError(res, 'Error en la base de datos al enviar solicitud');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /getUserId', async () => {
+        // Usamos jest.fn() para simular el fallo en User.findOne
+        User.findOne = jest.fn()
+          .mockImplementationOnce(() => { throw new Error('Error en la base de datos'); });
+    
+        // Realizamos la llamada a la ruta con un query
+        const res = await request(app).get('/getUserId')
+          .query({ username: 'testUser' });
+    
+        // Verificamos que la respuesta tenga un código de error 500
+        expectDatabaseError(res, 'Internal server error');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /getUsername', async () => {
+        // Usamos jest.fn() para simular el fallo en User.findById
+        User.findById = jest.fn()
+          .mockImplementationOnce(() => { throw new Error('Error en la base de datos'); });
+    
+        // Realizamos la llamada a la ruta con un query
+        const res = await request(app).get('/getUsername')
+          .query({ userId: '12345' });
+    
+        // Verificamos que la respuesta tenga un código de error 500
+        expectDatabaseError(res, 'Internal server error');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos /getMessages', async () => {
+        // Usamos jest.fn() para simular el fallo en Message.find
+        Message.find = jest.fn()
+          .mockImplementationOnce(() => { throw new Error('Error al obtener mensajes de la base de datos'); });
+    
+        // Realizamos la llamada a la ruta
+        const res = await request(app).get('/getMessages');
+    
+        // Verificamos que la respuesta tenga un código de error 500
+        expectDatabaseError(res, 'Error al obtener mensajes de la base de datos');
+      });
+
+      it('debe retornar 500 si ocurre un error en la base de datos al obtener mensajes privados /getPrivateMessages', async () => {
+        // Usamos jest.fn() para simular el fallo en PrivateMessage.find
+        PrivateMessage.find = jest.fn()
+          .mockImplementationOnce(() => { throw new Error('Error al obtener mensajes privados de la base de datos'); });
+      
+        // Realizamos la llamada a la ruta
+        const res = await request(app).get('/getPrivateMessages/user1/user2');
+      
+        // Verificamos que la respuesta tenga un código de error 500
+        expectDatabaseError(res, 'Error al obtener mensajes privados de la base de datos');
+      });
+    });
+
+    function expectDatabaseError(res, errorMessage) {
+      expect(res.status).toBe(500);
+      expect(res.body).toHaveProperty('error');
+      expect(res.body).toHaveProperty('error', errorMessage);
+      expect(res.body.error).toBe(errorMessage);
+    }
 });
