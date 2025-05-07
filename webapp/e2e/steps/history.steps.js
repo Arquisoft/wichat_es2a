@@ -101,6 +101,7 @@ defineFeature(feature, test => {
         });
 
         when('User navigates to the history page', async () => {
+            await page.waitForSelector('a', { text: 'Historial', timeout: 10000 });
             await expect(page).toClick('a', { text: 'Historial' });
         });
 
