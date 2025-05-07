@@ -74,28 +74,25 @@ defineFeature(feature, test => {
         });
 
         when('User choose category, press start button and play', async () => {
-            // Abre el Select para escoger la categoría
-            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000 });
-            await expect(page).toClick('[aria-labelledby="category-select-label"]', { timeout: 60000 });
+            await page.waitForSelector('[data-testid="category-select"]', { visible: true, timeout: 60000 });
+            await expect(page).toClick('[data-testid="category-select"]', { timeout: 60000 });
 
-            // Escoge la categoría "Banderas" del menú desplegable
-            await page.click('li[data-value="' + category + '"]', { timeout: 60000 });
+            await page.waitForSelector(`[data-testid="category-option-${category}"`, { visible: true, timeout: 60000 });
+            await page.click(`[data-testid="category-option-${category}"`, { timeout: 60000 });
 
-            // Abre el Select para escoger la dificultad
-            await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 100000 });
-            await expect(page).toClick('[aria-labelledby="level-select-label"]', { timeout: 60000 });
+            await page.waitForSelector('[data-testid="level-select"]', { visible: true, timeout: 60000 });
+            await expect(page).toClick('[data-testid="level-select"]', { timeout: 60000 });
 
-            // Escoge la dificultad "Medio" del menú desplegable
-            await page.click('li[data-value="' + dificulty + '"]', { timeout: 60000 });
+            await page.waitForSelector(`[data-testid="level-option-${dificulty}"]`, { visible: true, timeout: 60000 });
+            await page.click(`[data-testid="level-option-${dificulty}"]`, { timeout: 60000 });
 
-            // Finalmente, hacer clic en el botón para comenzar el juego
-            await page.waitForSelector('button', { text: 'Comenzar a jugar', visible: true, timeout: 60000 });
-            await expect(page).toClick('button', { text: 'Comenzar a jugar', timeout: 60000 });
+            await page.waitForSelector('[data-testid="start-game-button"]', { visible: true, timeout: 60000 });
+            await expect(page).toClick('[data-testid="start-game-button"]', { text: 'Comenzar a jugar', timeout: 60000 });
 
             // Realiza 10 respuestas durante el juego
             for (let i = 0; i < 10; i++) {
                 // Esperamos que se cargue la imagen
-                await page.waitForSelector('img[alt="Imagen del juego"]', { visible: true, timeout: 100000 });
+                await page.waitForSelector('[data-testid="image-game"]', { visible: true, timeout: 100000 });
 
                 // Esperamos a que las opciones estén disponibles
                 await page.waitForSelector(`[data-testid^="respuesta-"]`, { visible: true, timeout: 100000 });
@@ -113,7 +110,7 @@ defineFeature(feature, test => {
         });
 
         then('User sees the game summary', async () => {
-            await page.waitForSelector('h4', { text: 'Resumen del Juego', timeout: 100000 });
+            await page.waitForSelector('[data-testid="resumenJuego"]', { text: 'Resumen del Juego', timeout: 100000 });
             const resumenTexto = await page.$eval('h4', el => el.textContent);
             expect(resumenTexto).toContain('Resumen del Juego');
         });

@@ -76,20 +76,20 @@ defineFeature(feature, test => {
     });
 
     when('User choose category and press start button', async () => {
-      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 60000 });
-      await expect(page).toClick('[aria-labelledby="category-select-label"]', { timeout: 60000 });
+      await page.waitForSelector('[data-testid="category-select"]', { visible: true, timeout: 60000 });
+      await expect(page).toClick('[data-testid="category-select"]', { timeout: 60000 });
 
-      await page.waitForSelector(`li[data-value="${category}"]`, { visible: true, timeout: 60000 });
-      await page.click(`li[data-value="${category}"]`, { timeout: 60000 });
+      await page.waitForSelector(`[data-testid="category-option-${category}"`, { visible: true, timeout: 60000 });
+      await page.click(`[data-testid="category-option-${category}"`, { timeout: 60000 });
 
-      await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 60000 });
-      await expect(page).toClick('[aria-labelledby="level-select-label"]', { timeout: 60000 });
+      await page.waitForSelector('[data-testid="level-select"]', { visible: true, timeout: 60000 });
+      await expect(page).toClick('[data-testid="level-select"]', { timeout: 60000 });
 
-      await page.waitForSelector(`li[data-value="${dificulty}"]`, { visible: true, timeout: 60000 });
-      await page.click(`li[data-value="${dificulty}"]`, { timeout: 60000 });
+      await page.waitForSelector(`[data-testid="level-option-${dificulty}"]`, { visible: true, timeout: 60000 });
+      await page.click(`[data-testid="level-option-${dificulty}"]`, { timeout: 60000 });
 
-      await page.waitForSelector('button', { visible: true, timeout: 60000 });
-      await expect(page).toClick('button', { text: 'Comenzar a jugar', timeout: 60000 });
+      await page.waitForSelector('[data-testid="start-game-button"]', { visible: true, timeout: 60000 });
+      await expect(page).toClick('[data-testid="start-game-button"]', { text: 'Comenzar a jugar', timeout: 60000 });
     });
 
     then('Game start in this category', async () => {

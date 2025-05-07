@@ -22,7 +22,7 @@ const GameHistoryTable = ({ gameHistory = [], theme }) => {
     const usedTheme = theme || defaultTheme;
     return (
         <TableContainer component={Paper} style={{ margin: '16px auto', maxWidth: '80%', background: '#1C5E75', borderRadius: '12px', overflow: 'hidden' }}>
-            <Typography variant="h4" align="center" gutterBottom style={{ padding: '16px 0', background: usedTheme.palette.primary.main, color: '#fff' }}>
+            <Typography variant="h4" align="center" gutterBottom style={{ padding: '16px 0', background: usedTheme.palette.primary.main, color: '#fff' }} data-testid="history-title">
                 Historial de Partidas
             </Typography>
             <Table>
