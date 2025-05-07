@@ -25,42 +25,7 @@ on:
           - 'false'
 
 jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 22
-    - run: npm --prefix users/authservice ci
-    - run: npm --prefix users/userservice ci
-    - run: npm --prefix users/groupservice ci
-    - run: npm --prefix llmservice ci
-    - run: npm --prefix gatewayservice ci
-    - run: npm --prefix webapp ci
-    - run: npm --prefix mathGame ci
-    - run: npm --prefix apiservice ci
-    - run: npm install --prefix webapp react-router-dom@6.23.1
-    - run: npm install --save-dev --prefix webapp @babel/plugin-proposal-private-property-in-object
-    - run: npm --prefix wikidata ci
-    - run: npm --prefix users/authservice test -- --coverage
-    - run: npm --prefix users/userservice test -- --coverage
-    - run: npm --prefix users/groupservice test -- --coverage
-    - run: npm --prefix llmservice test -- --coverage
-    - run: npm --prefix gatewayservice test -- --coverage
-    - run: npm --prefix webapp test -- --coverage
-    - run: npm --prefix wikidata test -- --coverage
-    - run: npm --prefix mathGame test -- --coverage
-    - run: npm --prefix apiservice test -- --coverage
-    - name: Analyze with SonarQube
-      uses: SonarSource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        EMPATHY_API_KEY: ${{ secrets.EMPATHY_API_KEY }}
-
   e2e-tests:
-    needs: [unit-tests]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

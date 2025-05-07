@@ -100,13 +100,23 @@ defineFeature(feature, test => {
             await expect(page).toClick("button", { text: "Login" });
         });
 
-        when('User navigates to the history page', async () => {
-            await page.waitForFunction(
-                () => !!Array.from(document.querySelectorAll('a')).find(a => a.textContent.trim() === 'Historial'),
-                { timeout: 600000 }
-            );
-            await expect(page).toClick('a', { text: 'Historial' }); 
-        });
+when('User navigates to the history page', async () => {
+    // Espera a que exista y sea visible el enlace
+    await page.waitForFunction(
+        () => {
+            const a = Array.from(document.querySelectorAll('a')).find(a => a.textContent.trim() === 'Historial');
+            return a && a.offsetParent !== null; // visible
+        },
+        { timeout: 20000 }
+    );
+    // Screenshot para depuración
+    await page.screenshot({ path: 'debug-historial.png' });
+    // Log de todos los enlaces
+    const links = await page.$$eval('a', els => els.map(e => e.textContent));
+    console.log('Links:', links);
+    // Ahora sí, haz click
+    await expect(page).toClick('a', { text: 'Historial' });
+});
 
         then('User sees a list of past games', async () => {
             await page.waitForSelector('h4', { text: 'Historial de Partidas', timeout: 10000 });
