@@ -17,8 +17,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loginSuccess, setLoginSuccess] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);  // Estado para manejar la carga
   const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
   const navigate = useNavigate(); // Hook de navegación
@@ -53,15 +51,14 @@ const Login = () => {
       // const { createdAt: userCreatedAt } = response.data;
 
       // setCreatedAt(userCreatedAt);
-      setLoginSuccess(true);
 
 
       // Guardamos el usuario en el localStorage
       localStorage.setItem("user", JSON.stringify(response.data));
-      setOpenSnackbar(true); // Mostramos el snackbar
+      
       // Redirigimos al usuario a la página del juego
       navigate('/home');
-      setOpenSnackbar(true); // Mostramos el snackbar
+      
 
     } catch (error) {
       // Caputramos errores de autenticación y mostramos el mensaje adecuado

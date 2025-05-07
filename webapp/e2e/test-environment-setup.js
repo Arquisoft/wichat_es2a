@@ -17,7 +17,12 @@ async function startServer() {
     authservice = await require("../../users/authservice/auth-service");
     llmservice = await require("../../llmservice/llm-service");
     gatewayservice = await require("../../gatewayservice/gateway-service");
-    wikidataservice = await require("../../wikidata/src/wikidataRoutes");
+    const wikidataApp = require("../../wikidata/src/wikidataRoutes");
+    const wikidataServer = wikidataApp.listen(3001, () => {
+        console.log("📚 Wikidata Service listening at http://localhost:3001");
+    });
+    process.env.WIKIDATA_PORT = 3001;
+
     groupservice = await require("../../users/groupservice/group-service");
 }
 

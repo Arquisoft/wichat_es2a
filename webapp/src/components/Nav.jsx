@@ -42,7 +42,11 @@ const MenuDrawer = ({ open, onClose }) => (
             <List>
                 {pages.map((page) => (
                     <ListItem key={page.name} disablePadding>
-                        <ListItemButton sx={{ textAlign: 'left' }}>
+                        <ListItemButton 
+                            component={Link}
+                            to={page.link}
+                            data-testid={`drawer-${page.code}`}
+                            sx={{ textAlign: 'left' }}>
                             <ListItemText primary={page.name} />
                         </ListItemButton>
                     </ListItem>
@@ -63,7 +67,10 @@ const UserMenu = ({ anchorEl, open, onClose, onLogout, navigate }) => (
         onClose={onClose}
     >
         {["Perfil", "Configuración", "Cerrar Sesión"].map((text, index) => (
-            <MenuItem key={text} onClick={()=>{
+            <MenuItem 
+                key={text} 
+                data-testid={`nav-user-menu-${text.toLowerCase().replace(/\s/g, '-')}`}
+                onClick={()=>{
               if(index===0){ // Perfil
                 navigate('/profile');
               } 
@@ -117,6 +124,7 @@ const Nav = () => {
                                     key={page.name} 
                                     component={Link}
                                     to={page.link}
+                                    data-testid={`nav-${page.code}`}
                                     sx={{ my: 2, color: defaultTheme.palette.primary.contrastText }}>
                                     {page.name}
                                 </Button>
@@ -125,7 +133,7 @@ const Nav = () => {
 
                         {/* Icons */}
                         <Box sx={{ flexGrow: 0 }}>
-                            <IconButton size="large" onClick={(e) => setAnchorElUser(e.currentTarget)} color="inherit">
+                            <IconButton size="large" onClick={(e) => setAnchorElUser(e.currentTarget)} color="inherit" data-testid="nav-mobile-menu-button">
                                 <AccountCircleIcon />
                             </IconButton>
                         </Box>

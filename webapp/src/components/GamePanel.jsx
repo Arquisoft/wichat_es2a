@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Paper, Typography, Button, CircularProgress } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
@@ -54,16 +54,16 @@ const GamePanel = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
 
-  const getQuestions = async () => {
+  const getQuestions = useCallback(async () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
       const data = response.data;      
       if (data && data.length === TOTAL_QUESTIONS) {data.map(question => ({...question,userCategory: category}));setQuestions(data);
       } else {getQuestions();}
-    } catch (error) {}};
+    } catch (error) {}}, [category]);
   
 
-  const chooseQuestion = async () => {
+  const chooseQuestion = useCallback(async () => {
     if (questions.length === 0) {await getQuestions();return;}
     const randomIndex = Math.floor(Math.random() * questions.length);
     const question = questions[randomIndex];
@@ -71,7 +71,7 @@ const GamePanel = () => {
     let options = question.options || [];
     if (!options.includes(question.answer)) {options.push(question.answer);}
     options = options.sort(() => Math.random() - 0.5);
-    setImageLoaded(false);setQuestionData({question: question.statements,image: question.image,options: options,correctAnswer: question.answer,userCategory: category});};
+    setImageLoaded(false);setQuestionData({question: question.statements,image: question.image,options: options,correctAnswer: question.answer,userCategory: category});}, [questions, category, getQuestions]);
 
   const resetCountdownTime = () => {setCountdownKey(prev => prev + 1);}
 
@@ -126,29 +126,29 @@ const getUserData = () => {
       return { userId, username };
   } catch {return {};}};
 
-  const startGame = async () => {
+  const startGame = useCallback(async () => {
     try {
         const userId = getUserId();
         await axios.post(`${apiEndpoint}/game/start`, { userId });
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
-};
+}, []);
 
 const endGame = async () => {
   try {
     const userId = getUserId();
-    const { id, username } = getUserData();
+    const { username } = getUserData();
     if (userId) {await axios.post(`${apiEndpoint}/game/end`, {userId, username,category: category,level: level,totalQuestions: TOTAL_QUESTIONS,answered: numberOfQuestionsAnswered,correct: correctCount, wrong: incorrectCount,points: scorePoints});}
 } catch (error) {}};
 
-useEffect(() => {startGame();}, []);
+useEffect(() => {startGame();}, [startGame]);
 
-  useEffect(() => {getQuestions();}, []);
+  useEffect(() => {getQuestions();}, [getQuestions]);
 
   useEffect(() => {
     if (questionData.question === '' && questions.length > 0 && !gameEnded) {chooseQuestion();}
-  }, [questions, gameEnded, questionData.question]);
+  }, [questions, gameEnded, questionData.question, chooseQuestion]);
 
   useEffect(() => {
     if (questionData.question !== '' && imageLoaded && initialLoading) {setInitialLoading(false);}
@@ -179,7 +179,7 @@ useEffect(() => {startGame();}, []);
   if (gameEnded) {endGame();const performanceMessage = correctCount >= TOTAL_QUESTIONS / 2 ? "¡Buen trabajo!" : "¡Sigue intentando!";
     return (<ThemeProvider theme={theme}><Grid container style={{height: '100vh',overflow: 'hidden',justifyContent: 'center',alignItems: 'center',backgroundColor: theme.palette.background.default,}}>
         <Paper style={{ padding: '14px 32px', textAlign: 'center' }}>
-        <Typography variant="h4" gutterBottom>Resumen del Juego</Typography>
+        <Typography variant="h4" gutterBottom data-testid="resumenJuego">Resumen del Juego</Typography>
         <Typography variant="h6" style={{ fontSize: '0.9rem' }}>Preguntas totales de la partida: {TOTAL_QUESTIONS}</Typography>
         <Typography variant="h6" style={{ fontSize: '0.9rem' }}>Preguntas contestadas: {numberOfQuestionsAnswered}</Typography>
         <Typography variant="h6" color="green" style={{ fontSize: '0.9rem' }}>Respuestas correctas: {correctCount}</Typography>
@@ -197,7 +197,7 @@ useEffect(() => {startGame();}, []);
           <Box style={{ display: 'flex', flexDirection:'row', justifyContent: 'space-between', width: '80%'}}><Score ref={scoreRef} style={{width: '50%',}} currentQuestion={currentQuestionIndex + 1} scoreLevel={level} answered={numberOfQuestionsAnswered} trues={correctCount} falses={incorrectCount} currentScore={correctCount - incorrectCount}/><Countdown ref={countdownRef} key={countdownKey} timerLevel={level} onCountdownFinish={handleCountdownFinish}/></Box>
           <Paper elevation={3} style={{ padding: '2%', height: '100%' }}>
             <Typography variant="h4" align="center" gutterBottom>{questionData.question}</Typography>
-            <Box style={{display: 'flex',justifyContent: 'center',alignItems: 'center',marginTop: '3%',position: 'relative',}}>{!imageLoaded && (<Box style={{position: 'absolute',zIndex: 1,display: 'flex',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',width: '100%',height: '100%',backgroundColor: 'rgba(255,255,255,0.7)'}}><CircularProgress style={{ marginBottom: '8px' }} /><Typography variant="caption">Cargando pregunta...</Typography></Box>)}<Box component="img" src={questionData.image} alt="Imagen del juego" onLoad={() => setImageLoaded(true)} onError={() => setImageLoaded(true)}style={{width: '100%',maxWidth: '70vw',maxHeight: '40vh', height: '50%', objectFit: 'contain', opacity: imageLoaded ? 1 : 0.7,}}/></Box>
+            <Box style={{display: 'flex',justifyContent: 'center',alignItems: 'center',marginTop: '3%',position: 'relative',}}>{!imageLoaded && (<Box style={{position: 'absolute',zIndex: 1,display: 'flex',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',width: '100%',height: '100%',backgroundColor: 'rgba(255,255,255,0.7)'}}><CircularProgress style={{ marginBottom: '8px' }} /><Typography variant="caption">Cargando pregunta...</Typography></Box>)}<Box component="img" src={questionData.image} data-testid="image-game" alt="Imagen del juego" onLoad={() => setImageLoaded(true)} onError={() => setImageLoaded(true)}style={{width: '100%',maxWidth: '70vw',maxHeight: '40vh', height: '50%', objectFit: 'contain', opacity: imageLoaded ? 1 : 0.7,}}/></Box>
             <Grid container spacing={2} justifyContent="center" style={{marginTop: '20px',transform: showChat ? 'scale(0.8)' : 'scale(1)',transition: 'transform 0.5s',}}>{questionData.options.map((respuesta, index) => (<Grid item xs={6} sm={6} md={6} key={index}><Button variant="contained" onClick={() => handleAnswerClick(respuesta)} fullWidth disabled={!imageLoaded || selectedAnswer !== null} style={{ padding: '10px',fontSize: '0.9rem',textAlign: 'center',...getButtonStyle(respuesta)}}data-testid={`respuesta-${index}`}>{respuesta}</Button></Grid>))}</Grid>
           </Paper></Box></Grid>
         {showChat && (<Grid item xs={12} sm={5} md={4} lg={4} xl={3} style={{height: '100vh',backgroundColor: theme.palette.primary.main,padding: '16px',position: 'absolute',top: 0,right: 0,width: showChat ? '40%' : '0%',maxWidth: '500px',transition: 'width 0.5s ease-out',overflowY: 'auto',}}><ChatPanel setShowChat={setShowChat} correctAnswer={questionData.correctAnswer} category={category}/></Grid>)}

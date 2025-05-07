@@ -17,7 +17,7 @@ describe('Contact Component', () => {
         'David Covián Gómez', 
         'Marcos Llanos Vega', 
         'Darío Cristóbal González', 
-        'Hugo Fernández Rogríguez', 
+        'Hugo Fernández Rodríguez', 
         'Hugo Prendes Menéndez'
     ];
     const roles = [

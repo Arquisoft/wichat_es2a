@@ -86,6 +86,7 @@ const Home = () => {
           <FormControl fullWidth error={categoryError} sx={{ marginBottom: 2 }}>
             <InputLabel id="category-select-label">Seleccionar categoría</InputLabel>
             <Select
+              data-testid="category-select"
               labelId="category-select-label"
               value={category}
               label="Seleccionar categoría"
@@ -94,7 +95,7 @@ const Home = () => {
             >
 
               {Object.keys(categoryEmojis).map((categoria, index) => (
-                <MenuItem key={index} value={categoria}>
+                <MenuItem key={index} value={categoria} data-testid={`category-option-${categoria}`}>
                   {categoria} {categoryEmojis[categoria]}
                 </MenuItem>
               ))}
@@ -112,6 +113,7 @@ const Home = () => {
 
             <InputLabel id="level-select-label">Seleccionar nivel</InputLabel>
             <Select
+              data-testid="level-select"
               labelId="level-select-label"
               value={level}
               label="Seleccionar nivel"
@@ -119,7 +121,7 @@ const Home = () => {
               displayEmpty
             >
               {Object.entries(gameLevels).map(([key, label]) => (
-                <MenuItem key={key} value={key}>
+                <MenuItem key={key} value={key} data-testid={`level-option-${key}`}>
                   {label}
                 </MenuItem>
               ))}
@@ -133,6 +135,7 @@ const Home = () => {
 
           <Box>
             <Button
+              data-testid="start-game-button"
               variant="contained"
               color="primary"
               // component={Link}

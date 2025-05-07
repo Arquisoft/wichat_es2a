@@ -59,7 +59,7 @@ const ProfilePage = () => {
             mouth: options.mouth,
             hairColor: options.hairColor,
             skinColor: options.skinColor
-            
+
         });
         return `${base}?${params.toString()}`;
     }
@@ -104,6 +104,47 @@ const ProfilePage = () => {
         navigate('/login');
     };
 
+    // Datos para el gráfico de estadísticas
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+
+    if (Array.isArray(gameHistory)) {
+        correctAnswers = gameHistory.reduce((total, game) => total + game.correct, 0);
+        wrongAnswers = gameHistory.reduce((total, game) => total + game.wrong, 0);
+    }
+
+
+    const data = {
+        labels: ['Correctas', 'Erróneas'],
+        datasets: [
+            {
+                label: 'Estadísticas de Juego',
+                data: [correctAnswers, wrongAnswers],
+                backgroundColor: [
+                    theme.palette.green.main,
+                    theme.palette.red.main
+
+                ],
+                hoverBackgroundColor: [
+                    theme.palette.green.dark,
+                    theme.palette.red.dark
+                ],
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        },
+        maintainAspectRatio: false,
+    }
+
+
+
     if (loading) {
         return (
             <ThemeProvider theme={theme}>
@@ -138,9 +179,9 @@ const ProfilePage = () => {
                         {/* Columna derecha: Información del usuario */}
                         <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Box sx={{ textAlign: 'center', mt: 4 }}>
-                                <Avatar 
-                                    sx={{ width: 120, height: 120, margin: 'auto' }} 
-                                    src={getAvatarUrl(user.avatarOptions)} 
+                                <Avatar
+                                    sx={{ width: 120, height: 120, margin: 'auto' }}
+                                    src={getAvatarUrl(user.avatarOptions)}
                                 />
                                 <Typography variant="body1" sx={{ mt: 1 }}>
                                     Aquí puedes ver y editar tu perfil.
@@ -168,38 +209,8 @@ const ProfilePage = () => {
         )
     }
 
-    // Datos para el gráfico de estadísticas
-    const correctAnswers = gameHistory.reduce((total, game) => total + game.correct, 0);
-    const wrongAnswers = gameHistory.reduce((total, game) => total + game.wrong, 0);
 
-    const data = {
-        labels: ['Correctas', 'Erróneas'],
-        datasets: [
-            {
-                label: 'Estadísticas de Juego',
-                data: [correctAnswers, wrongAnswers],
-                backgroundColor: [
-                    theme.palette.green.main,
-                    theme.palette.red.main
 
-                ],
-                hoverBackgroundColor: [
-                    theme.palette.green.dark,
-                    theme.palette.red.dark
-                ],
-            },
-        ],
-    };
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            }
-        },
-        maintainAspectRatio: false,
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -234,8 +245,8 @@ const ProfilePage = () => {
                     {/* Columna derecha: Información del usuario */}
                     <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Box sx={{ textAlign: 'center', mt: 4 }}>
-                            <Avatar 
-                                sx={{ width: 120, height: 120, margin: 'auto' }} 
+                            <Avatar
+                                sx={{ width: 120, height: 120, margin: 'auto' }}
                                 src={getAvatarUrl(user.avatarOptions)} />
                             <Typography variant="body1" sx={{ mt: 1 }}>
                                 Aquí puedes ver y editar tu perfil.

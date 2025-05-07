@@ -1,7 +1,11 @@
 const request = require('supertest');
-const app = require('./mathGameRoutes');
-const service = require('./service/mathGameService');
 const express = require('express');
+const router = require('./mathGameRoutes');
+const service = require('./service/mathGameService');
+
+// Crear una aplicación Express para los tests
+const app = express();
+app.use('/mathgame', router);
 
 jest.mock('./service/mathGameService');
 

@@ -64,6 +64,9 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
             case 'dificil':
                 truesPoints = 700;
                 break;
+            default:
+                truesPoints = 500;
+                break;
         }
 
         // Puntos por fallo por nivel
@@ -77,6 +80,9 @@ const Score =  forwardRef(({ currentQuestion, scoreLevel, answered, trues, false
                 break;
             case 'dificil':
                 falsesPoints = -300;
+                break;
+            default:
+                falsesPoints = -200;
                 break;
         }
 
