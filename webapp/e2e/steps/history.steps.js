@@ -33,7 +33,7 @@ defineFeature(feature, test => {
 
             await expect(page).toFill('[data-testid="username-field"] input', username);
             await expect(page).toFill('[data-testid="password-field"] input', password);
-            await expect(page).toClick("button", { text: "LOGIN" });
+            await expect(page).toClick("button", { text: "Login" });
         });
 
         when('User navigates to the history page', async () => {
