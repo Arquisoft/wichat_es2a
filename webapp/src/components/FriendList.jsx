@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import profilePic from '../media/fotousuario.png';
+//import profilePic from '../media/fotousuario.png';
 import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import HistoryIcon from '@mui/icons-material/History';
 
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
-const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
+//const apiEndpoint2 = process.env.USER_SERVICE_ENDPOINT || 'http://localhost:8001';
 
 // Función para construir la URL del avatar de DiceBear desde avatarOptions
 const getAvatarUrl = (options) => {
