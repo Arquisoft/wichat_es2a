@@ -9,6 +9,28 @@ let browser;
 defineFeature(feature, test => {
 
     beforeAll(async () => {
+        // 1. Crear usuario de test si no existe
+        try {
+            await fetch(`http://localhost:8000/adduser`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: 'NataliaBA',
+                    password: 'Contrasena$1',
+                    confirmPassword: 'Contrasena$1',
+                    avatarOptions: {
+                        hair: "short",
+                        eyes: "happy",
+                        mouth: "smile",
+                        hairColor: "brown",
+                        skinColor: "light"
+                    }
+                })
+            });
+        } catch (e) {
+            console.warn("⚠️ El usuario ya puede existir o hubo un error al crearlo:", e.message);
+        }
+
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] })
             : await puppeteer.launch({ headless: false, slowMo: 100 });
@@ -41,7 +63,7 @@ defineFeature(feature, test => {
             const [menuButton] = await page.$x('//*[@id="root"]/div/header/div/div/div[3]/button');
             if (!menuButton) throw new Error('Botón de menú no encontrado');
             await menuButton.click();
-        
+
             // 2. Esperar y hacer clic en el <li> que contiene un <p> con el texto exacto
             const [logoutItem] = await page.$x('//li[.//p[normalize-space()="Cerrar Sesión"]]');
             if (!logoutItem) throw new Error('Opción de logout no encontrada');

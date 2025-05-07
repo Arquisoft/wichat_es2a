@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const { defineFeature, loadFeature } = require('jest-cucumber');
+const { response } = require('../../../wikidata/src/wikidataRoutes');
 const setDefaultOptions = require('expect-puppeteer').setDefaultOptions;
 const feature = loadFeature('./features/history.feature');
 
@@ -9,6 +10,67 @@ let browser;
 defineFeature(feature, test => {
 
     beforeAll(async () => {
+        let userId = null;
+
+        // 1. Crear usuario de test si no existe
+        try {
+            const res = await fetch(`http://localhost:8000/adduser`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: 'NataliaBA',
+                    password: 'Contrasena$1',
+                    confirmPassword: 'Contrasena$1',
+                    avatarOptions: {
+                        hair: "short",
+                        eyes: "happy",
+                        mouth: "smile",
+                        hairColor: "brown",
+                        skinColor: "light"
+                    }
+                })
+            });
+
+            const user = await res.json();
+            userId = user._id; // Guardar el ID del usuario creado
+        } catch (e) {
+            console.warn("⚠️ El usuario ya puede existir o hubo un error al crearlo:", e.message);
+
+            // Si ya existe, recuperamos su ID con un GET (asumiendo que hay endpoint)
+            const res = await fetch(`http://localhost:8000/user/username/NataliaBA`);
+            const user = await res.json();
+            userId = user._id;
+        }
+
+        // 2. Insertar historial (partida de prueba)
+        if (userId) {
+            try {
+                await fetch(`http://localhost:3001/game/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId })
+                });
+
+                await fetch(`http://localhost:3001/game/end`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId,
+                        username: 'NataliaBA',
+                        category: 'Ciencia',
+                        level: 'Difícil',
+                        totalQuestions: 10,
+                        answered: 10,
+                        correct: 9,
+                        wrong: 1,
+                        points: 90
+                    })
+                });
+            } catch (e) {
+                console.error("❌ Error al insertar partida de prueba:", e.message);
+            }
+        }
+
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] })
             : await puppeteer.launch({ headless: false, slowMo: 100, defaultViewport: { width: 1920, height: 1080 } });
@@ -37,7 +99,7 @@ defineFeature(feature, test => {
         });
 
         when('User navigates to the history page', async () => {
-            await expect(page).toClick('a', { text: 'HISTORIAL' });
+            await expect(page).toClick('a', { text: 'Historial' });
         });
 
         then('User sees a list of past games', async () => {

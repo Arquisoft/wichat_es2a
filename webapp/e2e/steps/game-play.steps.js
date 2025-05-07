@@ -9,6 +9,28 @@ let browser;
 defineFeature(feature, test => {
 
     beforeAll(async () => {
+        // 1. Crear usuario de test si no existe
+        try {
+            await fetch(`http://localhost:8000/adduser`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: 'NataliaBA',
+                    password: 'Contrasena$1',
+                    confirmPassword: 'Contrasena$1',
+                    avatarOptions: {
+                        hair: "short",
+                        eyes: "happy",
+                        mouth: "smile",
+                        hairColor: "brown",
+                        skinColor: "light"
+                    }
+                })
+            });
+        } catch (e) {
+            console.warn("⚠️ El usuario ya puede existir o hubo un error al crearlo:", e.message);
+        }
+
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] })
             : await puppeteer.launch({ headless: false, slowMo: 100 });
@@ -39,7 +61,7 @@ defineFeature(feature, test => {
             // Definimos la categoría a seleccionar
             category = "Banderas"
             dificulty = "facil"
-            
+
             // Introduces los datos de usuario y contraseña
             await expect(page).toFill('[data-testid="username-field"] input', username);
             await expect(page).toFill('[data-testid="password-field"] input', password);
@@ -53,13 +75,13 @@ defineFeature(feature, test => {
             await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
             // Escoge la categoría "Futbolistas" del menú desplegable
-            await page.click('li[data-value="'+category+'"]');
+            await page.click('li[data-value="' + category + '"]');
 
             // Abre el Select para escoger la dificultad
             await expect(page).toClick('[aria-labelledby="level-select-label"]');
 
             // Escoge la dificultad "Medio" del menú desplegable
-            await page.click('li[data-value="'+dificulty+'"]');
+            await page.click('li[data-value="' + dificulty + '"]');
 
             // Finalmente, hacer clic en el botón para comenzar el juego.
             await expect(page).toClick('button', { text: 'Comenzar a jugar' });
