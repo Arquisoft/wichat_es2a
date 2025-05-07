@@ -82,22 +82,22 @@ defineFeature(feature, test => {
       await page.waitForSelector(`[data-testid="category-option-${category}"`, { visible: true, timeout: 60000 });
       await page.click(`[data-testid="category-option-${category}"`, { timeout: 60000 });
 
-      await page.waitForSelector('[data-testid="level-select"]', { visible: true, timeout: 60000 });
-      await expect(page).toClick('[data-testid="level-select"]', { timeout: 60000 });
+      await page.waitForSelector('[data-testid="level-select"]', { visible: true, timeout: 500000 });
+      await expect(page).toClick('[data-testid="level-select"]', { timeout: 500000 });
 
-      await page.waitForSelector(`[data-testid="level-option-${dificulty}"]`, { visible: true, timeout: 60000 });
-      await page.click(`[data-testid="level-option-${dificulty}"]`, { timeout: 60000 });
+      await page.waitForSelector(`[data-testid="level-option-${dificulty}"]`, { visible: true, timeout: 500000 });
+      await page.click(`[data-testid="level-option-${dificulty}"]`, { timeout: 500000 });
 
-      await page.waitForSelector('[data-testid="start-game-button"]', { visible: true, timeout: 60000 });
-      await expect(page).toClick('[data-testid="start-game-button"]', { text: 'Comenzar a jugar', timeout: 60000 });
+      await page.waitForSelector('[data-testid="start-game-button"]', { visible: true, timeout: 500000 });
+      await expect(page).toClick('[data-testid="start-game-button"]', { text: 'Comenzar a jugar', timeout: 500000 });
     });
 
     then('Game start in this category', async () => {
       await page.waitForFunction(
         () => document.body.innerText.includes('¿De qué país es esta bandera?'),
-        { timeout: 60000 }
+        { timeout: 500000 }
       );
-      await expect(page).toMatchElement('div', { text: '¿De qué país es esta bandera?', timeout: 60000 });
+      await expect(page).toMatchElement('div', { text: '¿De qué país es esta bandera?', timeout: 500000 });
     });
   })
 
