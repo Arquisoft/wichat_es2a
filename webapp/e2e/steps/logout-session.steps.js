@@ -73,7 +73,7 @@ defineFeature(feature, test => {
         then('User logs out and sees the login view', async () => {
             await page.waitForFunction(
                 () => Array.from(document.querySelectorAll('h1')).some(el => el.textContent.includes('Log in to your account')),
-                { timeout: 600000 }
+                { timeout: 20000 }
             );
             const titulo = await page.$eval('h1', el => el.textContent);
             expect(titulo).toContain('Log in to your account');

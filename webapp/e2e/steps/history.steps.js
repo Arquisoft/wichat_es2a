@@ -101,20 +101,19 @@ defineFeature(feature, test => {
         });
 
 when('User navigates to the history page', async () => {
-    // Espera a que exista y sea visible el enlace
+    // Screenshot y log para depuración
+    await page.screenshot({ path: 'debug-historial-before.png' });
+    const links = await page.$$eval('a', els => els.map(e => e.textContent.trim()));
+    console.log('Links visibles:', links);
+
+    // Espera a que exista y sea visible el enlace con texto que incluya 'Historial'
     await page.waitForFunction(
         () => {
-            const a = Array.from(document.querySelectorAll('a')).find(a => a.textContent.trim() === 'Historial');
-            return a && a.offsetParent !== null; // visible
+            const a = Array.from(document.querySelectorAll('a')).find(a => a.textContent && a.textContent.includes('Historial') && a.offsetParent !== null);
+            return !!a;
         },
         { timeout: 20000 }
     );
-    // Screenshot para depuración
-    await page.screenshot({ path: 'debug-historial.png' });
-    // Log de todos los enlaces
-    const links = await page.$$eval('a', els => els.map(e => e.textContent));
-    console.log('Links:', links);
-    // Ahora sí, haz click
     await expect(page).toClick('a', { text: 'Historial' });
 });
 
