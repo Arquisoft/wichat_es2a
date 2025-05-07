@@ -54,7 +54,8 @@ function PrivateChat() {
     fetchMessages();
     const interval = setInterval(fetchMessages, 3000); // actualización cada 3 segundos
     return () => clearInterval(interval);
-  }, [username, friendUsername]);
+  // }, [username, friendUsername]);
+  });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
