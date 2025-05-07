@@ -33,11 +33,11 @@ defineFeature(feature, test => {
 
             await expect(page).toFill('[data-testid="username-field"] input', username);
             await expect(page).toFill('[data-testid="password-field"] input', password);
-            await expect(page).toClick("button", { text: "Login" });
+            await expect(page).toClick("button", { text: "LOGIN" });
         });
 
         when('User navigates to the history page', async () => {
-            await expect(page).toClick('a', { text: 'Historial' });
+            await expect(page).toClick('a', { text: 'HISTORIAL' });
         });
 
         then('User sees a list of past games', async () => {
