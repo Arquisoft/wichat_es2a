@@ -149,6 +149,9 @@ services:
       - authservice
       - llmservice
       - wikidata
+      - groupservice
+      - mathgame
+      - apiservice
     ports:
       - "8000:8000"
     networks:
