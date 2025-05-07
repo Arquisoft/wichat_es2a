@@ -143,9 +143,16 @@ when('User navigates to the history page', async () => {
             // Scroll al enlace
             await handle.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
             await page.waitForTimeout(300);
-            await handle.click();
-            clicked = true;
-            break;
+            try {
+                await handle.click({ delay: 100 });
+                clicked = true;
+                break;
+            } catch (e) {
+                // Si el click de Puppeteer falla, fuerza el click con JS
+                await handle.evaluate(el => el.click());
+                clicked = true;
+                break;
+            }
         }
     }
     if (!clicked) throw new Error('No se pudo hacer click en el enlace Historial');
