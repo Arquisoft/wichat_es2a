@@ -104,6 +104,41 @@ const ProfilePage = () => {
         navigate('/login');
     };
 
+    // Datos para el gráfico de estadísticas
+    const correctAnswers = gameHistory.reduce((total, game) => total + game.correct, 0);
+    const wrongAnswers = gameHistory.reduce((total, game) => total + game.wrong, 0);
+
+    const data = {
+        labels: ['Correctas', 'Erróneas'],
+        datasets: [
+            {
+                label: 'Estadísticas de Juego',
+                data: [correctAnswers, wrongAnswers],
+                backgroundColor: [
+                    theme.palette.green.main,
+                    theme.palette.red.main
+
+                ],
+                hoverBackgroundColor: [
+                    theme.palette.green.dark,
+                    theme.palette.red.dark
+                ],
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        },
+        maintainAspectRatio: false,
+    }
+
+
+
     if (loading) {
         return (
             <ThemeProvider theme={theme}>
@@ -168,39 +203,9 @@ const ProfilePage = () => {
         )
     }
 
-    // Datos para el gráfico de estadísticas
-    const correctAnswers = gameHistory.reduce((total, game) => total + game.correct, 0);
-    const wrongAnswers = gameHistory.reduce((total, game) => total + game.wrong, 0);
+    
 
-    const data = {
-        labels: ['Correctas', 'Erróneas'],
-        datasets: [
-            {
-                label: 'Estadísticas de Juego',
-                data: [correctAnswers, wrongAnswers],
-                backgroundColor: [
-                    theme.palette.green.main,
-                    theme.palette.red.main
-
-                ],
-                hoverBackgroundColor: [
-                    theme.palette.green.dark,
-                    theme.palette.red.dark
-                ],
-            },
-        ],
-    };
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            }
-        },
-        maintainAspectRatio: false,
-    }
-
+    
     return (
         <ThemeProvider theme={theme}>
             <Container maxWidth="xl">

@@ -18,25 +18,25 @@ import { useTheme } from '@mui/material/styles';
 const apiEndpoint = process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8000';
 
 const GlobalRanking = () => {
-    const getUserId = () => {
-        try {
-            const userDataStr = window.localStorage.getItem('user');
-            if (!userDataStr) return null;
+    // const getUserId = () => {
+    //     try {
+    //         const userDataStr = window.localStorage.getItem('user');
+    //         if (!userDataStr) return null;
 
-            const userData = JSON.parse(userDataStr);
-            const parsedToken = userData?.token;
+    //         const userData = JSON.parse(userDataStr);
+    //         const parsedToken = userData?.token;
 
-            if (parsedToken) {
-                const decoded = JSON.parse(atob(parsedToken.split('.')[1]));
-                return decoded?.userId || null;
-            }
+    //         if (parsedToken) {
+    //             const decoded = JSON.parse(atob(parsedToken.split('.')[1]));
+    //             return decoded?.userId || null;
+    //         }
 
-            return null;
-        } catch (error) {
-            console.error("Error al recuperar userId:", error);
-            return null;
-        }
-    };
+    //         return null;
+    //     } catch (error) {
+    //         console.error("Error al recuperar userId:", error);
+    //         return null;
+    //     }
+    // };
     const theme = useTheme();
     // const [gameHistory, setGameHistory] = useState([]);
     const [globalRanking, setGlobalRanking] = useState([]);

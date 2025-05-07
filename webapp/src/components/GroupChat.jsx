@@ -31,7 +31,7 @@ const GroupChat = ({ groupName, onClose }) => {
     const [error, setError] = useState(null);
     const chatEndRef = useRef(null);
     const { username } = getUserData();
-    const [polling, setPolling] = useState(true);
+    const [polling] = useState(true);
 
     useEffect(() => {
         let interval;
