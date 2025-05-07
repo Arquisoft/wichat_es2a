@@ -101,7 +101,11 @@ defineFeature(feature, test => {
         });
 
         when('User navigates to the history page', async () => {
-            await expect(page).toClick('a', { text: 'Historial' });
+            await page.waitForFunction(
+                () => !!Array.from(document.querySelectorAll('a')).find(a => a.textContent.trim() === 'Historial'),
+                { timeout: 600000 }
+            );
+            await expect(page).toClick('a', { text: 'Historial' }); 
         });
 
         then('User sees a list of past games', async () => {

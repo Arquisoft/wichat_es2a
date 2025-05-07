@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - Fix-Deployment-Dario
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:

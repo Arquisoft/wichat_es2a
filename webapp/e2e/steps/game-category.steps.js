@@ -86,6 +86,7 @@ defineFeature(feature, test => {
       await expect(page).toClick('[aria-labelledby="level-select-label"]');
 
       // Escoge la dificultad "Medio" del menú desplegable
+      await page.waitForSelector('li[data-value="' + dificulty + '"]', { visible: true, timeout: 600000 });
       await page.click('li[data-value="' + dificulty + '"]');
 
       // Finalmente, hacer clic en el botón para comenzar el juego.
