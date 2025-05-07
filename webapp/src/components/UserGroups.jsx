@@ -42,7 +42,7 @@ const UserGroups = () => {
 
     useEffect(() => {
         fetchGroups();
-    }, []);
+    });
 
     const fetchGroups = async () => {
         try {
