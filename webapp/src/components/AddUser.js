@@ -1,5 +1,5 @@
 // src/components/AddUser.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
   Container, Grid, Typography, TextField,
@@ -25,7 +25,6 @@ const AddUser = () => {
   const [showPassword, setShowPassword] = useState(false); // mostrar contraseña
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // mostrar confirmar contraseña
   // Para el avatar
-  const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarOptions, setAvatarOptions] = useState({
     hairColor: '3a1a00',
     eyes: 'cheery',
@@ -35,13 +34,6 @@ const AddUser = () => {
   });
 
   const navigate = useNavigate();
-
-  // Según vayamos cambiando el avatar, se va mostrando
-  useEffect(() => {
-    const { hairColor, eyes, hair, mouth, skinColor } = avatarOptions;
-    const newAvatarUrl = `https://api.dicebear.com/9.x/big-smile/svg?hairColor=${hairColor}&eyes=${eyes}&hair=${hair}&mouth=${mouth}&skinColor=${skinColor}`;
-    setAvatarUrl(newAvatarUrl);
-  }, [avatarOptions]);
 
   const addUser = async () => {
     try {
