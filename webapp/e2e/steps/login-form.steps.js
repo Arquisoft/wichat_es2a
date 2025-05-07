@@ -27,8 +27,8 @@ defineFeature(feature, test => {
 
   test('The user has an account and wants to log in', ({given, when, then}) => {
     
-    const username = "admin";
-    const password = "admin";
+    const username = "NataliaBA";
+    const password = "Contrasena$1";
 
     given('A registered user', async () => {
       await expect(page).toMatchElement('h1', { text: "Log in to your account" });

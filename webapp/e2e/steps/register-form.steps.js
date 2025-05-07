@@ -29,8 +29,8 @@ defineFeature(feature, test => {
     let password;
 
     given('An unregistered user', async () => {
-      username = "prueba" + Math.floor(Math.random() * 1000);
-      password = "EstoEsUnaPassDePrueba123."
+      username = "prueba2" + Math.floor(Math.random() * 1000);
+      password = "EstoEsUnaPassDePrueba123-"
       await expect(page).toClick("a", { text: "Sign up" });
       
     });

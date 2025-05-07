@@ -33,11 +33,11 @@ defineFeature(feature, test => {
     given('Registered user login' , async () => {
 
       // Definimos los datos de usuario y contraseña
-      username = "admin"
-      password = "admin"
+      username = "NataliaBA"
+      password = "Contrasena$1"
 
       // Definimos la categoría a seleccionar
-      category = "Lugares"
+      category = "Banderas"
       dificulty = "medio"
 
       // Introduces los datos de usuario y contraseña
