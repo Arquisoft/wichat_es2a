@@ -72,6 +72,7 @@ defineFeature(feature, test => {
 
         when('User choose category, press start button and play', async () => {
             // Abre el Select para escoger la categoría (Futbolistas)
+            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true });
             await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
             // Escoge la categoría "Futbolistas" del menú desplegable

@@ -74,6 +74,7 @@ defineFeature(feature, test => {
     when('User choose category and press start button', async () => {
 
       // Abre el Select para escoger la categoría
+      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true });
       await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
       // Escoge la categoría del menú desplegable
