@@ -50,8 +50,8 @@ defineFeature(feature, test => {
         let password;
         given('User in home view', async () => {
 
-            username = "NataliaBA"
-            password = "Contrasena$1"
+            username = "NataliaBD"
+            password = "Contrasena$4"
             await expect(page).toFill('[data-testid="username-field"] input', username);
             await expect(page).toFill('[data-testid="password-field"] input', password);
             await expect(page).toClick("button", { text: "Login" });

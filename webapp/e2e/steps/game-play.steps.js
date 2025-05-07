@@ -55,8 +55,8 @@ defineFeature(feature, test => {
         given('Registered user login', async () => {
 
             // Definimos los datos de usuario y contraseña
-            username = "NataliaBA"
-            password = "Contrasena$1"
+            username = "NataliaBC"
+            password = "Contrasena$3"
 
             // Definimos la categoría a seleccionar
             category = "Banderas"

@@ -7,8 +7,7 @@ let page;
 let browser;
 
 defineFeature(feature, test => {
-  let userId = null;
-
+  
   beforeAll(async () => {
     // 1. Crear usuario de test si no existe
     try {
@@ -28,9 +27,6 @@ defineFeature(feature, test => {
           }
         })
       });
-
-      const user = await res.json();
-      userId = user._id; // Guardar el ID del usuario creado
     } catch (e) {
       console.warn("⚠️ El usuario ya puede existir o hubo un error al crearlo:", e.message);
     }
@@ -59,8 +55,9 @@ defineFeature(feature, test => {
     given('Registered user login', async () => {
 
       // Definimos los datos de usuario y contraseña
-      username = "NataliaBA"
-      password = "Contrasena$1"
+      username = "NataliaBB";
+
+      password = "Contrasena$2";
 
       // Definimos la categoría a seleccionar
       category = "Banderas"
