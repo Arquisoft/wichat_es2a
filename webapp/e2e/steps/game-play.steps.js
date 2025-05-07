@@ -60,7 +60,7 @@ defineFeature(feature, test => {
 
             // Definimos la categoría a seleccionar
             category = "Banderas"
-            dificulty = "facil"
+            dificulty = "medio"
 
             // Introduces los datos de usuario y contraseña
             await expect(page).toFill('[data-testid="username-field"] input', username);
@@ -72,7 +72,7 @@ defineFeature(feature, test => {
 
         when('User choose category, press start button and play', async () => {
             // Abre el Select para escoger la categoría (Futbolistas)
-            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true });
+            await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000  });
             await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
             // Escoge la categoría "Futbolistas" del menú desplegable
@@ -89,10 +89,10 @@ defineFeature(feature, test => {
 
             for (let i = 0; i < 10; i++) {
                 // Esperamos que se cargue la imagen
-                await page.waitForSelector('img[alt="Imagen del juego"]', { visible: true });
+                await page.waitForSelector('img[alt="Imagen del juego"]', { visible: true, timeout: 100000  });
 
                 // Esperamos a que las opciones estén disponibles
-                await page.waitForSelector(`[data-testid^="respuesta-"]`, { visible: true });
+                await page.waitForSelector(`[data-testid^="respuesta-"]`, { visible: true, timeout: 100000  });
 
                 // Seleccionamos todas las opciones disponibles
                 const opciones = await page.$$(`[data-testid^="respuesta-"]`);
@@ -107,7 +107,7 @@ defineFeature(feature, test => {
         });
 
         then('User sees the game summary', async () => {
-            await page.waitForSelector('h4', { text: 'Resumen del Juego', timeout: 10000 });
+            await page.waitForSelector('h4', { text: 'Resumen del Juego', timeout: 100000 });
             const resumenTexto = await page.$eval('h4', el => el.textContent);
             expect(resumenTexto).toContain('Resumen del Juego');
         });

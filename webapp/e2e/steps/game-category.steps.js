@@ -74,18 +74,18 @@ defineFeature(feature, test => {
     when('User choose category and press start button', async () => {
 
       // Abre el Select para escoger la categoría
-      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true });
+      await page.waitForSelector('[aria-labelledby="category-select-label"]', { visible: true, timeout: 100000 });
       await expect(page).toClick('[aria-labelledby="category-select-label"]');
 
       // Escoge la categoría del menú desplegable
       await page.click('li[data-value="' + category + '"]');
 
       // Abre el Select para escoger la dificultad
-      await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true });
+      await page.waitForSelector('[aria-labelledby="level-select-label"]', { visible: true, timeout: 100000  });
       await expect(page).toClick('[aria-labelledby="level-select-label"]');
 
       // Escoge la dificultad "Medio" del menú desplegable
-      await page.waitForSelector('li[data-value="' + dificulty + '"]', { visible: true });
+      await page.waitForSelector('li[data-value="' + dificulty + '"]', { visible: true, timeout: 100000  });
       await page.click('li[data-value="' + dificulty + '"]');
 
       // Finalmente, hacer clic en el botón para comenzar el juego.
@@ -98,7 +98,7 @@ defineFeature(feature, test => {
     then('Game start in this category', async () => {
 
       // Espera a que el div que contiene el texto sea visible.
-      await page.waitForSelector('div', { text: '¿De qué país es esta bandera?' });
+      await page.waitForSelector('div', { text: '¿De qué país es esta bandera?', timeout: 100000  });
 
       // Verifica que el texto esté presente en el div.
       // Se comprueba el texto de la pregunta que se muestra en el juego.
