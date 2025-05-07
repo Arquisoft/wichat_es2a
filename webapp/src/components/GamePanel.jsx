@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Paper, Typography, Button, CircularProgress } from '@mui/material';
 import { MessageCircle } from 'lucide-react';
 import ChatPanel from './ChatPanel';
@@ -54,16 +54,16 @@ const GamePanel = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
 
-  const getQuestions = async () => {
+  const getQuestions = useCallback(async () => {
     try {
       const response = await axios.get(`${apiEndpoint}/wikidata/question/`+category+`/`+TOTAL_QUESTIONS);
       const data = response.data;      
       if (data && data.length === TOTAL_QUESTIONS) {data.map(question => ({...question,userCategory: category}));setQuestions(data);
       } else {getQuestions();}
-    } catch (error) {}};
+    } catch (error) {}}, [category]);
   
 
-  const chooseQuestion = async () => {
+  const chooseQuestion = useCallback(async () => {
     if (questions.length === 0) {await getQuestions();return;}
     const randomIndex = Math.floor(Math.random() * questions.length);
     const question = questions[randomIndex];
@@ -71,7 +71,7 @@ const GamePanel = () => {
     let options = question.options || [];
     if (!options.includes(question.answer)) {options.push(question.answer);}
     options = options.sort(() => Math.random() - 0.5);
-    setImageLoaded(false);setQuestionData({question: question.statements,image: question.image,options: options,correctAnswer: question.answer,userCategory: category});};
+    setImageLoaded(false);setQuestionData({question: question.statements,image: question.image,options: options,correctAnswer: question.answer,userCategory: category});}, [questions, category, getQuestions]);
 
   const resetCountdownTime = () => {setCountdownKey(prev => prev + 1);}
 
@@ -126,29 +126,29 @@ const getUserData = () => {
       return { userId, username };
   } catch {return {};}};
 
-  const startGame = async () => {
+  const startGame = useCallback(async () => {
     try {
         const userId = getUserId();
         await axios.post(`${apiEndpoint}/game/start`, { userId });
     } catch (error) {
         console.error('Error al iniciar el juego:', error);
     }
-};
+}, []);
 
 const endGame = async () => {
   try {
     const userId = getUserId();
-    const { id, username } = getUserData();
+    const { username } = getUserData();
     if (userId) {await axios.post(`${apiEndpoint}/game/end`, {userId, username,category: category,level: level,totalQuestions: TOTAL_QUESTIONS,answered: numberOfQuestionsAnswered,correct: correctCount, wrong: incorrectCount,points: scorePoints});}
 } catch (error) {}};
 
-useEffect(() => {startGame();}, []);
+useEffect(() => {startGame();}, [startGame]);
 
-  useEffect(() => {getQuestions();}, []);
+  useEffect(() => {getQuestions();}, [getQuestions]);
 
   useEffect(() => {
     if (questionData.question === '' && questions.length > 0 && !gameEnded) {chooseQuestion();}
-  }, [questions, gameEnded, questionData.question]);
+  }, [questions, gameEnded, questionData.question, chooseQuestion]);
 
   useEffect(() => {
     if (questionData.question !== '' && imageLoaded && initialLoading) {setInitialLoading(false);}
