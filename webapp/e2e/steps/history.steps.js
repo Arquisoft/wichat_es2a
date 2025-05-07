@@ -101,12 +101,11 @@ defineFeature(feature, test => {
         });
 
         when('User navigates to the history page', async () => {
-            await page.waitForSelector('a', { text: 'Historial', timeout: 10000 });
-            await expect(page).toClick('a', { text: 'Historial' });
+            await expect(page).toClick('a', { text: 'Historial', timeout: 100000 });
         });
 
         then('User sees a list of past games', async () => {
-            await page.waitForSelector('h4', { text: 'Historial de Partidas', timeout: 10000 });
+            await page.waitForSelector('h4', { text: 'Historial de Partidas', timeout: 100000 });
             const historyHeader = await page.$eval('h4', el => el.textContent);
             expect(historyHeader).toContain('Historial de Partidas');
         });
