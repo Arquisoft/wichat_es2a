@@ -125,6 +125,9 @@ when('User navigates to the history page', async () => {
         // Si ya está visible, espera un poco para asegurar renderizado
         await page.waitForTimeout(500);
     }
+    // Screenshot antes del click manual
+    await page.screenshot({ path: 'debug-historial-preclick.png' });
+
     // Click manual sobre el primer enlace visible con 'Historial'
     const linksHandles = await page.$$('a');
     let clicked = false;
@@ -132,6 +135,14 @@ when('User navigates to the history page', async () => {
         const text = await page.evaluate(el => el.textContent.trim(), handle);
         const visible = await handle.evaluate(el => el.offsetParent !== null);
         if (text.includes('Historial') && visible) {
+            // Log bounding box y z-index
+            const box = await handle.boundingBox();
+            const z = await handle.evaluate(el => getComputedStyle(el).zIndex);
+            console.log('BoundingBox:', box, 'z-index:', z);
+
+            // Scroll al enlace
+            await handle.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+            await page.waitForTimeout(300);
             await handle.click();
             clicked = true;
             break;
