@@ -7,6 +7,7 @@ let page;
 let browser;
 
 defineFeature(feature, test => {
+  let userId = null;
 
   beforeAll(async () => {
     // 1. Crear usuario de test si no existe
@@ -27,6 +28,9 @@ defineFeature(feature, test => {
           }
         })
       });
+
+      const user = await res.json();
+      userId = user._id; // Guardar el ID del usuario creado
     } catch (e) {
       console.warn("⚠️ El usuario ya puede existir o hubo un error al crearlo:", e.message);
     }
@@ -36,7 +40,7 @@ defineFeature(feature, test => {
       : await puppeteer.launch({ headless: false, slowMo: 100 });
     page = await browser.newPage();
     //Way of setting up the timeout
-    setDefaultOptions({ timeout: 120000 })
+    setDefaultOptions({ timeout: 60000 })
 
     await page
       .goto("http://localhost:3000", {
@@ -94,12 +98,12 @@ defineFeature(feature, test => {
     then('Game start in this category', async () => {
 
       // Espera a que el div que contiene el texto sea visible.
-      await page.waitForSelector('div', { text: '¿A qué lugar corresponde la siguiente foto?' });
+      await page.waitForSelector('div', { text: '¿De qué país es esta bandera?' });
 
       // Verifica que el texto esté presente en el div.
       // Se comprueba el texto de la pregunta que se muestra en el juego.
       // Ya que cada categoría tiene su propia pregunta.
-      await expect(page).toMatchElement('div', { text: '¿A qué lugar corresponde la siguiente foto?' });
+      await expect(page).toMatchElement('div', { text: '¿De qué país es esta bandera?' });
 
     });
   })
