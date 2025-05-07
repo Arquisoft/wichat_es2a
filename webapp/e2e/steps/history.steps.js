@@ -75,7 +75,7 @@ defineFeature(feature, test => {
 
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] })
-            : await puppeteer.launch({ headless: false, slowMo: 100, defaultViewport: { width: 1920, height: 1080 } });
+            : await puppeteer.launch({ headless: false, slowMo: 10, defaultViewport: { width: 1920, height: 1080 } });
         page = await browser.newPage();
         await page.setViewport({ width: 1200, height: 800 });
         setDefaultOptions({ timeout: 60000 });
